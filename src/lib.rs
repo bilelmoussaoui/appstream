@@ -3,7 +3,7 @@ mod collection;
 mod component;
 mod content_rating;
 mod de;
-pub mod enums;
+mod enums;
 mod language;
 mod license;
 mod release;
@@ -14,6 +14,10 @@ pub use app_id::AppId;
 pub use collection::Collection;
 pub use component::Component;
 pub use content_rating::{ContentRating, ContentRatingVersion};
+pub use enums::{
+    Bundle, Category, ComponentType, ContentAttribute, ContentState, Icon, Kudo, Launchable,
+    ProjectUrl, Provide, Translation, 
+};
 
 pub use language::Language;
 pub use license::License;
