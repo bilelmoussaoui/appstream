@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="firmware">
+  <id>com.hughski.ColorHug2.firmware</id>
+  <name>ColorHugALS Firmware</name>
+  <summary>Firmware for the ColorHugALS Ambient Light Sensor</summary>
+  <description>
+    <p>
+      Updating the firmware on your ColorHugALS device improves performance and
+      adds new features.
+    </p>
+  </description>
+  <url type="homepage">http://www.hughski.com/</url>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <developer_name>Hughski Limited</developer_name>
+  <provides>
+    <firmware type="flashed">84f40464-9272-4ef7-9399-cd95f12da696</firmware>
+  </provides>
+  <releases>
+    <release version="3.0.2" date="2015-02-16">
+      <artifacts>
+        <artifact type="binary">
+          <location>http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab</location>
+        </artifact>
+      </artifacts>
+      <description>
+        <p>This stable release fixes the following bugs:</p>
+        <ul>
+          <li>Fix the return code from GetHardwareVersion</li>
+          <li>Scale the output of TakeReadingRaw by the datasheet values</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>
