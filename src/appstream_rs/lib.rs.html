@@ -20,13 +20,17 @@
 <span id="20">20</span>
 <span id="21">21</span>
 <span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">app_id</span>;
 <span class="kw">mod</span> <span class="ident">collection</span>;
 <span class="kw">mod</span> <span class="ident">component</span>;
 <span class="kw">mod</span> <span class="ident">content_rating</span>;
 <span class="kw">mod</span> <span class="ident">de</span>;
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">enums</span>;
+<span class="kw">mod</span> <span class="ident">enums</span>;
 <span class="kw">mod</span> <span class="ident">language</span>;
 <span class="kw">mod</span> <span class="ident">license</span>;
 <span class="kw">mod</span> <span class="ident">release</span>;
@@ -37,6 +41,10 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">component</span>::<span class="ident">Component</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">content_rating</span>::{<span class="ident">ContentRating</span>, <span class="ident">ContentRatingVersion</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">enums</span>::{
+    <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentType</span>, <span class="ident">ContentAttribute</span>, <span class="ident">ContentState</span>, <span class="ident">Icon</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>,
+    <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
+};
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">language</span>::<span class="ident">Language</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">license</span>::<span class="ident">License</span>;

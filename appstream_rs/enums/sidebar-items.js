@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Bundle",""],["Category",""],["ComponentType",""],["ContentAttribute",""],["ContentState",""],["Icon",""],["Kudo",""],["Launchable",""],["ProjectUrl",""],["Provide",""],["Translation",""]]});
