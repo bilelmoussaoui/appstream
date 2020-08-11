@@ -16,7 +16,7 @@ pub use component::Component;
 pub use content_rating::{ContentRating, ContentRatingVersion};
 pub use enums::{
     Bundle, Category, ComponentType, ContentAttribute, ContentState, Icon, Kudo, Launchable,
-    ProjectUrl, Provide, Translation, 
+    ProjectUrl, Provide, Translation,
 };
 
 pub use language::Language;
