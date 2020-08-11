@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ContentRatingVersion",""],["Image",""],["ReleaseSize",""],["ReleaseType",""]],"mod":[["enums",""]],"struct":[["AppId",""],["Collection",""],["Component",""],["ContentRating",""],["Language",""],["License",""],["Release",""],["Screenshot",""],["TranslatableString",""],["Video",""]]});
