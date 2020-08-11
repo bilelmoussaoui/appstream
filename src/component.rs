@@ -5,13 +5,13 @@ use super::enums::{
 use super::translatable_string::{TranslatableString, TranslatableVec};
 use super::{AppId, ContentRating, Language, License, Release, Screenshot};
 use anyhow::Result;
-#[cfg(feature="gzip")]
+#[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use quick_xml::de::from_str;
 use serde::{Deserialize, Serialize};
-#[cfg(feature="gzip")]
+#[cfg(feature = "gzip")]
 use std::fs::File;
-#[cfg(feature="gzip")]
+#[cfg(feature = "gzip")]
 use std::io::prelude::*;
 use std::path::PathBuf;
 
@@ -91,7 +91,7 @@ impl Component {
         Ok(component)
     }
 
-    #[cfg(feature="gzip")]
+    #[cfg(feature = "gzip")]
     pub fn from_gzipped(path: PathBuf) -> Result<Self> {
         let f = File::open(path)?;
 

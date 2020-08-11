@@ -1,13 +1,13 @@
 use super::AppId;
 use super::Component;
 use anyhow::Result;
-#[cfg(feature="gzip")]
+#[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use quick_xml::de::from_str;
 use serde::Deserialize;
-#[cfg(feature="gzip")]
+#[cfg(feature = "gzip")]
 use std::fs::File;
-#[cfg(feature="gzip")]
+#[cfg(feature = "gzip")]
 use std::io::prelude::*;
 use std::path::PathBuf;
 
@@ -29,7 +29,7 @@ impl Collection {
         Ok(collection)
     }
 
-    #[cfg(feature="gzip")]
+    #[cfg(feature = "gzip")]
     pub fn from_gzipped(path: PathBuf) -> Result<Self> {
         let f = File::open(path)?;
 

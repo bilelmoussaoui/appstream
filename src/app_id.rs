@@ -14,8 +14,6 @@ impl TryFrom<&str> for AppId {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;

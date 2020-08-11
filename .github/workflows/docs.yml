@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -17,7 +17,8 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
-          command: doc --package appstream-rs --all-features
+          command: doc
+          args: --package appstream-rs --all-features
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v2
