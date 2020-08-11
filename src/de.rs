@@ -97,7 +97,7 @@ where
         runtime: Option<String>,
         sdk: String,
         #[serde(rename = "$value", default)]
-        name: String,
+        id: String,
     };
 
     let bundles: Vec<PBundle> = Vec::deserialize(deserializer)?;
@@ -105,14 +105,14 @@ where
         .into_iter()
         .map(|b| match b._type.as_ref() {
             "flatpak" => Bundle::Flatpak {
-                name: b.name,
+                id: b.id,
                 sdk: b.sdk,
                 runtime: b.runtime,
             },
-            "limba" => Bundle::Limba(b.name),
-            "snap" => Bundle::Snap(b.name),
-            "appimage" => Bundle::AppImage(b.name),
-            _ => Bundle::Tarball(b.name),
+            "limba" => Bundle::Limba(b.id),
+            "snap" => Bundle::Snap(b.id),
+            "appimage" => Bundle::AppImage(b.id),
+            _ => Bundle::Tarball(b.id),
         })
         .collect::<Vec<Bundle>>())
 }

@@ -194,7 +194,7 @@ pub enum Bundle {
         runtime: Option<String>,
         sdk: String,
         #[serde(rename = "$value", default)]
-        name: String,
+        id: String,
     },
     AppImage(String),
     Snap(String),
