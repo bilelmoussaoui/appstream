@@ -18,7 +18,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: --package appstream-rs --all-features
+          args: --package appstream-rs --all-features --no-deps
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v2
