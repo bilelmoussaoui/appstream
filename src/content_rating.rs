@@ -6,7 +6,7 @@ pub struct ContentRating {
     #[serde(rename = "type", default)]
     pub version: ContentRatingVersion,
     #[serde(rename = "content_attribute", default)]
-    attributes: Vec<ContentAttribute>,
+    pub attributes: Vec<ContentAttribute>,
 }
 
 #[derive(Clone, Eq, PartialEq, Deserialize, Serialize, Debug)]

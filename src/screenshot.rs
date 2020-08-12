@@ -136,7 +136,10 @@ mod tests {
 
         let mut caption =
             TranslatableString::with_default("FooBar showing kitchen-sink functionality.");
-        caption.add_for_lang("de", "FooBar beim Ausführen der Spühlbecken-Funktion.");
+        caption.add_for_locale(
+            Some("de"),
+            "FooBar beim Ausführen der Spühlbecken-Funktion.",
+        );
         assert_eq!(s.caption, Some(caption));
 
         assert_eq!(
