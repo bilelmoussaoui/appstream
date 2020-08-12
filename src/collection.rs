@@ -52,81 +52,144 @@ impl Collection {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::{Category, ComponentKind, Icon, Provide};
+    use crate::enums::{Category, ComponentKind, Icon, Image, ProjectUrl, Provide};
     use crate::TranslatableVec;
+    use crate::{
+        AppId, CollectionBuilder, ComponentBuilder, ReleaseBuilder, ScreenshotBuilder,
+        TranslatableString,
+    };
+    use std::convert::TryFrom;
     use std::str::FromStr;
     use url::Url;
 
     #[test]
     fn spec_example_collection() {
-        let c = Collection::from_path("./tests/collections/spec_example.xml".into()).unwrap();
+        let c1 = Collection::from_path("./tests/collections/spec_example.xml".into()).unwrap();
 
-        assert_eq!(c.version, "0.10");
-
-        let first = c.components.get(0).unwrap();
-        assert_eq!(first.kind, ComponentKind::DesktopApplication);
-
-        assert_eq!(first.provides, vec![Provide::Binary("firefox".into())]);
-        assert_eq!(
-            first.categories,
-            vec![
-                Category::Unknown("network".into()),
-                Category::Unknown("webbrowser".into())
-            ]
-        );
-        assert_eq!(
-            first.mimetypes,
-            vec![
-                "text/html",
-                "text/xml",
-                "application/xhtml+xml",
-                "application/vnd.mozilla.xul+xml",
-                "text/mml",
-                "application/x-xpinstall",
-                "x-scheme-handler/http",
-                "x-scheme-handler/https",
-            ]
-        );
-        assert_eq!(
-            first.icons,
-            vec![
-                Icon::Stock("web-browser".into()),
-                Icon::Cached("firefox.png".into()),
-            ]
-        );
-
-        let second = c.components.get(1).unwrap();
-        assert_eq!(second.kind, ComponentKind::Generic);
-        assert_eq!(
-            second.provides,
-            vec![
-                Provide::Library("libpulse-simple.so.0".into()),
-                Provide::Library("libpulse.so.0".into()),
-                Provide::Binary("start-pulseaudio-kde".into()),
-                Provide::Binary("start-pulseaudio-x11".into()),
-            ]
-        );
-
-        let third = c.components.get(2).unwrap();
-        assert_eq!(third.kind, ComponentKind::Font);
-        assert_eq!(
-            third.provides,
-            vec![Provide::Font("LinLibertine_M.otf".into())]
-        );
+        let c2 = CollectionBuilder::new("0.10")
+        .component(
+            ComponentBuilder::new(
+                AppId::try_from("org.mozilla.Firefox").unwrap(),
+                TranslatableString::with_default("Firefox").and_locale("en_GB", "Firefoux")
+            )
+            .kind(ComponentKind::DesktopApplication)
+            .pkgname("firefox-bin")
+            .project_license("MPL-2.0".into())
+            .keywords(TranslatableVec::with_default(vec!["internet","web", "browser"]).and_locale("fr_FR", vec!["navigateur"]))
+            .summary(TranslatableString::with_default("Web browser").and_locale("fr_FR", "Navigateur web"))
+            .url(ProjectUrl::Homepage(Url::from_str("https://www.mozilla.com").unwrap()))
+            .screenshot(
+                ScreenshotBuilder::new().image(Image::Source {
+                    url: Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap(),
+                    width: Some(800),
+                    height: Some(600),
+                })
+                .image(Image::Thumbnail {
+                    url: Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png").unwrap(),
+                    width: 200,
+                    height: 150,
+                }).build()
+            )
+            .provide(Provide::Binary("firefox".into()))
+            .mimetype("text/html")
+            .mimetype("text/xml")
+            .mimetype("application/xhtml+xml")
+            .mimetype("application/vnd.mozilla.xul+xml")
+            .mimetype("text/mml")
+            .mimetype("application/x-xpinstall")
+            .mimetype("x-scheme-handler/http")
+            .mimetype("x-scheme-handler/https")
+            .category(Category::Unknown("network".into()))
+            .category(Category::Unknown("webbrowser".into()))
+            .icon(Icon::Stock("web-browser".into()))
+            .icon(Icon::Cached("firefox.png".into()))
+            .build()
+        )
+        .component(
+            ComponentBuilder::new(
+                AppId::try_from("org.freedesktop.PulseAudio").unwrap(),
+                TranslatableString::with_default("PulseAudio")
+            )
+            .summary(TranslatableString::with_default("The PulseAudio sound server"))
+            .project_license("GPL-2.0+".into())
+            .url(ProjectUrl::Homepage(Url::from_str("https://www.freedesktop.org/wiki/Software/PulseAudio/").unwrap()))
+            .provide(Provide::Library("libpulse-simple.so.0".into()))
+            .provide(Provide::Library("libpulse.so.0".into()))
+            .provide(Provide::Binary("start-pulseaudio-kde".into()))
+            .provide(Provide::Binary("start-pulseaudio-x11".into()))
+            .release(ReleaseBuilder::new("2.0").build())
+            .build()
+        )
+        .component(
+            ComponentBuilder::new(
+                AppId::try_from("org.linuxlibertine.LinuxLibertine").unwrap(),
+                TranslatableString::with_default("Linux Libertine")
+            )
+            .kind(ComponentKind::Font)
+            .summary(TranslatableString::with_default("Linux Libertine Open fonts"))
+            .provide(Provide::Font("LinLibertine_M.otf".into()))
+            .build()
+        )
+        .build();
+        assert_eq!(c1, c2);
     }
     #[test]
     fn generic_collection() {
-        let c = Collection::from_path("./tests/collections/fedora-other-repos.xml".into()).unwrap();
+        let c1 =
+            Collection::from_path("./tests/collections/fedora-other-repos.xml".into()).unwrap();
 
-        assert_eq!(c.version, "0.8");
-        c.components.iter().for_each(|comp| {
-            assert_eq!(comp.kind, ComponentKind::Generic);
-        });
+        let c2 = CollectionBuilder::new("0.8")
+            .component(
+                ComponentBuilder::new(
+                    AppId::try_from("adobe-release-x86_64").unwrap(),
+                    TranslatableString::with_default("Adobe"),
+                )
+                .pkgname("adobe-release-x86_64")
+                .metadata_license("CC0-1.0".into())
+                .summary(TranslatableString::with_default(
+                    "Adobe Repository Configuration",
+                ))
+                .build(),
+            )
+            .component(
+                ComponentBuilder::new(
+                    AppId::try_from("livna-release").unwrap(),
+                    TranslatableString::with_default("Livna"),
+                )
+                .pkgname("livna-release")
+                .metadata_license("CC0-1.0".into())
+                .summary(TranslatableString::with_default(
+                    "Livna Repository Configuration",
+                ))
+                .build(),
+            )
+            .component(
+                ComponentBuilder::new(
+                    AppId::try_from("rpmfusion-free-release").unwrap(),
+                    TranslatableString::with_default("RPM Fusion Free"),
+                )
+                .pkgname("rpmfusion-free-release")
+                .metadata_license("CC0-1.0".into())
+                .summary(TranslatableString::with_default(
+                    "RPM Fusion Repository Configuration",
+                ))
+                .build(),
+            )
+            .component(
+                ComponentBuilder::new(
+                    AppId::try_from("rpmfusion-nonfree-release").unwrap(),
+                    TranslatableString::with_default("RPM Fusion Non-Free"),
+                )
+                .pkgname("rpmfusion-nonfree-release")
+                .metadata_license("CC0-1.0".into())
+                .summary(TranslatableString::with_default(
+                    "RPM Fusion Repository Configuration",
+                ))
+                .build(),
+            )
+            .build();
 
-        assert_eq!(
-            c.components.get(0).unwrap().pkgname,
-            Some("adobe-release-x86_64".into())
-        );
+        assert_eq!(c1, c2);
     }
     #[test]
     fn web_collection() {

@@ -19,6 +19,11 @@ impl TranslatableString {
         t
     }
 
+    pub fn and_locale(mut self, locale: &str, text: &str) -> Self {
+        self.add_for_locale(Some(locale), text);
+        self
+    }
+
     pub fn set_is_markup(&mut self, is_markup: bool) {
         self.1 = is_markup;
     }
@@ -53,6 +58,13 @@ impl TranslatableVec {
             t.add_for_locale(None, w);
         });
         t
+    }
+
+    pub fn and_locale(mut self, locale: &str, words: Vec<&str>) -> Self {
+        words.iter().for_each(|w| {
+            self.add_for_locale(Some(locale), w);
+        });
+        self
     }
 
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {

@@ -110,273 +110,347 @@ mod tests {
     use super::Component;
     use crate::enums::{ComponentKind, FirmwareKind, Launchable, ProjectUrl, Provide};
     use crate::translatable_string::TranslatableString;
-    use crate::{AppId, Image, Language, ReleaseBuilder, ReleaseKind, Screenshot};
+    use crate::{
+        AppId, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder, ReleaseKind,
+        ScreenshotBuilder,
+    };
     use chrono::{TimeZone, Utc};
     use std::convert::TryFrom;
     use std::str::FromStr;
     use url::Url;
 
     #[test]
-    fn desktop_application_component() {
-        let c: Component = Component::from_path("./tests/desktop.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::DesktopApplication);
-        assert_eq!(
-            c.id,
-            AppId::try_from("org.gnome.gnome-power-statistics").unwrap()
-        );
-        assert_eq!(
-            c.provides,
-            vec![
-                Provide::Binary("gnome-power-statistics".into()),
-                Provide::Id("gnome-power-statistics.desktop".into())
-            ]
-        );
-        assert_eq!(
-            c.launchables,
-            vec![Launchable::DesktopId(
-                "org.gnome.gnome-power-statistics.desktop".to_string()
-            )]
-        );
-        assert_eq!(
-            c.screenshots,
-            vec![
-                Screenshot {
-                    is_default: true,
-                    caption: Some(TranslatableString::with_default("The options dialog")),
-                    videos: vec![],
-                    images: vec![Image::Source {
-                        url: Url::from_str("http://www.hughsie.com/en_US/main.png").unwrap(),
-                        width: None,
-                        height: None
-                    },]
-                },
-                Screenshot {
-                    is_default: false,
-                    caption: None,
-                    videos: vec![],
-                    images: vec![Image::Source {
-                        url: Url::from_str("http://www.hughsie.com/en_US/preferences.png").unwrap(),
-                        width: None,
-                        height: None
-                    }]
-                }
-            ]
-        );
-        assert_eq!(
-            c.releases,
-            vec![ReleaseBuilder::new("3.12.2")
-                .date(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0))
-                .build()]
-        );
-        assert_eq!(c.project_group, Some("GNOME".into()));
-    }
+    fn addon_component() {
+        let c1 = Component::from_path("./tests/addon.xml".into()).unwrap();
 
-    #[test]
-    fn runtime_component() {
-        let c: Component = Component::from_path("./tests/runtime.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::Runtime);
-    }
+        let id = AppId::try_from("org.gnome.gedit_code_assistance").unwrap();
+        let name = TranslatableString::with_default("Code Assistance");
 
-    #[test]
-    fn os_component() {
-        let c: Component = Component::from_path("./tests/os.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::OS);
-        assert_eq!(
-            c.releases,
-            vec![
-                ReleaseBuilder::new("10.0")
-                    .kind(ReleaseKind::Development)
-                    .build(),
-                ReleaseBuilder::new("9.0")
-                    .date(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0))
-                    .date_eol(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0))
-                    .build()
-            ]
-        );
-    }
-
-    #[test]
-    fn localization_component() {
-        let c = Component::from_path("./tests/localization.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::Localization);
-        assert_eq!(
-            c.extends,
-            vec![
-                AppId::try_from("org.kde.plasmashell").unwrap(),
-                AppId::try_from("org.kde.gwenview.desktop").unwrap(),
-                AppId::try_from("org.kde.dolphin.desktop").unwrap(),
-            ]
-        );
-
-        assert_eq!(
-            c.languages,
-            vec![
-                Language {
-                    locale: "de_DE".into(),
-                    percentage: None
-                },
-                Language {
-                    locale: "de_AT".into(),
-                    percentage: Some(96)
-                },
-                Language {
-                    locale: "de".into(),
-                    percentage: Some(100)
-                },
-            ]
-        );
-    }
-
-    #[test]
-    fn driver_component() {
-        let c: Component = Component::from_path("./tests/driver.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::Driver);
-        assert_eq!(
-            c.provides,
-            vec![Provide::Modalias(
-                "pci:v000010DEd*sv*sd*bc03sc00i00*".into()
-            )]
-        );
-    }
-
-    #[test]
-    fn firmware_component() {
-        let c = Component::from_path("./tests/firmware.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::Firmware);
-        assert_eq!(
-            c.developer_name,
-            Some(TranslatableString::with_default("Hughski Limited"))
-        );
-        assert_eq!(
-            c.provides,
-            vec![Provide::Firmware {
-                kind: FirmwareKind::Flashed,
-                item: "84f40464-9272-4ef7-9399-cd95f12da696".into()
-            }]
-        )
-    }
-
-    #[test]
-    fn input_method_component() {
-        let c = Component::from_path("./tests/input-method.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::InputMethod);
-        assert_eq!(c.metadata_license, Some("FSFAP".into()));
-        assert_eq!(c.name, TranslatableString::with_default("Mathwriter"));
-        assert_eq!(
-            c.summary,
-            Some(TranslatableString::with_default(
-                "Math symbols input method"
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Addon)
+            .metadata_license("FSFAP".into())
+            .project_license("GPL-3.0+".into())
+            .summary(TranslatableString::with_default(
+                "Code assistance for C, C++ and Objective-C",
             ))
-        );
-        assert_eq!(
-            c.urls,
-            vec![ProjectUrl::Homepage(
-                Url::from_str("https://github.com/mike-fabian/ibus-table-others").unwrap()
-            )]
-        );
+            .update_contact("developer_AT_example.com")
+            .url(ProjectUrl::Homepage(
+                Url::from_str("http://projects.gnome.org/gedit").unwrap(),
+            ))
+            .extend(AppId::try_from("org.gnome.gedit").unwrap())
+            .build();
+        assert_eq!(c1, c2);
     }
 
     #[test]
     fn codec_component() {
-        let c = Component::from_path("./tests/codec.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::Codec);
+        let c1 = Component::from_path("./tests/codec.xml".into()).unwrap();
+
+        let id = AppId::try_from("org.freedesktop.gstreamer.codecs-good").unwrap();
+        let name = TranslatableString::with_default("GStreamer Multimedia Codecs - Extra");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Codec)
+            .metadata_license("CC0".into())
+            .provide(Provide::Codec("encoder-audio/mpeg".into()))
+            .provide(Provide::Codec("mpegversion=(int){ 4, 2 }".into()))
+            .provide(Provide::Codec("stream-format=(string){ adts, raw }".into()))
+            .provide(Provide::Codec("encoder-video/mpeg".into()))
+            .provide(Provide::Codec("systemstream=(boolean)false".into()))
+            .provide(Provide::Codec("mpegversion=(int){ 1, 2, 4 }".into()))
+            .provide(Provide::Codec("systemstream=(boolean)true".into()))
+            .provide(Provide::Codec("encoder-video/x-xvid".into()))
+            .provide(Provide::Codec("element-faac".into()))
+            .provide(Provide::Codec("element-mpeg2enc".into()))
+            .provide(Provide::Codec("element-mplex".into()))
+            .provide(Provide::Codec("element-xviddec".into()))
+            .provide(Provide::Codec("element-xvidenc".into()))
+            .build();
+
+        assert_eq!(c1, c2);
     }
 
     #[test]
-    fn icon_theme_component() {
-        let c = Component::from_path("./tests/icon-theme.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::IconTheme);
-        assert_eq!(c.metadata_license, Some("FSFAP".into()));
-        assert_eq!(c.project_license, Some("GPL-3.0".into()));
-        assert_eq!(c.name, TranslatableString::with_default("Papirus"));
-        assert_eq!(
-            c.summary,
-            Some(TranslatableString::with_default(
-                "A free and open source icon theme for Linux, based on the Paper Icon Set"
+    fn desktop_application_component() {
+        let c1: Component = Component::from_path("./tests/desktop.xml".into()).unwrap();
+
+        let id = AppId::try_from("org.gnome.gnome-power-statistics").unwrap();
+        let name = TranslatableString::with_default("Power Statistics");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::DesktopApplication)
+            .summary(TranslatableString::with_default("Observe power management"))
+            .metadata_license("FSFAP".into())
+            .project_license("GPL-2.0+".into())
+            .project_group("GNOME")
+            .launchable(Launchable::DesktopId(
+                "org.gnome.gnome-power-statistics.desktop".to_string(),
             ))
-        );
+            .url(ProjectUrl::Homepage(
+                Url::from_str("http://www.gnome.org/projects/en_US/gnome-power-manager").unwrap(),
+            ))
+            .provide(Provide::Binary("gnome-power-statistics".into()))
+            .provide(Provide::Id("gnome-power-statistics.desktop".into()))
+            .screenshot(
+                ScreenshotBuilder::new()
+                    .caption(TranslatableString::with_default("The options dialog"))
+                    .image(Image::Source {
+                        url: Url::from_str("http://www.hughsie.com/en_US/main.png").unwrap(),
+                        width: None,
+                        height: None,
+                    })
+                    .build(),
+            )
+            .screenshot(
+                ScreenshotBuilder::new()
+                    .set_default(false)
+                    .image(Image::Source {
+                        url: Url::from_str("http://www.hughsie.com/en_US/preferences.png").unwrap(),
+                        width: None,
+                        height: None,
+                    })
+                    .build(),
+            )
+            .release(
+                ReleaseBuilder::new("3.12.2")
+                    .date(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0))
+                    .build(),
+            )
+            .build();
+        assert_eq!(c1, c2);
     }
 
     #[test]
-    fn addon_component() {
-        let c = Component::from_path("./tests/addon.xml".into()).unwrap();
+    fn driver_component() {
+        let c1: Component = Component::from_path("./tests/driver.xml".into()).unwrap();
 
-        assert_eq!(c.kind, ComponentKind::Addon);
-        assert_eq!(c.name, TranslatableString::with_default("Code Assistance"));
-        assert_eq!(c.update_contact, Some("developer_AT_example.com".into()));
-        assert_eq!(
-            c.summary,
-            Some(TranslatableString::with_default(
-                "Code assistance for C, C++ and Objective-C"
+        let id = AppId::try_from("com.nvidia.GeForce").unwrap();
+        let name = TranslatableString::with_default("NVIDIA GeForce");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Driver)
+            .metadata_license("CC0-1.0".into())
+            .project_license("LicenseRef-proprietary:NVIDIA".into())
+            .summary(TranslatableString::with_default("NVIDIA Graphics Driver"))
+            .developer_name(TranslatableString::with_default("NVIDIA Corporation"))
+            .provide(Provide::Modalias(
+                "pci:v000010DEd*sv*sd*bc03sc00i00*".into(),
             ))
-        );
-        assert_eq!(
-            c.urls,
-            vec![ProjectUrl::Homepage(
-                Url::from_str("http://projects.gnome.org/gedit").unwrap()
-            )]
-        );
-        assert_eq!(c.metadata_license, Some("FSFAP".into()));
-        assert_eq!(c.project_license, Some("GPL-3.0+".into()));
-        assert_eq!(c.extends, vec![AppId::try_from("org.gnome.gedit").unwrap()]);
+            .url(ProjectUrl::Homepage(
+                Url::from_str("http://www.nvidia.com/Download/index.aspx").unwrap(),
+            ))
+            .build();
+        assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn firmware_component() {
+        let c1 = Component::from_path("./tests/firmware.xml".into()).unwrap();
+
+        let id = AppId::try_from("com.hughski.ColorHug2.firmware").unwrap();
+        let name = TranslatableString::with_default("ColorHugALS Firmware");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Firmware)
+            .summary(TranslatableString::with_default(
+                "Firmware for the ColorHugALS Ambient Light Sensor",
+            ))
+            .url(ProjectUrl::Homepage(
+                Url::from_str("http://www.hughski.com/").unwrap(),
+            ))
+            .metadata_license("CC0-1.0".into())
+            .project_license("GPL-2.0+".into())
+            .developer_name(TranslatableString::with_default("Hughski Limited"))
+            .provide(Provide::Firmware {
+                kind: FirmwareKind::Flashed,
+                item: "84f40464-9272-4ef7-9399-cd95f12da696".into(),
+            })
+            .release(
+                ReleaseBuilder::new("3.0.2")
+                    .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+                    .build(),
+            )
+            .build();
+
+        assert_eq!(c1, c2);
     }
 
     #[test]
     fn font_component() {
-        let c = Component::from_path("./tests/font.xml".into()).unwrap();
-        assert_eq!(c.kind, ComponentKind::Font);
-        assert_eq!(c.metadata_license, Some("MIT".into()));
-        assert_eq!(c.project_license, Some("OFL-1.1".into()));
-        assert_eq!(c.name, TranslatableString::with_default("Lato"));
-        assert_eq!(
-            c.summary,
-            Some(TranslatableString::with_default(
-                "A sanserif type­face fam­ily"
+        let c1 = Component::from_path("./tests/font.xml".into()).unwrap();
+
+        let id = AppId::try_from("com.latofonts.Lato").unwrap();
+        let name = TranslatableString::with_default("Lato");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Font)
+            .metadata_license("MIT".into())
+            .project_license("OFL-1.1".into())
+            .summary(TranslatableString::with_default(
+                "A sanserif type­face fam­ily",
             ))
-        );
-        assert_eq!(
-            c.provides,
-            vec![
-                Provide::Font("Lato Regular".into()),
-                Provide::Font("Lato Italic".into()),
-                Provide::Font("Lato Bold".into()),
-                Provide::Font("Lato Light".into()),
-                Provide::Font("Lato Light Italic".into()),
-            ]
-        );
+            .provide(Provide::Font("Lato Regular".into()))
+            .provide(Provide::Font("Lato Italic".into()))
+            .provide(Provide::Font("Lato Bold".into()))
+            .provide(Provide::Font("Lato Light".into()))
+            .provide(Provide::Font("Lato Light Italic".into()))
+            .build();
+
+        assert_eq!(c1, c2);
     }
 
     #[test]
     fn generic_component() {
-        let c = Component::from_path("./tests/generic.xml".into()).unwrap();
-        assert_eq!(
-            c.urls.first().unwrap(),
-            &ProjectUrl::Homepage(Url::from_str("http://www.example.org").unwrap())
-        );
-        assert_eq!(c.metadata_license, Some("CC0-1.0".into()));
-        assert_eq!(c.kind, ComponentKind::Generic);
-        assert_eq!(c.name, TranslatableString::with_default("Foo Bar"));
-        assert_eq!(
-            c.summary,
-            Some(TranslatableString::with_default("A foo-ish bar"))
-        );
-        assert_eq!(
-            c.developer_name,
-            Some(TranslatableString::with_default("FooBar Team"))
-        );
-        assert_eq!(
-            c.provides,
-            vec![
-                Provide::Library("libfoobar.so.2".into()),
-                Provide::Font("foo.ttf".into()),
-                Provide::Binary("foobar".into())
-            ]
-        );
-        assert_eq!(
-            c.releases,
-            vec![ReleaseBuilder::new("1.2")
-                .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
-                .build()]
-        );
+        let c1 = Component::from_path("./tests/generic.xml".into()).unwrap();
+
+        let id = AppId::try_from("com.example.foobar").unwrap();
+        let name = TranslatableString::with_default("Foo Bar");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .metadata_license("CC0-1.0".into())
+            .summary(TranslatableString::with_default("A foo-ish bar"))
+            .url(ProjectUrl::Homepage(
+                Url::from_str("http://www.example.org").unwrap(),
+            ))
+            .developer_name(TranslatableString::with_default("FooBar Team"))
+            .provide(Provide::Library("libfoobar.so.2".into()))
+            .provide(Provide::Font("foo.ttf".into()))
+            .provide(Provide::Binary("foobar".into()))
+            .release(
+                ReleaseBuilder::new("1.2")
+                    .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+                    .build(),
+            )
+            .build();
+        assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn icon_theme_component() {
+        let c1 = Component::from_path("./tests/icon-theme.xml".into()).unwrap();
+        let id = AppId::try_from("io.git.PapirusIconTheme").unwrap();
+        let name = TranslatableString::with_default("Papirus");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::IconTheme)
+            .metadata_license("FSFAP".into())
+            .project_license("GPL-3.0".into())
+            .summary(TranslatableString::with_default("A free and open source icon theme for Linux, based on the Paper Icon Set"))
+            .screenshot(ScreenshotBuilder::new().image(Image::Source {
+                width: None,
+                height:None,
+                url: Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
+            }).build())
+            .build();
+
+        assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn input_method_component() {
+        let c1 = Component::from_path("./tests/input-method.xml".into()).unwrap();
+
+        let id = AppId::try_from("com.github.ibus.mathwriter-ibus.db").unwrap();
+        let name = TranslatableString::with_default("Mathwriter");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::InputMethod)
+            .metadata_license("FSFAP".into())
+            .summary(TranslatableString::with_default(
+                "Math symbols input method",
+            ))
+            .url(ProjectUrl::Homepage(
+                Url::from_str("https://github.com/mike-fabian/ibus-table-others").unwrap(),
+            ))
+            .build();
+
+        assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn localization_component() {
+        let c1 = Component::from_path("./tests/localization.xml".into()).unwrap();
+
+        let id = AppId::try_from("org.kde.l10n.de").unwrap();
+        let name = TranslatableString::with_default("KDE German Language");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Localization)
+            .metadata_license("FSFAP".into())
+            .summary(TranslatableString::with_default(
+                "German localization for the KDE desktop and apps",
+            ))
+            .developer_name(TranslatableString::with_default("The KDE German L10N team"))
+            .extend(AppId::try_from("org.kde.plasmashell").unwrap())
+            .extend(AppId::try_from("org.kde.gwenview.desktop").unwrap())
+            .extend(AppId::try_from("org.kde.dolphin.desktop").unwrap())
+            .url(ProjectUrl::Homepage(
+                Url::from_str("http://i18n.kde.org/team-infos.php?teamcode=de").unwrap(),
+            ))
+            .language(LanguageBuilder::new("de_DE").build())
+            .language(LanguageBuilder::new("de_AT").percentage(96).build())
+            .language(LanguageBuilder::new("de").percentage(100).build())
+            .build();
+        assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn os_component() {
+        let c1: Component = Component::from_path("./tests/os.xml".into()).unwrap();
+
+        let id = AppId::try_from("org.debian.debian").unwrap();
+        let name = TranslatableString::with_default("Debian GNU/Linux");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::OS)
+            .summary(TranslatableString::with_default(
+                "The universal operating system",
+            ))
+            .url(ProjectUrl::Homepage(
+                Url::from_str("https://www.debian.org/").unwrap(),
+            ))
+            .metadata_license("FSFAP".into())
+            .developer_name(TranslatableString::with_default("The Debian Project"))
+            .release(
+                ReleaseBuilder::new("10.0")
+                    .kind(ReleaseKind::Development)
+                    .build(),
+            )
+            .release(
+                ReleaseBuilder::new("9.0")
+                    .date(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0))
+                    .date_eol(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0))
+                    .build(),
+            )
+            .build();
+        assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn runtime_component() {
+        let c1: Component = Component::from_path("./tests/runtime.xml".into()).unwrap();
+
+        let id = AppId::try_from("org.freedesktop.Platform").unwrap();
+        let name = TranslatableString::with_default("Freedesktop Platform");
+
+        let c2 = ComponentBuilder::new(id, name)
+            .kind(ComponentKind::Runtime)
+            .metadata_license("FSFAP".into())
+            .project_license("LicenseRef-free=https://freedesktop-sdk.gitlab.io/".into())
+            .summary(TranslatableString::with_default(
+                "Basic libraries to run Linux desktop applications",
+            ))
+            .url(ProjectUrl::Homepage(
+                Url::from_str("https://freedesktop-sdk.gitlab.io/").unwrap(),
+            ))
+            .release(ReleaseBuilder::new("10.0").build())
+            .release(
+                ReleaseBuilder::new("9.0")
+                    .date(Utc.ymd(2020, 01, 12).and_hms_milli(0, 0, 0, 0))
+                    .build(),
+            )
+            .build();
+
+        assert_eq!(c1, c2);
     }
 }

@@ -53,7 +53,9 @@
       <binary>start-pulseaudio-kde</binary>
       <binary>start-pulseaudio-x11</binary>
     </provides>
-    <release version="2.0"/>
+    <releases>
+      <release version="2.0"/>
+    </releases>
   </component>
   <component type="font">
     <id>org.linuxlibertine.LinuxLibertine</id>

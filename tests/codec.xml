@@ -28,7 +28,6 @@
     <codec>encoder-video/mpeg</codec>
     <codec>systemstream=(boolean)false</codec>
     <codec>mpegversion=(int){ 1, 2, 4 }</codec>
-    <codec>encoder-video/mpeg</codec>
     <codec>systemstream=(boolean)true</codec>
     <codec>encoder-video/x-xvid</codec>
     <codec>element-faac</codec>

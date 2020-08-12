@@ -163,7 +163,7 @@ where
     };
     #[derive(Debug, Deserialize)]
     struct PKeyword {
-        #[serde(rename = "xml:lang", default)]
+        #[serde(rename = "xml:lang", alias = "lang", default)]
         pub locale: Option<String>,
         #[serde(rename = "$value")]
         text: String,
@@ -284,7 +284,7 @@ where
 {
     #[derive(Debug, Deserialize)]
     struct PTranslatable {
-        #[serde(rename = "xml:lang", default)]
+        #[serde(rename = "xml:lang", alias = "lang", default)]
         pub lang: Option<String>,
         #[serde(rename = "$value", default)]
         pub val: String,
@@ -307,7 +307,7 @@ where
 {
     #[derive(Debug, Deserialize)]
     struct PTranslatable {
-        #[serde(rename = "xml:lang", default)]
+        #[serde(rename = "xml:lang", alias = "lang", default)]
         pub locale: Option<String>,
         #[serde(rename = "$value", default)]
         pub val: String,
