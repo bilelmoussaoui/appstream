@@ -358,6 +358,24 @@
 <span id="358">358</span>
 <span id="359">359</span>
 <span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
@@ -366,7 +384,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ComponentType</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ComponentKind</span> {
     <span class="ident">Runtime</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;console&quot;</span>)]</span>
     <span class="ident">ConsoleApplication</span>,
@@ -389,9 +407,9 @@
     <span class="ident">Codec</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ComponentType</span> {
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ComponentKind</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">ComponentType</span>::<span class="ident">Generic</span>
+        <span class="ident">ComponentKind</span>::<span class="ident">Generic</span>
     }
 }
 
@@ -445,12 +463,24 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FirmwareKind</span> {
+    <span class="ident">Flashed</span>,
+    <span class="ident">Runtime</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Provide</span> {
     <span class="ident">Library</span>(<span class="ident">PathBuf</span>),
     <span class="ident">Binary</span>(<span class="ident">String</span>),
     <span class="ident">Font</span>(<span class="ident">String</span>),
     <span class="ident">Modalias</span>(<span class="ident">String</span>),
-    <span class="ident">Firmware</span>(<span class="ident">String</span>),
+    <span class="ident">Firmware</span> {
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+        <span class="ident">kind</span>: <span class="ident">FirmwareKind</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;$value&quot;</span>)]</span>
+        <span class="ident">item</span>: <span class="ident">String</span>,
+    },
     <span class="ident">Python2</span>(<span class="ident">String</span>),
     <span class="ident">Python3</span>(<span class="ident">String</span>),
     <span class="ident">DBus</span>(<span class="ident">String</span>),
@@ -462,7 +492,13 @@
 <span class="kw">fn</span> <span class="ident">test_provide_firmware</span>() {
     <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="string">r&quot;&lt;firmware type=&#39;runtime&#39;&gt;ipw2200-bss.fw&lt;/firmware&gt;&quot;</span>;
     <span class="kw">let</span> <span class="ident">p</span>: <span class="ident">Provide</span> <span class="op">=</span> <span class="ident">quick_xml</span>::<span class="ident">de</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>).<span class="ident">unwrap</span>();
-    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">p</span>, <span class="ident">Provide</span>::<span class="ident">Firmware</span>(<span class="string">&quot;ipw2200-bss.fw&quot;</span>.<span class="ident">into</span>()));
+    <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="ident">p</span>,
+        <span class="ident">Provide</span>::<span class="ident">Firmware</span> {
+            <span class="ident">kind</span>: <span class="ident">FirmwareKind</span>::<span class="ident">Runtime</span>,
+            <span class="ident">item</span>: <span class="string">&quot;ipw2200-bss.fw&quot;</span>.<span class="ident">into</span>()
+        }
+    );
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>

@@ -143,6 +143,15 @@
 <span id="143">143</span>
 <span id="144">144</span>
 <span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
@@ -159,9 +168,9 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Collection</span> {
-    <span class="ident">version</span>: <span class="ident">String</span>,
+    <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">String</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
-    <span class="ident">origin</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">origin</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;component&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span>,
     <span class="comment">// TODO: architecture</span>
@@ -198,18 +207,19 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentType</span>, <span class="ident">Icon</span>, <span class="ident">Provide</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Provide</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">TranslatableVec</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">collection_test_1</span>() {
+    <span class="kw">fn</span> <span class="ident">spec_example_collection</span>() {
         <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/spec_example.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">version</span>, <span class="string">&quot;0.10&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">first</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">components</span>.<span class="ident">get</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">first</span>.<span class="ident">_type</span>, <span class="ident">ComponentType</span>::<span class="ident">DesktopApplication</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">first</span>.<span class="ident">kind</span>, <span class="ident">ComponentKind</span>::<span class="ident">DesktopApplication</span>);
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">first</span>.<span class="ident">provides</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;firefox&quot;</span>.<span class="ident">into</span>())]);
         <span class="macro">assert_eq</span><span class="macro">!</span>(
@@ -241,7 +251,7 @@
         );
 
         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">components</span>.<span class="ident">get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">second</span>.<span class="ident">_type</span>, <span class="ident">ComponentType</span>::<span class="ident">Generic</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">second</span>.<span class="ident">kind</span>, <span class="ident">ComponentKind</span>::<span class="ident">Generic</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">second</span>.<span class="ident">provides</span>,
             <span class="macro">vec</span><span class="macro">!</span>[
@@ -253,19 +263,19 @@
         );
 
         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">components</span>.<span class="ident">get</span>(<span class="number">2</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">third</span>.<span class="ident">_type</span>, <span class="ident">ComponentType</span>::<span class="ident">Font</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">third</span>.<span class="ident">kind</span>, <span class="ident">ComponentKind</span>::<span class="ident">Font</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">third</span>.<span class="ident">provides</span>,
             <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;LinLibertine_M.otf&quot;</span>.<span class="ident">into</span>())]
         );
     }
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">collection_test_2</span>() {
+    <span class="kw">fn</span> <span class="ident">generic_collection</span>() {
         <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/fedora-other-repos.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">version</span>, <span class="string">&quot;0.8&quot;</span>);
         <span class="ident">c</span>.<span class="ident">components</span>.<span class="ident">iter</span>().<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">comp</span><span class="op">|</span> {
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">comp</span>.<span class="ident">_type</span>, <span class="ident">ComponentType</span>::<span class="ident">Generic</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">comp</span>.<span class="ident">kind</span>, <span class="ident">ComponentKind</span>::<span class="ident">Generic</span>);
         });
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
@@ -274,12 +284,12 @@
         );
     }
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">collection_test_3</span>() {
+    <span class="kw">fn</span> <span class="ident">web_collection</span>() {
         <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/fedora-web-apps.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">version</span>, <span class="string">&quot;0.8&quot;</span>);
         <span class="kw">let</span> <span class="ident">comp</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">components</span>.<span class="ident">get</span>(<span class="number">0</span>).<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">comp</span>.<span class="ident">_type</span>, <span class="ident">ComponentType</span>::<span class="ident">WebApplication</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">comp</span>.<span class="ident">kind</span>, <span class="ident">ComponentKind</span>::<span class="ident">WebApplication</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">comp</span>.<span class="ident">icons</span>, <span class="macro">vec</span><span class="macro">!</span>[
             <span class="ident">Icon</span>::<span class="ident">Remote</span>{
                 <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png&quot;</span>).<span class="ident">unwrap</span>(),
@@ -287,6 +297,14 @@
                 <span class="ident">height</span>: <span class="prelude-val">None</span>
             }
         ]);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">comp</span>.<span class="ident">categories</span>,
+            <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Category</span>::<span class="ident">Education</span>, <span class="ident">Category</span>::<span class="ident">Literature</span>,]
+        );
+
+        <span class="kw">let</span> <span class="ident">keywords</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;book&quot;</span>, <span class="string">&quot;ebook&quot;</span>, <span class="string">&quot;reader&quot;</span>];
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">comp</span>.<span class="ident">keywords</span>, <span class="prelude-val">Some</span>(<span class="ident">TranslatableVec</span>::<span class="ident">with_default</span>(<span class="ident">keywords</span>)))
     }
 }
 </pre></div>

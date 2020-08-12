@@ -183,6 +183,9 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="ident">some_translatable_deserialize</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">translatable_string</span>::<span class="ident">TranslatableString</span>;
@@ -322,7 +325,10 @@
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">caption</span> <span class="op">=</span>
             <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;FooBar showing kitchen-sink functionality.&quot;</span>);
-        <span class="ident">caption</span>.<span class="ident">add_for_lang</span>(<span class="string">&quot;de&quot;</span>, <span class="string">&quot;FooBar beim Ausführen der Spühlbecken-Funktion.&quot;</span>);
+        <span class="ident">caption</span>.<span class="ident">add_for_locale</span>(
+            <span class="prelude-val">Some</span>(<span class="string">&quot;de&quot;</span>),
+            <span class="string">&quot;FooBar beim Ausführen der Spühlbecken-Funktion.&quot;</span>,
+        );
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s</span>.<span class="ident">caption</span>, <span class="prelude-val">Some</span>(<span class="ident">caption</span>));
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(
