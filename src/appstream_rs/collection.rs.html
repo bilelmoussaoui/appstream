@@ -242,7 +242,8 @@
     <span class="kw">pub</span> <span class="ident">origin</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;component&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span>,
-    <span class="comment">// TODO: architecture</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">architecture</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> {
@@ -279,10 +280,9 @@
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Image</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">TranslatableVec</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">AppId</span>, <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>,
+        <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>,
         <span class="ident">TranslatableString</span>,
     };
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
@@ -293,7 +293,7 @@
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.10&quot;</span>)
         .<span class="ident">component</span>(
             <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.mozilla.Firefox&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="string">&quot;org.mozilla.Firefox&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Firefox&quot;</span>).<span class="ident">and_locale</span>(<span class="string">&quot;en_GB&quot;</span>, <span class="string">&quot;Firefoux&quot;</span>)
             )
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">DesktopApplication</span>)
@@ -331,7 +331,7 @@
         )
         .<span class="ident">component</span>(
             <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.freedesktop.PulseAudio&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="string">&quot;org.freedesktop.PulseAudio&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;PulseAudio&quot;</span>)
             )
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The PulseAudio sound server&quot;</span>))
@@ -346,7 +346,7 @@
         )
         .<span class="ident">component</span>(
             <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.linuxlibertine.LinuxLibertine&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="string">&quot;org.linuxlibertine.LinuxLibertine&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Linux Libertine&quot;</span>)
             )
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Font</span>)
@@ -365,7 +365,7 @@
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.8&quot;</span>)
             .<span class="ident">component</span>(
                 <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;adobe-release-x86_64&quot;</span>).<span class="ident">unwrap</span>(),
+                    <span class="string">&quot;adobe-release-x86_64&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Adobe&quot;</span>),
                 )
                 .<span class="ident">pkgname</span>(<span class="string">&quot;adobe-release-x86_64&quot;</span>)
@@ -377,7 +377,7 @@
             )
             .<span class="ident">component</span>(
                 <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;livna-release&quot;</span>).<span class="ident">unwrap</span>(),
+                    <span class="string">&quot;livna-release&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Livna&quot;</span>),
                 )
                 .<span class="ident">pkgname</span>(<span class="string">&quot;livna-release&quot;</span>)
@@ -389,7 +389,7 @@
             )
             .<span class="ident">component</span>(
                 <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;rpmfusion-free-release&quot;</span>).<span class="ident">unwrap</span>(),
+                    <span class="string">&quot;rpmfusion-free-release&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;RPM Fusion Free&quot;</span>),
                 )
                 .<span class="ident">pkgname</span>(<span class="string">&quot;rpmfusion-free-release&quot;</span>)
@@ -401,7 +401,7 @@
             )
             .<span class="ident">component</span>(
                 <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;rpmfusion-nonfree-release&quot;</span>).<span class="ident">unwrap</span>(),
+                    <span class="string">&quot;rpmfusion-nonfree-release&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;RPM Fusion Non-Free&quot;</span>),
                 )
                 .<span class="ident">pkgname</span>(<span class="string">&quot;rpmfusion-nonfree-release&quot;</span>)
@@ -422,7 +422,7 @@
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.8&quot;</span>)
             .<span class="ident">component</span>(
                 <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;epiphany-kindlecloud.desktop&quot;</span>).<span class="ident">unwrap</span>(),
+                    <span class="string">&quot;epiphany-kindlecloud.desktop&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Kindle Cloud Reader&quot;</span>)
                 )
                 .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">WebApplication</span>)

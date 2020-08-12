@@ -461,8 +461,6 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
-<span id="464">464</span>
-<span id="465">465</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -527,6 +525,8 @@
     <span class="kw">pub</span> <span class="ident">launchables</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Launchable</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>    
+    <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;bundle&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;bundle_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">bundle</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;releases_deserialize&quot;</span>)]</span>
@@ -579,11 +579,10 @@
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::<span class="ident">TranslatableString</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">AppId</span>, <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
+        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
         <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
@@ -591,7 +590,7 @@
     <span class="kw">fn</span> <span class="ident">addon_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/addon.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.gnome.gedit_code_assistance&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;org.gnome.gedit_code_assistance&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Code Assistance&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -605,7 +604,7 @@
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
                 <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://projects.gnome.org/gedit&quot;</span>).<span class="ident">unwrap</span>(),
             ))
-            .<span class="ident">extend</span>(<span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.gnome.gedit&quot;</span>).<span class="ident">unwrap</span>())
+            .<span class="ident">extend</span>(<span class="string">&quot;org.gnome.gedit&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
     }
@@ -614,7 +613,7 @@
     <span class="kw">fn</span> <span class="ident">codec_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/codec.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.freedesktop.gstreamer.codecs-good&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;org.freedesktop.gstreamer.codecs-good&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;GStreamer Multimedia Codecs - Extra&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -642,7 +641,7 @@
     <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/desktop.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.gnome.gnome-power-statistics&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;org.gnome.gnome-power-statistics&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Power Statistics&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -692,7 +691,7 @@
     <span class="kw">fn</span> <span class="ident">driver_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/driver.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;com.nvidia.GeForce&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;com.nvidia.GeForce&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;NVIDIA GeForce&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -715,7 +714,7 @@
     <span class="kw">fn</span> <span class="ident">firmware_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/firmware.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;com.hughski.ColorHug2.firmware&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;com.hughski.ColorHug2.firmware&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;ColorHugALS Firmware&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -754,7 +753,7 @@
     <span class="kw">fn</span> <span class="ident">font_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/font.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;com.latofonts.Lato&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;com.latofonts.Lato&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Lato&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -778,7 +777,7 @@
     <span class="kw">fn</span> <span class="ident">generic_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/generic.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;com.example.foobar&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;com.example.foobar&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Foo Bar&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -803,7 +802,7 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/icon-theme.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;io.git.PapirusIconTheme&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;io.git.PapirusIconTheme&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Papirus&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -825,7 +824,7 @@
     <span class="kw">fn</span> <span class="ident">input_method_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/input-method.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;com.github.ibus.mathwriter-ibus.db&quot;</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="string">&quot;com.github.ibus.mathwriter-ibus.db&quot;</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Mathwriter&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
@@ -846,19 +845,18 @@
     <span class="kw">fn</span> <span class="ident">localization_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/localization.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.kde.l10n.de&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;KDE German Language&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;org.kde.l10n.de&quot;</span>.<span class="ident">into</span>(), <span class="ident">name</span>)
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Localization</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
                 <span class="string">&quot;German localization for the KDE desktop and apps&quot;</span>,
             ))
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The KDE German L10N team&quot;</span>))
-            .<span class="ident">extend</span>(<span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.kde.plasmashell&quot;</span>).<span class="ident">unwrap</span>())
-            .<span class="ident">extend</span>(<span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.kde.gwenview.desktop&quot;</span>).<span class="ident">unwrap</span>())
-            .<span class="ident">extend</span>(<span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.kde.dolphin.desktop&quot;</span>).<span class="ident">unwrap</span>())
+            .<span class="ident">extend</span>(<span class="string">&quot;org.kde.plasmashell&quot;</span>.<span class="ident">into</span>())
+            .<span class="ident">extend</span>(<span class="string">&quot;org.kde.gwenview.desktop&quot;</span>.<span class="ident">into</span>())
+            .<span class="ident">extend</span>(<span class="string">&quot;org.kde.dolphin.desktop&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
                 <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://i18n.kde.org/team-infos.php?teamcode=de&quot;</span>).<span class="ident">unwrap</span>(),
             ))
@@ -873,10 +871,9 @@
     <span class="kw">fn</span> <span class="ident">os_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/os.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.debian.debian&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Debian GNU/Linux&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;org.debian.debian&quot;</span>.<span class="ident">into</span>(), <span class="ident">name</span>)
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">OS</span>)
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
                 <span class="string">&quot;The universal operating system&quot;</span>,
@@ -905,10 +902,9 @@
     <span class="kw">fn</span> <span class="ident">runtime_component</span>() {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/runtime.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">AppId</span>::<span class="ident">try_from</span>(<span class="string">&quot;org.freedesktop.Platform&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Freedesktop Platform&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">name</span>)
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;org.freedesktop.Platform&quot;</span>.<span class="ident">into</span>(), <span class="ident">name</span>)
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Runtime</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;LicenseRef-free=https://freedesktop-sdk.gitlab.io/&quot;</span>.<span class="ident">into</span>())
