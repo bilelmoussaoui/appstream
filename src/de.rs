@@ -6,7 +6,6 @@ use super::{AppId, Artifact, ContentRating, Language, License, Release, Screensh
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 use serde::de;
 use serde::Deserialize;
-use std::convert::TryFrom;
 use std::str::FromStr;
 use url::Url;
 
@@ -15,7 +14,7 @@ where
     D: de::Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
-    Ok(AppId::try_from(s.as_ref()).expect("Invalid app id, can't deserialize"))
+    Ok(s.into())
 }
 
 pub(crate) fn artifacts_deserialize<'de, D>(deserializer: D) -> Result<Vec<Artifact>, D::Error>
@@ -110,7 +109,7 @@ where
     let extends: Vec<String> = Vec::deserialize(deserializer)?;
     Ok(extends
         .into_iter()
-        .map(|e| AppId::try_from(e.as_ref()).expect("Invalid AppId"))
+        .map(|e| e.into())
         .collect::<Vec<AppId>>())
 }
 

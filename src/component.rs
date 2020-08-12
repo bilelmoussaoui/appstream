@@ -115,11 +115,10 @@ mod tests {
     };
     use crate::translatable_string::TranslatableString;
     use crate::{
-        AppId, ArtifactBuilder, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder,
+        ArtifactBuilder, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder,
         ReleaseKind, ScreenshotBuilder,
     };
     use chrono::{TimeZone, Utc};
-    use std::convert::TryFrom;
     use std::str::FromStr;
     use url::Url;
 
@@ -127,7 +126,7 @@ mod tests {
     fn addon_component() {
         let c1 = Component::from_path("./tests/addon.xml".into()).unwrap();
 
-        let id = AppId::try_from("org.gnome.gedit_code_assistance").unwrap();
+        let id = "org.gnome.gedit_code_assistance".into();
         let name = TranslatableString::with_default("Code Assistance");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -141,7 +140,7 @@ mod tests {
             .url(ProjectUrl::Homepage(
                 Url::from_str("http://projects.gnome.org/gedit").unwrap(),
             ))
-            .extend(AppId::try_from("org.gnome.gedit").unwrap())
+            .extend("org.gnome.gedit".into())
             .build();
         assert_eq!(c1, c2);
     }
@@ -150,7 +149,7 @@ mod tests {
     fn codec_component() {
         let c1 = Component::from_path("./tests/codec.xml".into()).unwrap();
 
-        let id = AppId::try_from("org.freedesktop.gstreamer.codecs-good").unwrap();
+        let id = "org.freedesktop.gstreamer.codecs-good".into();
         let name = TranslatableString::with_default("GStreamer Multimedia Codecs - Extra");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -178,7 +177,7 @@ mod tests {
     fn desktop_application_component() {
         let c1: Component = Component::from_path("./tests/desktop.xml".into()).unwrap();
 
-        let id = AppId::try_from("org.gnome.gnome-power-statistics").unwrap();
+        let id = "org.gnome.gnome-power-statistics".into();
         let name = TranslatableString::with_default("Power Statistics");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -228,7 +227,7 @@ mod tests {
     fn driver_component() {
         let c1: Component = Component::from_path("./tests/driver.xml".into()).unwrap();
 
-        let id = AppId::try_from("com.nvidia.GeForce").unwrap();
+        let id = "com.nvidia.GeForce".into();
         let name = TranslatableString::with_default("NVIDIA GeForce");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -251,7 +250,7 @@ mod tests {
     fn firmware_component() {
         let c1 = Component::from_path("./tests/firmware.xml".into()).unwrap();
 
-        let id = AppId::try_from("com.hughski.ColorHug2.firmware").unwrap();
+        let id = "com.hughski.ColorHug2.firmware".into();
         let name = TranslatableString::with_default("ColorHugALS Firmware");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -290,7 +289,7 @@ mod tests {
     fn font_component() {
         let c1 = Component::from_path("./tests/font.xml".into()).unwrap();
 
-        let id = AppId::try_from("com.latofonts.Lato").unwrap();
+        let id = "com.latofonts.Lato".into();
         let name = TranslatableString::with_default("Lato");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -314,7 +313,7 @@ mod tests {
     fn generic_component() {
         let c1 = Component::from_path("./tests/generic.xml".into()).unwrap();
 
-        let id = AppId::try_from("com.example.foobar").unwrap();
+        let id = "com.example.foobar".into();
         let name = TranslatableString::with_default("Foo Bar");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -339,7 +338,7 @@ mod tests {
     #[test]
     fn icon_theme_component() {
         let c1 = Component::from_path("./tests/icon-theme.xml".into()).unwrap();
-        let id = AppId::try_from("io.git.PapirusIconTheme").unwrap();
+        let id = "io.git.PapirusIconTheme".into();
         let name = TranslatableString::with_default("Papirus");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -361,7 +360,7 @@ mod tests {
     fn input_method_component() {
         let c1 = Component::from_path("./tests/input-method.xml".into()).unwrap();
 
-        let id = AppId::try_from("com.github.ibus.mathwriter-ibus.db").unwrap();
+        let id = "com.github.ibus.mathwriter-ibus.db".into();
         let name = TranslatableString::with_default("Mathwriter");
 
         let c2 = ComponentBuilder::new(id, name)
@@ -382,19 +381,18 @@ mod tests {
     fn localization_component() {
         let c1 = Component::from_path("./tests/localization.xml".into()).unwrap();
 
-        let id = AppId::try_from("org.kde.l10n.de").unwrap();
         let name = TranslatableString::with_default("KDE German Language");
 
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::new("org.kde.l10n.de".into(), name)
             .kind(ComponentKind::Localization)
             .metadata_license("FSFAP".into())
             .summary(TranslatableString::with_default(
                 "German localization for the KDE desktop and apps",
             ))
             .developer_name(TranslatableString::with_default("The KDE German L10N team"))
-            .extend(AppId::try_from("org.kde.plasmashell").unwrap())
-            .extend(AppId::try_from("org.kde.gwenview.desktop").unwrap())
-            .extend(AppId::try_from("org.kde.dolphin.desktop").unwrap())
+            .extend("org.kde.plasmashell".into())
+            .extend("org.kde.gwenview.desktop".into())
+            .extend("org.kde.dolphin.desktop".into())
             .url(ProjectUrl::Homepage(
                 Url::from_str("http://i18n.kde.org/team-infos.php?teamcode=de").unwrap(),
             ))
@@ -409,10 +407,9 @@ mod tests {
     fn os_component() {
         let c1: Component = Component::from_path("./tests/os.xml".into()).unwrap();
 
-        let id = AppId::try_from("org.debian.debian").unwrap();
         let name = TranslatableString::with_default("Debian GNU/Linux");
 
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::new("org.debian.debian".into(), name)
             .kind(ComponentKind::OS)
             .summary(TranslatableString::with_default(
                 "The universal operating system",
@@ -441,10 +438,9 @@ mod tests {
     fn runtime_component() {
         let c1: Component = Component::from_path("./tests/runtime.xml".into()).unwrap();
 
-        let id = AppId::try_from("org.freedesktop.Platform").unwrap();
         let name = TranslatableString::with_default("Freedesktop Platform");
 
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::new("org.freedesktop.Platform".into(), name)
             .kind(ComponentKind::Runtime)
             .metadata_license("FSFAP".into())
             .project_license("LicenseRef-free=https://freedesktop-sdk.gitlab.io/".into())

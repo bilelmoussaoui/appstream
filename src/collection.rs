@@ -56,10 +56,9 @@ mod tests {
     use crate::enums::{Category, ComponentKind, Icon, Image, ProjectUrl, Provide};
     use crate::TranslatableVec;
     use crate::{
-        AppId, CollectionBuilder, ComponentBuilder, ReleaseBuilder, ScreenshotBuilder,
+        CollectionBuilder, ComponentBuilder, ReleaseBuilder, ScreenshotBuilder,
         TranslatableString,
     };
-    use std::convert::TryFrom;
     use std::str::FromStr;
     use url::Url;
 
@@ -70,7 +69,7 @@ mod tests {
         let c2 = CollectionBuilder::new("0.10")
         .component(
             ComponentBuilder::new(
-                AppId::try_from("org.mozilla.Firefox").unwrap(),
+                "org.mozilla.Firefox".into(),
                 TranslatableString::with_default("Firefox").and_locale("en_GB", "Firefoux")
             )
             .kind(ComponentKind::DesktopApplication)
@@ -108,7 +107,7 @@ mod tests {
         )
         .component(
             ComponentBuilder::new(
-                AppId::try_from("org.freedesktop.PulseAudio").unwrap(),
+                "org.freedesktop.PulseAudio".into(),
                 TranslatableString::with_default("PulseAudio")
             )
             .summary(TranslatableString::with_default("The PulseAudio sound server"))
@@ -123,7 +122,7 @@ mod tests {
         )
         .component(
             ComponentBuilder::new(
-                AppId::try_from("org.linuxlibertine.LinuxLibertine").unwrap(),
+                "org.linuxlibertine.LinuxLibertine".into(),
                 TranslatableString::with_default("Linux Libertine")
             )
             .kind(ComponentKind::Font)
@@ -142,7 +141,7 @@ mod tests {
         let c2 = CollectionBuilder::new("0.8")
             .component(
                 ComponentBuilder::new(
-                    AppId::try_from("adobe-release-x86_64").unwrap(),
+                    "adobe-release-x86_64".into(),
                     TranslatableString::with_default("Adobe"),
                 )
                 .pkgname("adobe-release-x86_64")
@@ -154,7 +153,7 @@ mod tests {
             )
             .component(
                 ComponentBuilder::new(
-                    AppId::try_from("livna-release").unwrap(),
+                    "livna-release".into(),
                     TranslatableString::with_default("Livna"),
                 )
                 .pkgname("livna-release")
@@ -166,7 +165,7 @@ mod tests {
             )
             .component(
                 ComponentBuilder::new(
-                    AppId::try_from("rpmfusion-free-release").unwrap(),
+                    "rpmfusion-free-release".into(),
                     TranslatableString::with_default("RPM Fusion Free"),
                 )
                 .pkgname("rpmfusion-free-release")
@@ -178,7 +177,7 @@ mod tests {
             )
             .component(
                 ComponentBuilder::new(
-                    AppId::try_from("rpmfusion-nonfree-release").unwrap(),
+                    "rpmfusion-nonfree-release".into(),
                     TranslatableString::with_default("RPM Fusion Non-Free"),
                 )
                 .pkgname("rpmfusion-nonfree-release")
@@ -199,7 +198,7 @@ mod tests {
         let c2 = CollectionBuilder::new("0.8")
             .component(
                 ComponentBuilder::new(
-                    AppId::try_from("epiphany-kindlecloud.desktop").unwrap(),
+                    "epiphany-kindlecloud.desktop".into(),
                     TranslatableString::with_default("Kindle Cloud Reader")
                 )
                 .kind(ComponentKind::WebApplication)
