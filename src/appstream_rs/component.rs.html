@@ -454,6 +454,15 @@
 <span id="454">454</span>
 <span id="455">455</span>
 <span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -565,11 +574,13 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">ComponentKind</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{
+        <span class="ident">ArtifactKind</span>, <span class="ident">ComponentKind</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>,
+    };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::<span class="ident">TranslatableString</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">AppId</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ReleaseKind</span>,
-        <span class="ident">ScreenshotBuilder</span>,
+        <span class="ident">AppId</span>, <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
+        <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
@@ -725,6 +736,13 @@
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;3.0.2&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2015</span>, <span class="number">2</span>, <span class="number">16</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
+                    .<span class="ident">artifact</span>(
+                        <span class="ident">ArtifactBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>).<span class="ident">unwrap</span>(), 
+                            <span class="ident">ArtifactKind</span>::<span class="ident">Binary</span>
+                        )
+                        .<span class="ident">build</span>()
+                    )
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();

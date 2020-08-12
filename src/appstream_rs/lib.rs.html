@@ -29,6 +29,7 @@
 <span id="29">29</span>
 <span id="30">30</span>
 <span id="31">31</span>
+<span id="32">32</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">app_id</span>;
 <span class="kw">mod</span> <span class="ident">builders</span>;
@@ -45,20 +46,21 @@
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">app_id</span>::<span class="ident">AppId</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">builders</span>::{
-    <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>,
-    <span class="ident">VideoBuilder</span>,
+    <span class="ident">ArtifactBuilder</span>, <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
+    <span class="ident">ScreenshotBuilder</span>, <span class="ident">VideoBuilder</span>,
 };
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">component</span>::<span class="ident">Component</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">content_rating</span>::<span class="ident">ContentRating</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">enums</span>::{
-    <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentAttribute</span>, <span class="ident">ContentState</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>, <span class="ident">Image</span>,
-    <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseSize</span>, <span class="ident">Translation</span>,
+    <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">Checksum</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentAttribute</span>, <span class="ident">ContentState</span>,
+    <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>, <span class="ident">Image</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseUrgency</span>,
+    <span class="ident">Size</span>, <span class="ident">Translation</span>,
 };
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">language</span>::<span class="ident">Language</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">license</span>::<span class="ident">License</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">release</span>::<span class="ident">Release</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">release</span>::{<span class="ident">Artifact</span>, <span class="ident">Release</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">screenshot</span>::{<span class="ident">Screenshot</span>, <span class="ident">Video</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
 </pre></div>
