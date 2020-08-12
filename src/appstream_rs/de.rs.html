@@ -517,7 +517,7 @@
         <span class="ident">runtime</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">sdk</span>: <span class="ident">String</span>,
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;$value&quot;</span>, <span class="ident">default</span>)]</span>
-        <span class="ident">name</span>: <span class="ident">String</span>,
+        <span class="ident">id</span>: <span class="ident">String</span>,
     };
 
     <span class="kw">let</span> <span class="ident">bundles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">PBundle</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">deserialize</span>(<span class="ident">deserializer</span>)<span class="question-mark">?</span>;
@@ -525,14 +525,14 @@
         .<span class="ident">into_iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">b</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">b</span>.<span class="ident">_type</span>.<span class="ident">as_ref</span>() {
             <span class="string">&quot;flatpak&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Flatpak</span> {
-                <span class="ident">name</span>: <span class="ident">b</span>.<span class="ident">name</span>,
+                <span class="ident">id</span>: <span class="ident">b</span>.<span class="ident">id</span>,
                 <span class="ident">sdk</span>: <span class="ident">b</span>.<span class="ident">sdk</span>,
                 <span class="ident">runtime</span>: <span class="ident">b</span>.<span class="ident">runtime</span>,
             },
-            <span class="string">&quot;limba&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Limba</span>(<span class="ident">b</span>.<span class="ident">name</span>),
-            <span class="string">&quot;snap&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Snap</span>(<span class="ident">b</span>.<span class="ident">name</span>),
-            <span class="string">&quot;appimage&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">AppImage</span>(<span class="ident">b</span>.<span class="ident">name</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Tarball</span>(<span class="ident">b</span>.<span class="ident">name</span>),
+            <span class="string">&quot;limba&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Limba</span>(<span class="ident">b</span>.<span class="ident">id</span>),
+            <span class="string">&quot;snap&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Snap</span>(<span class="ident">b</span>.<span class="ident">id</span>),
+            <span class="string">&quot;appimage&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">AppImage</span>(<span class="ident">b</span>.<span class="ident">id</span>),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Bundle</span>::<span class="ident">Tarball</span>(<span class="ident">b</span>.<span class="ident">id</span>),
         })
         .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span><span class="op">&gt;</span>())
 }
