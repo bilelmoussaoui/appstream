@@ -164,7 +164,7 @@ mod tests {
         );
         assert_eq!(
             c.releases,
-            vec![ReleaseBuilder::new("3.12.2".into())
+            vec![ReleaseBuilder::new("3.12.2")
                 .date(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0))
                 .build()]
         );
@@ -184,10 +184,10 @@ mod tests {
         assert_eq!(
             c.releases,
             vec![
-                ReleaseBuilder::new("10.0".into())
+                ReleaseBuilder::new("10.0")
                     .kind(ReleaseKind::Development)
                     .build(),
-                ReleaseBuilder::new("9.0".into())
+                ReleaseBuilder::new("9.0")
                     .date(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0))
                     .date_eol(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0))
                     .build()
@@ -374,7 +374,7 @@ mod tests {
         );
         assert_eq!(
             c.releases,
-            vec![ReleaseBuilder::new("1.2".into())
+            vec![ReleaseBuilder::new("1.2")
                 .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
                 .build()]
         );

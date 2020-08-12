@@ -1,4 +1,6 @@
-use super::enums::{Bundle, Category, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation};
+use super::enums::{
+    Bundle, Category, Icon, Image, Kudo, Launchable, ProjectUrl, Provide, Translation,
+};
 use super::translatable_string::{TranslatableString, TranslatableVec};
 use super::{AppId, ContentRating, Language, License, Release, Screenshot};
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
@@ -7,6 +9,96 @@ use serde::Deserialize;
 use std::convert::TryFrom;
 use std::str::FromStr;
 use url::Url;
+
+pub(crate) fn app_id_deserialize<'de, D>(deserializer: D) -> Result<AppId, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+    Ok(AppId::try_from(s.as_ref()).expect("Invalid app id, can't deserialize"))
+}
+
+pub(crate) fn bundle_deserialize<'de, D>(deserializer: D) -> Result<Vec<Bundle>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    #[derive(Debug, Deserialize)]
+    struct PBundle {
+        #[serde(rename = "type")]
+        _type: String,
+        runtime: Option<String>,
+        sdk: String,
+        #[serde(rename = "$value", default)]
+        id: String,
+    };
+
+    let bundles: Vec<PBundle> = Vec::deserialize(deserializer)?;
+    Ok(bundles
+        .into_iter()
+        .map(|b| match b._type.as_ref() {
+            "flatpak" => Bundle::Flatpak {
+                id: b.id,
+                sdk: b.sdk,
+                runtime: b.runtime,
+            },
+            "limba" => Bundle::Limba(b.id),
+            "snap" => Bundle::Snap(b.id),
+            "appimage" => Bundle::AppImage(b.id),
+            _ => Bundle::Tarball(b.id),
+        })
+        .collect::<Vec<Bundle>>())
+}
+
+pub(crate) fn category_deserialize<'de, D>(deserializer: D) -> Result<Vec<Category>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct PCategories {
+        #[serde(rename = "$value")]
+        pub categories: Vec<PCategory>,
+    };
+    #[derive(Debug, Deserialize)]
+    struct PCategory {
+        #[serde(rename = "$value", default)]
+        pub categories: Vec<String>,
+    };
+
+    let c: PCategories = PCategories::deserialize(deserializer)?;
+
+    let mut categories = Vec::new();
+    c.categories.into_iter().for_each(|c| {
+        c.categories.into_iter().for_each(|category: String| {
+            categories.push(Category::from_str(&category).unwrap_or(Category::Unknown(category)))
+        })
+    });
+
+    Ok(categories)
+}
+
+pub(crate) fn content_rating_deserialize<'de, D>(
+    deserializer: D,
+) -> Result<Option<ContentRating>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    let mut contents: Vec<ContentRating> = Vec::deserialize(deserializer)?;
+    contents.sort_by(|a, b| b.version.cmp(&a.version));
+
+    Ok(contents.into_iter().next())
+}
+
+pub(crate) fn extends_deserialize<'de, D>(deserializer: D) -> Result<Vec<AppId>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    let extends: Vec<String> = Vec::deserialize(deserializer)?;
+    Ok(extends
+        .into_iter()
+        .map(|e| AppId::try_from(e.as_ref()).expect("Invalid AppId"))
+        .collect::<Vec<AppId>>())
+}
 
 pub(crate) fn icon_deserialize<'de, D>(deserializer: D) -> Result<Vec<Icon>, D::Error>
 where
@@ -44,90 +136,6 @@ where
         .collect::<Vec<Icon>>())
 }
 
-pub(crate) fn timestamp_deserialize<'de, D>(
-    deserializer: D,
-) -> Result<Option<chrono::DateTime<chrono::Utc>>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer);
-    match s {
-        Ok(timestamp) => Ok(Some(
-            chrono::Utc
-                .datetime_from_str(&timestamp, "%s")
-                .or_else(
-                    |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
-                        let date: NaiveDateTime =
-                            NaiveDate::parse_from_str(&timestamp, "%Y-%m-%d")?.and_hms(0, 0, 0);
-                        Ok(DateTime::<Utc>::from_utc(date, chrono::Utc))
-                    },
-                )
-                .map_err(serde::de::Error::custom)?,
-        )),
-        Err(_) => Ok(None),
-    }
-}
-
-pub(crate) fn app_id_deserialize<'de, D>(deserializer: D) -> Result<AppId, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    let s = String::deserialize(deserializer)?;
-    Ok(AppId { 0: s })
-}
-
-pub(crate) fn license_deserialize<'de, D>(deserializer: D) -> Result<Option<License>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    match String::deserialize(deserializer) {
-        Ok(s) => Ok(Some(License(s))),
-        _ => Ok(None),
-    }
-}
-
-pub(crate) fn bundle_deserialize<'de, D>(deserializer: D) -> Result<Vec<Bundle>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    #[derive(Debug, Deserialize)]
-    struct PBundle {
-        #[serde(rename = "type")]
-        _type: String,
-        runtime: Option<String>,
-        sdk: String,
-        #[serde(rename = "$value", default)]
-        id: String,
-    };
-
-    let bundles: Vec<PBundle> = Vec::deserialize(deserializer)?;
-    Ok(bundles
-        .into_iter()
-        .map(|b| match b._type.as_ref() {
-            "flatpak" => Bundle::Flatpak {
-                id: b.id,
-                sdk: b.sdk,
-                runtime: b.runtime,
-            },
-            "limba" => Bundle::Limba(b.id),
-            "snap" => Bundle::Snap(b.id),
-            "appimage" => Bundle::AppImage(b.id),
-            _ => Bundle::Tarball(b.id),
-        })
-        .collect::<Vec<Bundle>>())
-}
-
-pub(crate) fn extends_deserialize<'de, D>(deserializer: D) -> Result<Vec<AppId>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    let extends: Vec<String> = Vec::deserialize(deserializer)?;
-    Ok(extends
-        .into_iter()
-        .map(|e| AppId::try_from(e.as_ref()).expect("Invalid AppId"))
-        .collect::<Vec<AppId>>())
-}
-
 pub(crate) fn provides_deserialize<'de, D>(deserializer: D) -> Result<Vec<Provide>, D::Error>
 where
     D: de::Deserializer<'de>,
@@ -140,18 +148,6 @@ where
 
     let provides = PProvides::deserialize(deserializer)?;
     Ok(provides.val)
-}
-
-pub(crate) fn content_rating_deserialize<'de, D>(
-    deserializer: D,
-) -> Result<Option<ContentRating>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    let mut contents: Vec<ContentRating> = Vec::deserialize(deserializer)?;
-    contents.sort_by(|a, b| b.version.cmp(&a.version));
-
-    Ok(contents.into_iter().next())
 }
 
 pub(crate) fn keywords_deserialize<'de, D>(
@@ -202,6 +198,56 @@ where
         .collect::<Vec<Kudo>>())
 }
 
+pub(crate) fn languages_deserialize<'de, D>(deserializer: D) -> Result<Vec<Language>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    #[derive(Debug, Deserialize)]
+    struct PLanguages {
+        #[serde(rename = "lang")]
+        languages: Vec<Language>,
+    };
+
+    let l: PLanguages = PLanguages::deserialize(deserializer)?;
+    Ok(l.languages)
+}
+
+pub(crate) fn launchable_deserialize<'de, D>(deserializer: D) -> Result<Vec<Launchable>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    #[derive(Debug, Deserialize)]
+    struct PLaunchable {
+        #[serde(rename = "type", default)]
+        pub _type: String,
+        #[serde(rename = "$value", default)]
+        pub val: String,
+    };
+
+    let launchables: Vec<PLaunchable> = Vec::deserialize(deserializer)?;
+
+    Ok(launchables
+        .into_iter()
+        .map(|l| match l._type.as_ref() {
+            "desktop-id" => Launchable::DesktopId(l.val),
+            "service" => Launchable::Service(l.val),
+            "url" => Launchable::Url(Url::from_str(&l.val).unwrap()),
+            "cockpit-manifest" => Launchable::CockpitManifest(l.val),
+            _ => Launchable::Unknown(l.val),
+        })
+        .collect::<Vec<Launchable>>())
+}
+
+pub(crate) fn license_deserialize<'de, D>(deserializer: D) -> Result<Option<License>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    match String::deserialize(deserializer) {
+        Ok(s) => Ok(Some(License(s))),
+        _ => Ok(None),
+    }
+}
+
 pub(crate) fn mimetypes_deserialize<'de, D>(deserializer: D) -> Result<Vec<String>, D::Error>
 where
     D: de::Deserializer<'de>,
@@ -228,20 +274,6 @@ where
 
     let r: PReleases = PReleases::deserialize(deserializer)?;
     Ok(r.releases)
-}
-
-pub(crate) fn languages_deserialize<'de, D>(deserializer: D) -> Result<Vec<Language>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    #[derive(Debug, Deserialize)]
-    struct PLanguages {
-        #[serde(rename = "lang")]
-        languages: Vec<Language>,
-    };
-
-    let l: PLanguages = PLanguages::deserialize(deserializer)?;
-    Ok(l.languages)
 }
 
 pub(crate) fn translatable_deserialize<'de, D>(
@@ -309,58 +341,97 @@ where
     Ok(s.screenshots)
 }
 
-pub(crate) fn launchable_deserialize<'de, D>(deserializer: D) -> Result<Vec<Launchable>, D::Error>
+pub(crate) fn screenshot_image_deserialize<'de, D>(deserializer: D) -> Result<Vec<Image>, D::Error>
 where
     D: de::Deserializer<'de>,
 {
     #[derive(Debug, Deserialize)]
-    struct PLaunchable {
+    struct PImage {
+        #[serde(rename = "type", default)]
+        pub _type: Option<String>,
+        width: Option<u32>,
+        height: Option<u32>,
+        #[serde(rename = "$value")]
+        url: Url,
+    };
+
+    let pimages: Vec<PImage> = Vec::deserialize(deserializer)?;
+    Ok(pimages
+        .into_iter()
+        .map(
+            |pi| match pi._type.unwrap_or_else(|| "source".to_string()).as_ref() {
+                "thumbnail" => Image::Thumbnail {
+                    url: pi.url,
+                    width: pi.width.expect("screenshots thumbnails must have a width"),
+                    height: pi
+                        .height
+                        .expect("screenshots thumbnails must have a height"),
+                },
+                _ => Image::Source {
+                    url: pi.url,
+                    width: pi.width,
+                    height: pi.height,
+                },
+            },
+        )
+        .collect::<Vec<Image>>())
+}
+
+pub(crate) fn screenshot_type_deserialize<'de, D>(deserializer: D) -> Result<bool, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer)?;
+
+    Ok(s == "default")
+}
+
+pub(crate) fn timestamp_deserialize<'de, D>(
+    deserializer: D,
+) -> Result<Option<chrono::DateTime<chrono::Utc>>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    let s = String::deserialize(deserializer);
+    match s {
+        Ok(timestamp) => Ok(Some(
+            chrono::Utc
+                .datetime_from_str(&timestamp, "%s")
+                .or_else(
+                    |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
+                        let date: NaiveDateTime =
+                            NaiveDate::parse_from_str(&timestamp, "%Y-%m-%d")?.and_hms(0, 0, 0);
+                        Ok(DateTime::<Utc>::from_utc(date, chrono::Utc))
+                    },
+                )
+                .map_err(serde::de::Error::custom)?,
+        )),
+        Err(_) => Ok(None),
+    }
+}
+
+pub(crate) fn translation_deserialize<'de, D>(deserializer: D) -> Result<Vec<Translation>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    #[derive(Debug, Deserialize)]
+    struct PTranslate {
         #[serde(rename = "type", default)]
         pub _type: String,
         #[serde(rename = "$value", default)]
-        pub val: String,
+        pub name: String,
     };
 
-    let launchables: Vec<PLaunchable> = Vec::deserialize(deserializer)?;
+    let translations: Vec<PTranslate> = Vec::deserialize(deserializer)?;
 
-    Ok(launchables
+    Ok(translations
         .into_iter()
-        .map(|l| match l._type.as_ref() {
-            "desktop-id" => Launchable::DesktopId(l.val),
-            "service" => Launchable::Service(l.val),
-            "url" => Launchable::Url(Url::from_str(&l.val).unwrap()),
-            "cockpit-manifest" => Launchable::CockpitManifest(l.val),
-            _ => Launchable::Unknown(l.val),
+        .map(|t| match t._type.as_str() {
+            "qt" => Translation::Qt(t.name),
+            "gettext" => Translation::Gettext(t.name),
+            _ => Translation::Unknown,
         })
-        .collect::<Vec<Launchable>>())
-}
-
-pub(crate) fn category_deserialize<'de, D>(deserializer: D) -> Result<Vec<Category>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    #[derive(Debug, Deserialize)]
-    #[serde(rename_all = "camelCase")]
-    struct PCategories {
-        #[serde(rename = "$value")]
-        pub categories: Vec<PCategory>,
-    };
-    #[derive(Debug, Deserialize)]
-    struct PCategory {
-        #[serde(rename = "$value", default)]
-        pub categories: Vec<String>,
-    };
-
-    let c: PCategories = PCategories::deserialize(deserializer)?;
-
-    let mut categories = Vec::new();
-    c.categories.into_iter().for_each(|c| {
-        c.categories.into_iter().for_each(|category: String| {
-            categories.push(Category::from_str(&category).unwrap_or(Category::Unknown(category)))
-        })
-    });
-
-    Ok(categories)
+        .collect::<Vec<Translation>>())
 }
 
 pub(crate) fn urls_deserialize<'de, D>(deserializer: D) -> Result<Vec<ProjectUrl>, D::Error>
@@ -393,28 +464,4 @@ where
             }
         })
         .collect::<Vec<ProjectUrl>>())
-}
-
-pub(crate) fn translation_deserialize<'de, D>(deserializer: D) -> Result<Vec<Translation>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    #[derive(Debug, Deserialize)]
-    struct PTranslate {
-        #[serde(rename = "type", default)]
-        pub _type: String,
-        #[serde(rename = "$value", default)]
-        pub name: String,
-    };
-
-    let translations: Vec<PTranslate> = Vec::deserialize(deserializer)?;
-
-    Ok(translations
-        .into_iter()
-        .map(|t| match t._type.as_str() {
-            "qt" => Translation::Qt(t.name),
-            "gettext" => Translation::Gettext(t.name),
-            _ => Translation::Unknown,
-        })
-        .collect::<Vec<Translation>>())
 }
