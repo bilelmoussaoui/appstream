@@ -593,6 +593,29 @@
 <span id="593">593</span>
 <span id="594">594</span>
 <span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -711,13 +734,13 @@
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{
-        <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Kudo</span>,
-        <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
+        <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>,
+        <span class="ident">ImageKind</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ContentRating</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
-        <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
+        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ContentRating</span>, <span class="ident">ImageBuilder</span>, <span class="ident">LanguageBuilder</span>,
+        <span class="ident">ReleaseBuilder</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
@@ -798,21 +821,23 @@
             .<span class="ident">screenshot</span>(
                 <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
                     .<span class="ident">caption</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The options dialog&quot;</span>))
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Source</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">height</span>: <span class="prelude-val">None</span>,
-                    })
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        )
+                        .<span class="ident">build</span>(),
+                    )
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">screenshot</span>(
                 <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
                     .<span class="ident">set_default</span>(<span class="bool-val">false</span>)
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Source</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">height</span>: <span class="prelude-val">None</span>,
-                    })
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        )
+                        .<span class="ident">build</span>(),
+                    )
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">release</span>(
@@ -947,11 +972,16 @@
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-3.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;A free and open source icon theme for Linux, based on the Paper Icon Set&quot;</span>))
-            .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>().<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Source</span> {
-                <span class="ident">width</span>: <span class="prelude-val">None</span>,
-                <span class="ident">height</span>:<span class="prelude-val">None</span>,
-                <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>()
-            }).<span class="ident">build</span>())
+            .<span class="ident">screenshot</span>(
+                <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
+                .<span class="ident">image</span>(
+                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                        <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>()
+                    )
+                    .<span class="ident">build</span>()
+                )
+                .<span class="ident">build</span>()
+            )
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
@@ -1158,31 +1188,47 @@
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;sv&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;tr&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
             .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Source</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="prelude-val">None</span>,
-                        <span class="ident">height</span>: <span class="prelude-val">None</span>,
-                    })
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="number">624</span>,
-                        <span class="ident">height</span>: <span class="number">351</span>,
-                    })
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="number">112</span>,
-                        <span class="ident">height</span>: <span class="number">63</span>,
-                    })
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="number">224</span>,
-                        <span class="ident">height</span>: <span class="number">126</span>,
-                    })
-                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
-                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
-                        <span class="ident">width</span>: <span class="number">752</span>,
-                        <span class="ident">height</span>: <span class="number">423</span>,
-                    }).<span class="ident">build</span>()
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>).<span class="ident">unwrap</span>()
+                        ).<span class="ident">build</span>()
+                    )
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                        )
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">width</span>(<span class="number">624</span>)
+                        .<span class="ident">height</span>(<span class="number">351</span>)
+                        .<span class="ident">build</span>()
+                    )
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                        )
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">width</span>(<span class="number">112</span>)
+                        .<span class="ident">height</span>(<span class="number">63</span>)
+                        .<span class="ident">build</span>()
+                    )
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                        )
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">width</span>(<span class="number">224</span>)
+                        .<span class="ident">height</span>(<span class="number">126</span>)
+                        .<span class="ident">build</span>()
+                    )
+                    .<span class="ident">image</span>(
+                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
+                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                        )
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">width</span>(<span class="number">752</span>)
+                        .<span class="ident">height</span>(<span class="number">423</span>)
+                        .<span class="ident">build</span>()
+                    ).<span class="ident">build</span>()
                 )
             .<span class="ident">build</span>();
 
