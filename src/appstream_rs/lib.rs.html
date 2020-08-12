@@ -24,8 +24,11 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">app_id</span>;
+<span class="kw">mod</span> <span class="ident">builders</span>;
 <span class="kw">mod</span> <span class="ident">collection</span>;
 <span class="kw">mod</span> <span class="ident">component</span>;
 <span class="kw">mod</span> <span class="ident">content_rating</span>;
@@ -38,18 +41,19 @@
 <span class="kw">mod</span> <span class="ident">translatable_string</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">app_id</span>::<span class="ident">AppId</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">builders</span>::{<span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">component</span>::<span class="ident">Component</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">content_rating</span>::{<span class="ident">ContentRating</span>, <span class="ident">ContentRatingVersion</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">content_rating</span>::<span class="ident">ContentRating</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">enums</span>::{
-    <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentAttribute</span>, <span class="ident">ContentState</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>, <span class="ident">Kudo</span>,
-    <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
+    <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentAttribute</span>, <span class="ident">ContentState</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>, <span class="ident">Image</span>,
+    <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseSize</span>, <span class="ident">Translation</span>,
 };
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">language</span>::<span class="ident">Language</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">license</span>::<span class="ident">License</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">release</span>::{<span class="ident">Release</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseSize</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">screenshot</span>::{<span class="ident">Image</span>, <span class="ident">Screenshot</span>, <span class="ident">Video</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">release</span>::<span class="ident">Release</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">screenshot</span>::{<span class="ident">Screenshot</span>, <span class="ident">Video</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "appstream_rs";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
