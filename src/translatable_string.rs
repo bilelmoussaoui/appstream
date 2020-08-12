@@ -1,14 +1,14 @@
 use serde::Serialize;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 pub const DEFAULT_LOCALE: &str = "C";
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
-pub struct TranslatableString(pub HashMap<String, String>, bool);
+pub struct TranslatableString(pub BTreeMap<String, String>, bool);
 
 impl Default for TranslatableString {
     fn default() -> Self {
-        Self(HashMap::new(), false)
+        Self(BTreeMap::new(), false)
     }
 }
 
@@ -45,11 +45,11 @@ impl TranslatableString {
 }
 
 #[derive(Clone, Debug, Serialize, PartialEq, Default)]
-pub struct TranslatableVec(pub HashMap<String, Vec<String>>);
+pub struct TranslatableVec(pub BTreeMap<String, Vec<String>>);
 
 impl TranslatableVec {
     pub fn new() -> Self {
-        Self(HashMap::new())
+        Self(BTreeMap::new())
     }
 
     pub fn with_default(words: Vec<&str>) -> Self {

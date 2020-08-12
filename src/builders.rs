@@ -123,7 +123,7 @@ pub struct ComponentBuilder {
     pub categories: Vec<Category>,
     pub launchables: Vec<Launchable>,
     pub pkgname: Option<String>,
-    pub bundle: Vec<Bundle>,
+    pub bundles: Vec<Bundle>,
     pub releases: Vec<Release>,
     pub languages: Vec<Language>,
     pub mimetypes: Vec<String>,
@@ -131,7 +131,7 @@ pub struct ComponentBuilder {
     pub keywords: Option<TranslatableVec>,
     pub content_rating: Option<ContentRating>,
     pub provides: Vec<Provide>,
-    pub translation: Vec<Translation>,
+    pub translations: Vec<Translation>,
     pub source_pkgname: Option<String>,
 }
 
@@ -157,7 +157,7 @@ impl ComponentBuilder {
             categories: vec![],
             launchables: vec![],
             pkgname: None,
-            bundle: vec![],
+            bundles: vec![],
             releases: vec![],
             languages: vec![],
             mimetypes: vec![],
@@ -165,9 +165,14 @@ impl ComponentBuilder {
             keywords: None,
             content_rating: None,
             provides: vec![],
-            translation: vec![],
+            translations: vec![],
             source_pkgname: None,
         }
+    }
+
+    pub fn content_rating(mut self, content_rating: ContentRating) -> Self {
+        self.content_rating = Some(content_rating);
+        self
     }
 
     pub fn kind(mut self, kind: ComponentKind) -> Self {
@@ -222,6 +227,21 @@ impl ComponentBuilder {
 
     pub fn icon(mut self, icon: Icon) -> Self {
         self.icons.push(icon);
+        self
+    }
+
+    pub fn kudo(mut self, kudo: Kudo) -> Self {
+        self.kudos.push(kudo);
+        self
+    }
+
+    pub fn translation(mut self, translation: Translation) -> Self {
+        self.translations.push(translation);
+        self
+    }
+
+    pub fn bundle(mut self, bundle: Bundle) -> Self {
+        self.bundles.push(bundle);
         self
     }
 
@@ -294,7 +314,7 @@ impl ComponentBuilder {
             categories: self.categories,
             launchables: self.launchables,
             pkgname: self.pkgname,
-            bundle: self.bundle,
+            bundles: self.bundles,
             releases: self.releases,
             languages: self.languages,
             mimetypes: self.mimetypes,
@@ -302,7 +322,7 @@ impl ComponentBuilder {
             keywords: self.keywords,
             content_rating: self.content_rating,
             provides: self.provides,
-            translation: self.translation,
+            translations: self.translations,
             source_pkgname: self.source_pkgname,
         }
     }

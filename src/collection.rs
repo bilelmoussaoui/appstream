@@ -131,6 +131,7 @@ mod tests {
         .build();
         assert_eq!(c1, c2);
     }
+
     #[test]
     fn generic_collection() {
         let c1 =
@@ -189,6 +190,7 @@ mod tests {
 
         assert_eq!(c1, c2);
     }
+
     #[test]
     fn web_collection() {
         let c1 = Collection::from_path("./tests/collections/fedora-web-apps.xml".into()).unwrap();
