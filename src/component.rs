@@ -110,7 +110,7 @@ mod tests {
     use super::Component;
     use crate::enums::{ComponentKind, FirmwareKind, Launchable, ProjectUrl, Provide};
     use crate::translatable_string::TranslatableString;
-    use crate::{AppId, Image, Language, Release, ReleaseKind, Screenshot};
+    use crate::{AppId, Image, Language, ReleaseBuilder, ReleaseKind, Screenshot};
     use chrono::{TimeZone, Utc};
     use std::convert::TryFrom;
     use std::str::FromStr;
@@ -164,13 +164,9 @@ mod tests {
         );
         assert_eq!(
             c.releases,
-            vec![Release {
-                version: "3.12.2".into(),
-                date: Some(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0)),
-                date_eol: None,
-                kind: ReleaseKind::default(),
-                sizes: vec![]
-            },]
+            vec![ReleaseBuilder::new("3.12.2".into())
+                .date(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0))
+                .build()]
         );
         assert_eq!(c.project_group, Some("GNOME".into()));
     }
@@ -188,20 +184,13 @@ mod tests {
         assert_eq!(
             c.releases,
             vec![
-                Release {
-                    version: "10.0".into(),
-                    date: None,
-                    date_eol: None,
-                    kind: ReleaseKind::Development,
-                    sizes: vec![]
-                },
-                Release {
-                    version: "9.0".into(),
-                    date: Some(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0)),
-                    date_eol: Some(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0)),
-                    kind: ReleaseKind::default(),
-                    sizes: vec![]
-                },
+                ReleaseBuilder::new("10.0".into())
+                    .kind(ReleaseKind::Development)
+                    .build(),
+                ReleaseBuilder::new("9.0".into())
+                    .date(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0))
+                    .date_eol(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0))
+                    .build()
             ]
         );
     }
@@ -385,13 +374,9 @@ mod tests {
         );
         assert_eq!(
             c.releases,
-            vec![Release {
-                version: "1.2".into(),
-                date_eol: None,
-                kind: ReleaseKind::default(),
-                date: Some(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0)),
-                sizes: vec![]
-            }]
+            vec![ReleaseBuilder::new("1.2".into())
+                .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+                .build()]
         );
     }
 }

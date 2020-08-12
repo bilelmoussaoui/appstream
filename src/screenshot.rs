@@ -23,6 +23,66 @@ pub struct Screenshot {
     pub videos: Vec<Video>,
 }
 
+impl Default for Screenshot {
+    fn default() -> Self {
+        Self {
+            is_default: true,
+            caption: None,
+            images: vec![],
+            videos: vec![],
+        }
+    }
+}
+
+pub struct ScreenshotBuilder {
+    pub is_default: Option<bool>,
+    pub caption: Option<TranslatableString>,
+    pub images: Vec<Image>,
+    pub videos: Vec<Video>,
+}
+#[allow(dead_code)]
+impl ScreenshotBuilder {
+    pub fn new() -> ScreenshotBuilder {
+        ScreenshotBuilder {
+            is_default: None,
+            caption: None,
+            videos: vec![],
+            images: vec![],
+        }
+    }
+
+    pub fn caption(mut self, caption: TranslatableString) -> Self {
+        self.caption = Some(caption);
+        self
+    }
+
+    pub fn is_default(mut self, is_default: bool) -> Self {
+        self.is_default = Some(is_default);
+        self
+    }
+
+    pub fn images(mut self, images: Vec<Image>) -> Self {
+        self.images = images;
+        self
+    }
+
+    pub fn videos(mut self, videos: Vec<Video>) -> Self {
+        self.videos = videos;
+        self
+    }
+
+    pub fn build(self) -> Screenshot {
+        let mut s = Screenshot::default();
+        s.videos = self.videos;
+        s.images = self.images;
+        if let Some(is_default) = self.is_default {
+            s.is_default = is_default;
+        }
+        s.caption = self.caption;
+        s
+    }
+}
+
 fn screenshot_image_deserialize<'de, D>(deserializer: D) -> Result<Vec<Image>, D::Error>
 where
     D: de::Deserializer<'de>,
@@ -109,15 +169,15 @@ mod tests {
             <screenshot type='default'>
                 <image type='source'>https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png</image>
             </screenshot>";
-        let s: Screenshot = quick_xml::de::from_str(&xml).unwrap();
-        assert_eq!(s.is_default, true);
-        assert_eq!(s.images, vec![
-            Image::Source{
-                url: Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap(),
-                width: None,
-                height: None
-            }
-        ]);
+        let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
+
+        let s2 = ScreenshotBuilder::new().images(vec![Image::Source{
+            url: Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap(),
+            width: None,
+            height: None
+        }]).build();
+
+        assert_eq!(s1, s2);
     }
 
     #[test]
@@ -130,9 +190,8 @@ mod tests {
             <image type='thumbnail' width='752' height='423'>https://www.example.org/en_US/main-large.png</image>
             <image type='thumbnail' width='112' height='63'>https://www.example.org/en_US/main-small.png</image>
         </screenshot>";
-        let s: Screenshot = quick_xml::de::from_str(&xml).unwrap();
+        let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
 
-        assert_eq!(s.is_default, true);
 
         let mut caption =
             TranslatableString::with_default("FooBar showing kitchen-sink functionality.");
@@ -140,10 +199,8 @@ mod tests {
             Some("de"),
             "FooBar beim Ausführen der Spühlbecken-Funktion.",
         );
-        assert_eq!(s.caption, Some(caption));
-
-        assert_eq!(
-            s.images,
+        
+        let s2 = ScreenshotBuilder::new().caption(caption).images(
             vec![
                 Image::Source {
                     url: Url::from_str("https://www.example.org/en_US/main.png").unwrap(),
@@ -161,7 +218,8 @@ mod tests {
                     height: 63
                 }
             ]
-        );
+        ).build();
+        assert_eq!(s1, s2);
     }
 
     #[test]
