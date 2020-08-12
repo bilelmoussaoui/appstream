@@ -193,25 +193,31 @@ mod tests {
     }
     #[test]
     fn web_collection() {
-        let c = Collection::from_path("./tests/collections/fedora-web-apps.xml".into()).unwrap();
+        let c1 = Collection::from_path("./tests/collections/fedora-web-apps.xml".into()).unwrap();
 
-        assert_eq!(c.version, "0.8");
-        let comp = c.components.get(0).unwrap();
-        assert_eq!(comp.kind, ComponentKind::WebApplication);
-        assert_eq!(comp.icons, vec![
-            Icon::Remote{
-                url: Url::from_str("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap(),
-                width: None,
-                height: None
-            }
-        ]);
-        assert_eq!(
-            comp.categories,
-            vec![Category::Education, Category::Literature,]
-        );
+        let c2 = CollectionBuilder::new("0.8")
+            .component(
+                ComponentBuilder::new(
+                    AppId::try_from("epiphany-kindlecloud.desktop").unwrap(),
+                    TranslatableString::with_default("Kindle Cloud Reader")
+                )
+                .kind(ComponentKind::WebApplication)
+                .metadata_license("CC0-1.0".into())
+                .project_license("proprietary".into())
+                .summary(TranslatableString::with_default("Read instantly in your browser"))
+                .icon(Icon::Remote{
+                    width: None,
+                    height: None,
+                    url: Url::from_str("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap()
+                })
+                .category(Category::Education)
+                .category(Category::Literature)
+                .keywords(TranslatableVec::with_default(vec!["book", "ebook", "reader"]))
+                .url(ProjectUrl::Homepage(Url::from_str("https://read.amazon.com").unwrap()))
+                .build()
+            )
+            .build();
 
-        let keywords = vec!["book", "ebook", "reader"];
-
-        assert_eq!(comp.keywords, Some(TranslatableVec::with_default(keywords)))
+        assert_eq!(c1, c2);
     }
 }
