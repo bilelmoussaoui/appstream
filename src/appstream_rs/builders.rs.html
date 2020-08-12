@@ -520,6 +520,13 @@
 <span id="520">520</span>
 <span id="521">521</span>
 <span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{
@@ -632,6 +639,7 @@
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">AppId</span>,
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
     <span class="kw">pub</span> <span class="ident">summary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">project_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">metadata_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">project_group</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -665,6 +673,7 @@
             <span class="ident">id</span>,
             <span class="ident">name</span>,
             <span class="ident">summary</span>: <span class="prelude-val">None</span>,
+            <span class="ident">description</span>: <span class="prelude-val">None</span>,
             <span class="ident">project_license</span>: <span class="prelude-val">None</span>,
             <span class="ident">metadata_license</span>: <span class="prelude-val">None</span>,
             <span class="ident">project_group</span>: <span class="prelude-val">None</span>,
@@ -703,6 +712,11 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">summary</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">summary</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">summary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">summary</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">description</span>);
         <span class="self">self</span>
     }
 

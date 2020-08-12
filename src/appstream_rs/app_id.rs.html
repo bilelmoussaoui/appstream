@@ -26,7 +26,6 @@
 <span id="26">26</span>
 <span id="27">27</span>
 <span id="28">28</span>
-<span id="29">29</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">ToString</span>;
@@ -44,7 +43,6 @@
         <span class="self">Self</span>(<span class="ident">id</span>)
     }
 }
-
 
 <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AppId</span> {
     <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {

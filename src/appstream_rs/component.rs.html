@@ -525,7 +525,7 @@
     <span class="kw">pub</span> <span class="ident">launchables</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Launchable</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>    
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;bundle&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;bundle_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">bundle</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
@@ -579,8 +579,8 @@
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::<span class="ident">TranslatableString</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
-        <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
+        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ReleaseKind</span>,
+        <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;

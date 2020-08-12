@@ -219,11 +219,8 @@
 <span id="219">219</span>
 <span id="220">220</span>
 <span id="221">221</span>
-<span id="222">222</span>
-<span id="223">223</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">AppId</span>, <span class="ident">Component</span>};
 <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">read</span>::<span class="ident">GzDecoder</span>;
@@ -269,7 +266,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_by_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">AppId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Component</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">components</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">id</span>.<span class="number">0</span> <span class="op">=</span><span class="op">=</span> <span class="ident">id</span>.<span class="number">0</span>)
+            .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">id</span>)
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Component</span><span class="op">&gt;</span><span class="op">&gt;</span>()
     }
 }
@@ -280,8 +277,7 @@
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Image</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">TranslatableVec</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>,
-        <span class="ident">TranslatableString</span>,
+        <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>, <span class="ident">TranslatableString</span>,
     };
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
