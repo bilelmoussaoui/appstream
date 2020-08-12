@@ -461,6 +461,138 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -528,7 +660,7 @@
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;bundle&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;bundle_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">bundle</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">bundles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;releases_deserialize&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">releases</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Release</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;languages_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
@@ -545,8 +677,12 @@
     <span class="kw">pub</span> <span class="ident">content_rating</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ContentRating</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;provides_deserialize&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">provides</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Provide</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;translation_deserialize&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">translation</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Translation</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;translation&quot;</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;translation_deserialize&quot;</span>
+    )]</span>
+    <span class="kw">pub</span> <span class="ident">translations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Translation</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Component</span> {
@@ -575,12 +711,13 @@
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{
-        <span class="ident">ArtifactKind</span>, <span class="ident">ComponentKind</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>,
+        <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Kudo</span>,
+        <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::<span class="ident">TranslatableString</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ReleaseKind</span>,
-        <span class="ident">ScreenshotBuilder</span>,
+        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ContentRating</span>, <span class="ident">Image</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
+        <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
@@ -920,6 +1057,133 @@
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2020</span>, <span class="number">01</span>, <span class="number">12</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">build</span>(),
             )
+            .<span class="ident">build</span>();
+
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span>
+            <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/org.gnome.design.Contrast.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Contrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;es&quot;</span>, <span class="string">&quot;Contraste&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;eu&quot;</span>, <span class="string">&quot;Kontrastea&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fi&quot;</span>, <span class="string">&quot;Kontrasti&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;hu&quot;</span>, <span class="string">&quot;Kontraszt&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;Kontras&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pl&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="string">&quot;Contraste&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>);
+        <span class="kw">let</span> <span class="ident">summary</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Check contrast between two colors&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Zkontrolujte kontrast mezi dvěma barvami&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="string">&quot;Undersøg kontrasten mellem to farver&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="string">&quot;Kontrast zwischen zwei Farben vergleichen&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;en_GB&quot;</span>, <span class="string">&quot;Check contrast between two colours&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;es&quot;</span>, <span class="string">&quot;Comprobar el contraste entre dos colores&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;eu&quot;</span>, <span class="string">&quot;Aztertu bi koloreren arteko kontrastea&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fi&quot;</span>, <span class="string">&quot;Tarkista kahden värin välinen kontrasti&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fur&quot;</span>, <span class="string">&quot;Controle il contrast tra doi colôrs&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;hu&quot;</span>, <span class="string">&quot;Kontraszt ellenőrzése két szín között&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;Periksa kontras antara dua warna&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pl&quot;</span>, <span class="string">&quot;Sprawdzanie kontrastu między dwoma kolorami&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="string">&quot;Verifique o contraste entre duas cores&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="string">&quot;Kontrollera kontrast mellan två färger&quot;</span>)
+            .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="string">&quot;İki renk arasındaki karşıtlığı gözden geçir&quot;</span>);
+        <span class="kw">let</span> <span class="ident">keywords</span> <span class="op">=</span> <span class="ident">TranslatableVec</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Color&quot;</span>, <span class="string">&quot;Contrast&quot;</span>, <span class="string">&quot;GNOME&quot;</span>, <span class="string">&quot;GTK&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;barva&quot;</span>, <span class="string">&quot;kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Farve&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Farbe&quot;</span>, <span class="string">&quot;Farben&quot;</span>, <span class="string">&quot;GTK+&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;en_GB&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Colour&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;es&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Contraste&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;eu&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Kolorea&quot;</span>, <span class="string">&quot;Kontrastea&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fi&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;kontrasti&quot;</span>, <span class="string">&quot;väri&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fur&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Colôr&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;hu&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;kontraszt&quot;</span>, <span class="string">&quot;szín&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;id&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Kontras&quot;</span>, <span class="string">&quot;Warna&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pl&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Colour&quot;</span>, <span class="string">&quot;GTK+&quot;</span>, <span class="string">&quot;Kolor&quot;</span>, <span class="string">&quot;Kolory&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Contraste&quot;</span>, <span class="string">&quot;cor&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Färg&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Karşıtlık&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>, <span class="string">&quot;Renk&quot;</span>]);
+
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;org.gnome.design.Contrast&quot;</span>.<span class="ident">into</span>(), <span class="ident">name</span>)
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">DesktopApplication</span>)
+            .<span class="ident">summary</span>(<span class="ident">summary</span>)
+            .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Utility</span>)
+            .<span class="ident">project_license</span>(<span class="string">&quot;GPL-3.0+&quot;</span>.<span class="ident">into</span>())
+            .<span class="ident">project_group</span>(<span class="string">&quot;GNOME&quot;</span>)
+            .<span class="ident">keywords</span>(<span class="ident">keywords</span>)
+            .<span class="ident">kudo</span>(<span class="ident">Kudo</span>::<span class="ident">HiDpiIcon</span>)
+            .<span class="ident">kudo</span>(<span class="ident">Kudo</span>::<span class="ident">HighContrast</span>)
+            .<span class="ident">kudo</span>(<span class="ident">Kudo</span>::<span class="ident">ModernToolkit</span>)
+            .<span class="ident">bundle</span>(<span class="ident">Bundle</span>::<span class="ident">Flatpak</span> {
+                <span class="ident">runtime</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;org.gnome.Platform/x86_64/3.36&quot;</span>.<span class="ident">into</span>()),
+                <span class="ident">sdk</span>: <span class="string">&quot;org.gnome.Sdk/x86_64/3.36&quot;</span>.<span class="ident">into</span>(),
+                <span class="ident">id</span>: <span class="string">&quot;app/org.gnome.design.Contrast/x86_64/stable&quot;</span>.<span class="ident">into</span>()
+            })
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Donation</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Translate</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">translation</span>(<span class="ident">Translation</span>::<span class="ident">Gettext</span>(<span class="string">&quot;contrast&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">launchable</span>(<span class="ident">Launchable</span>::<span class="ident">DesktopId</span>(<span class="string">&quot;org.gnome.design.Contrast.desktop&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Bilal Elmoussaoui&quot;</span>))
+            .<span class="ident">icon</span>(<span class="kw">crate</span>::<span class="ident">Icon</span>::<span class="ident">Cached</span>(<span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">icon</span>(<span class="kw">crate</span>::<span class="ident">Icon</span>::<span class="ident">Cached</span>(<span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">content_rating</span>(<span class="ident">ContentRating</span> {
+                <span class="ident">attributes</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+                <span class="ident">version</span>: <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>
+            })
+            .<span class="ident">release</span>(<span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.3&quot;</span>).<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1582329600&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">build</span>())
+            .<span class="ident">release</span>(<span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.2&quot;</span>).<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1566691200&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">build</span>())
+            .<span class="ident">release</span>(<span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.1&quot;</span>).<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1565136000&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>()).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;cs&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;da&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;en_GB&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;es&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;eu&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;fi&quot;</span>).<span class="ident">percentage</span>(<span class="number">86</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;fur&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;hu&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;pl&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;pt_BR&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;sv&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;tr&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
+                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Source</span> {
+                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">width</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">height</span>: <span class="prelude-val">None</span>,
+                    })
+                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
+                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">width</span>: <span class="number">624</span>,
+                        <span class="ident">height</span>: <span class="number">351</span>,
+                    })
+                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
+                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">width</span>: <span class="number">112</span>,
+                        <span class="ident">height</span>: <span class="number">63</span>,
+                    })
+                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
+                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">width</span>: <span class="number">224</span>,
+                        <span class="ident">height</span>: <span class="number">126</span>,
+                    })
+                    .<span class="ident">image</span>(<span class="ident">Image</span>::<span class="ident">Thumbnail</span> {
+                        <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">width</span>: <span class="number">752</span>,
+                        <span class="ident">height</span>: <span class="number">423</span>,
+                    }).<span class="ident">build</span>()
+                )
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
