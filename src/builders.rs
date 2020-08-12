@@ -1,10 +1,65 @@
 use super::enums::*;
 use super::{
-    AppId, Collection, Component, ContentRating, Language, License, Release, Screenshot, Video,
+    AppId, Artifact, Collection, Component, ContentRating, Language, License, Release,
+    ReleaseUrgency, Screenshot, Video,
 };
 use super::{TranslatableString, TranslatableVec};
 use chrono::{DateTime, Utc};
 use url::Url;
+
+pub struct ArtifactBuilder {
+    pub platform: Option<String>,
+    pub kind: ArtifactKind,
+    pub sizes: Vec<Size>,
+    pub url: Url,
+    pub checksums: Vec<Checksum>,
+    pub bundles: Vec<Bundle>,
+}
+
+#[allow(dead_code)]
+impl ArtifactBuilder {
+    pub fn new(url: Url, kind: ArtifactKind) -> Self {
+        Self {
+            url,
+            kind,
+            sizes: vec![],
+            checksums: vec![],
+            platform: None,
+            bundles: vec![],
+        }
+    }
+
+    pub fn bundle(mut self, bundle: Bundle) -> Self {
+        self.bundles.push(bundle);
+        self
+    }
+
+    pub fn size(mut self, size: Size) -> Self {
+        self.sizes.push(size);
+        self
+    }
+
+    pub fn checksum(mut self, checksum: Checksum) -> Self {
+        self.checksums.push(checksum);
+        self
+    }
+
+    pub fn platform(mut self, platform: &str) -> Self {
+        self.platform = Some(platform.to_string());
+        self
+    }
+
+    pub fn build(self) -> Artifact {
+        Artifact {
+            url: self.url,
+            kind: self.kind,
+            sizes: self.sizes,
+            checksums: self.checksums,
+            platform: self.platform,
+            bundles: self.bundles,
+        }
+    }
+}
 
 pub struct CollectionBuilder {
     pub version: String,
@@ -12,6 +67,7 @@ pub struct CollectionBuilder {
     pub components: Vec<Component>,
 }
 
+#[allow(dead_code)]
 impl CollectionBuilder {
     pub fn new(version: &str) -> Self {
         Self {
@@ -261,7 +317,10 @@ pub struct ReleaseBuilder {
     pub date_eol: Option<DateTime<Utc>>,
     pub version: String,
     pub kind: Option<ReleaseKind>,
-    pub sizes: Vec<ReleaseSize>,
+    pub sizes: Vec<Size>,
+    pub urgency: ReleaseUrgency,
+    pub artifacts: Vec<Artifact>,
+    pub url: Option<Url>,
 }
 
 #[allow(dead_code)]
@@ -273,23 +332,44 @@ impl ReleaseBuilder {
             kind: Some(ReleaseKind::Stable),
             sizes: vec![],
             version: version.to_string(),
+            urgency: ReleaseUrgency::Medium,
+            artifacts: vec![],
+            url: None,
         }
+    }
+
+    pub fn url(mut self, url: Url) -> Self {
+        self.url = Some(url);
+        self
+    }
+
+    pub fn urgency(mut self, urgency: ReleaseUrgency) -> Self {
+        self.urgency = urgency;
+        self
     }
 
     pub fn date(mut self, date: DateTime<Utc>) -> Self {
         self.date = Some(date);
         self
     }
+
     pub fn date_eol(mut self, date_eol: DateTime<Utc>) -> Self {
         self.date_eol = Some(date_eol);
         self
     }
+
     pub fn kind(mut self, kind: ReleaseKind) -> Self {
         self.kind = Some(kind);
         self
     }
-    pub fn sizes(mut self, sizes: Vec<ReleaseSize>) -> Self {
+
+    pub fn sizes(mut self, sizes: Vec<Size>) -> Self {
         self.sizes = sizes;
+        self
+    }
+
+    pub fn artifact(mut self, artifact: Artifact) -> Self {
+        self.artifacts.push(artifact);
         self
     }
 
@@ -301,6 +381,9 @@ impl ReleaseBuilder {
             date_eol: self.date_eol,
             kind,
             sizes: self.sizes,
+            urgency: self.urgency,
+            artifacts: self.artifacts,
+            url: self.url,
         }
     }
 }

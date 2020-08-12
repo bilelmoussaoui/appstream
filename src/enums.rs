@@ -4,6 +4,13 @@ use std::path::PathBuf;
 use strum_macros::EnumString;
 use url::Url;
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum ArtifactKind {
+    Source,
+    Binary,
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub enum Bundle {
     Limba(String),
@@ -174,6 +181,16 @@ pub enum Category {
     Applet,
     Shell,
     Unknown(String),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+#[serde(tag = "type", content = "$value")]
+pub enum Checksum {
+    Sha1(String),
+    Sha256(String),
+    Blake2b(String),
+    Blake2s(String),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -394,9 +411,24 @@ impl Default for ReleaseKind {
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", content = "$value", rename_all = "kebab-case")]
-pub enum ReleaseSize {
+pub enum Size {
     Download(u64),
     Installed(u64),
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum ReleaseUrgency {
+    Low,
+    Medium,
+    High,
+    Critical,
+}
+
+impl Default for ReleaseUrgency {
+    fn default() -> Self {
+        ReleaseUrgency::Medium
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]

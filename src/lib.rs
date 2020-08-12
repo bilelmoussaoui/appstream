@@ -13,19 +13,20 @@ mod translatable_string;
 
 pub use app_id::AppId;
 pub use builders::{
-    CollectionBuilder, ComponentBuilder, LanguageBuilder, ReleaseBuilder, ScreenshotBuilder,
-    VideoBuilder,
+    ArtifactBuilder, CollectionBuilder, ComponentBuilder, LanguageBuilder, ReleaseBuilder,
+    ScreenshotBuilder, VideoBuilder,
 };
 pub use collection::Collection;
 pub use component::Component;
 pub use content_rating::ContentRating;
 pub use enums::{
-    Bundle, Category, ComponentKind, ContentAttribute, ContentState, FirmwareKind, Icon, Image,
-    Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, ReleaseSize, Translation,
+    ArtifactKind, Bundle, Category, Checksum, ComponentKind, ContentAttribute, ContentState,
+    FirmwareKind, Icon, Image, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, ReleaseUrgency,
+    Size, Translation,
 };
 
 pub use language::Language;
 pub use license::License;
-pub use release::Release;
+pub use release::{Artifact, Release};
 pub use screenshot::{Screenshot, Video};
 pub use translatable_string::{TranslatableString, TranslatableVec};

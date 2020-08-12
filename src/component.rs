@@ -108,11 +108,13 @@ impl Component {
 mod tests {
 
     use super::Component;
-    use crate::enums::{ComponentKind, FirmwareKind, Launchable, ProjectUrl, Provide};
+    use crate::enums::{
+        ArtifactKind, ComponentKind, FirmwareKind, Launchable, ProjectUrl, Provide,
+    };
     use crate::translatable_string::TranslatableString;
     use crate::{
-        AppId, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder, ReleaseKind,
-        ScreenshotBuilder,
+        AppId, ArtifactBuilder, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder,
+        ReleaseKind, ScreenshotBuilder,
     };
     use chrono::{TimeZone, Utc};
     use std::convert::TryFrom;
@@ -268,6 +270,13 @@ mod tests {
             .release(
                 ReleaseBuilder::new("3.0.2")
                     .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+                    .artifact(
+                        ArtifactBuilder::new(
+                            Url::from_str("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab").unwrap(), 
+                            ArtifactKind::Binary
+                        )
+                        .build()
+                    )
                     .build(),
             )
             .build();

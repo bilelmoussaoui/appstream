@@ -2,7 +2,7 @@ use super::enums::{
     Bundle, Category, Icon, Image, Kudo, Launchable, ProjectUrl, Provide, Translation,
 };
 use super::translatable_string::{TranslatableString, TranslatableVec};
-use super::{AppId, ContentRating, Language, License, Release, Screenshot};
+use super::{AppId, Artifact, ContentRating, Language, License, Release, Screenshot};
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 use serde::de;
 use serde::Deserialize;
@@ -16,6 +16,20 @@ where
 {
     let s = String::deserialize(deserializer)?;
     Ok(AppId::try_from(s.as_ref()).expect("Invalid app id, can't deserialize"))
+}
+
+pub(crate) fn artifacts_deserialize<'de, D>(deserializer: D) -> Result<Vec<Artifact>, D::Error>
+where
+    D: de::Deserializer<'de>,
+{
+    #[derive(Debug, Deserialize)]
+    struct PArtifacts {
+        #[serde(rename = "artifact")]
+        artifacts: Vec<Artifact>,
+    };
+
+    let a: PArtifacts = PArtifacts::deserialize(deserializer)?;
+    Ok(a.artifacts)
 }
 
 pub(crate) fn bundle_deserialize<'de, D>(deserializer: D) -> Result<Vec<Bundle>, D::Error>
