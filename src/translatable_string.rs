@@ -1,6 +1,8 @@
 use serde::Serialize;
 use std::collections::HashMap;
 
+pub const DEFAULT_LOCALE: &str = "C";
+
 #[derive(Clone, Debug, Serialize, PartialEq)]
 pub struct TranslatableString(pub HashMap<String, String>, bool);
 
@@ -13,7 +15,7 @@ impl Default for TranslatableString {
 impl TranslatableString {
     pub fn with_default(text: &str) -> Self {
         let mut t = Self::default();
-        t.add_for_lang("default", text);
+        t.add_for_locale(None, text);
         t
     }
 
@@ -21,8 +23,19 @@ impl TranslatableString {
         self.1 = is_markup;
     }
 
-    pub fn add_for_lang(&mut self, lang: &str, text: &str) {
-        self.0.insert(lang.into(), text.to_string());
+    pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
+        self.0.insert(
+            locale.unwrap_or_else(|| DEFAULT_LOCALE).to_string(),
+            text.to_string(),
+        );
+    }
+
+    pub fn get_default(&self) -> Option<&String> {
+        self.0.get(DEFAULT_LOCALE)
+    }
+
+    pub fn get_for_locale(&self, locale: &str) -> Option<&String> {
+        self.0.get(locale)
     }
 }
 
@@ -34,9 +47,9 @@ impl TranslatableVec {
         Self(HashMap::new())
     }
 
-    pub fn add_for_lang(&mut self, lang: &str, text: &str) {
+    pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0
-            .entry(lang.into())
+            .entry(lang.unwrap_or_else(|| DEFAULT_LOCALE).into())
             .and_modify(|sentenses| {
                 sentenses.push(text.into());
             })

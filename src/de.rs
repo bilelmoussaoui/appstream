@@ -166,7 +166,7 @@ where
     #[derive(Debug, Deserialize)]
     struct PKeyword {
         #[serde(rename = "xml:lang", default)]
-        pub lang: Option<String>,
+        pub locale: Option<String>,
         #[serde(rename = "$value")]
         text: String,
     };
@@ -175,7 +175,7 @@ where
 
     let mut translatable = TranslatableVec::new();
     s.keywords.into_iter().for_each(|t| {
-        translatable.add_for_lang(&t.lang.unwrap_or_else(|| "default".to_string()), &t.text);
+        translatable.add_for_locale(t.locale.as_deref(), &t.text);
     });
     Ok(translatable)
 }
@@ -257,9 +257,7 @@ where
 
     let mut translatable = TranslatableString::default();
     s.into_iter().for_each(|t| {
-        translatable
-            .0
-            .insert(t.lang.unwrap_or_else(|| "default".to_string()), t.val);
+        translatable.add_for_locale(t.lang.as_deref(), &t.val);
     });
     Ok(translatable)
 }
@@ -273,7 +271,7 @@ where
     #[derive(Debug, Deserialize)]
     struct PTranslatable {
         #[serde(rename = "xml:lang", default)]
-        pub lang: Option<String>,
+        pub locale: Option<String>,
         #[serde(rename = "$value", default)]
         pub val: String,
     };
@@ -284,9 +282,7 @@ where
     match s {
         Some(a) => {
             a.into_iter().for_each(|t| {
-                translatable
-                    .0
-                    .insert(t.lang.unwrap_or_else(|| "default".to_string()), t.val);
+                translatable.add_for_locale(t.locale.as_deref(), &t.val);
             });
             Ok(Some(translatable))
         }
