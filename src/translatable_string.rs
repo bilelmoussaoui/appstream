@@ -47,9 +47,17 @@ impl TranslatableVec {
         Self(HashMap::new())
     }
 
+    pub fn with_default(words: Vec<&str>) -> Self {
+        let mut t = Self::default();
+        words.iter().for_each(|w| {
+            t.add_for_locale(None, w);
+        });
+        t
+    }
+
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0
-            .entry(lang.unwrap_or_else(|| DEFAULT_LOCALE).into())
+            .entry(locale.unwrap_or_else(|| DEFAULT_LOCALE).into())
             .and_modify(|sentenses| {
                 sentenses.push(text.into());
             })

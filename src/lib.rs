@@ -15,12 +15,12 @@ pub use collection::Collection;
 pub use component::Component;
 pub use content_rating::{ContentRating, ContentRatingVersion};
 pub use enums::{
-    Bundle, Category, ComponentType, ContentAttribute, ContentState, Icon, Kudo, Launchable,
-    ProjectUrl, Provide, Translation,
+    Bundle, Category, ComponentKind, ContentAttribute, ContentState, FirmwareKind, Icon, Kudo,
+    Launchable, ProjectUrl, Provide, Translation,
 };
 
 pub use language::Language;
 pub use license::License;
-pub use release::{Release, ReleaseSize, ReleaseType};
+pub use release::{Release, ReleaseKind, ReleaseSize};
 pub use screenshot::{Image, Screenshot, Video};
 pub use translatable_string::{TranslatableString, TranslatableVec};

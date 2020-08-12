@@ -154,7 +154,9 @@ where
     Ok(contents.into_iter().next())
 }
 
-pub(crate) fn keywords_deserialize<'de, D>(deserializer: D) -> Result<TranslatableVec, D::Error>
+pub(crate) fn keywords_deserialize<'de, D>(
+    deserializer: D,
+) -> Result<Option<TranslatableVec>, D::Error>
 where
     D: de::Deserializer<'de>,
 {
@@ -171,13 +173,16 @@ where
         text: String,
     };
 
-    let s: PKeywords = PKeywords::deserialize(deserializer)?;
-
-    let mut translatable = TranslatableVec::new();
-    s.keywords.into_iter().for_each(|t| {
-        translatable.add_for_locale(t.locale.as_deref(), &t.text);
-    });
-    Ok(translatable)
+    match PKeywords::deserialize(deserializer) {
+        Ok(s) => {
+            let mut translatable = TranslatableVec::new();
+            s.keywords.into_iter().for_each(|t| {
+                translatable.add_for_locale(t.locale.as_deref(), &t.text);
+            });
+            Ok(Some(translatable))
+        }
+        Err(_) => Ok(None),
+    }
 }
 
 pub(crate) fn kudos_deserialize<'de, D>(deserializer: D) -> Result<Vec<Kudo>, D::Error>

@@ -4,5 +4,5 @@ use serde::{Deserialize, Serialize};
 pub struct Language {
     pub percentage: Option<u32>,
     #[serde(rename = "$value")]
-    pub identifier: String,
+    pub locale: String,
 }

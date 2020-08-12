@@ -13,9 +13,9 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Collection {
-    version: String,
+    pub version: String,
     #[serde(default)]
-    origin: Option<String>,
+    pub origin: Option<String>,
     #[serde(rename = "component", default)]
     pub components: Vec<Component>,
     // TODO: architecture
@@ -52,18 +52,19 @@ impl Collection {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::{Category, ComponentType, Icon, Provide};
+    use crate::enums::{Category, ComponentKind, Icon, Provide};
+    use crate::TranslatableVec;
     use std::str::FromStr;
     use url::Url;
 
     #[test]
-    fn collection_test_1() {
+    fn spec_example_collection() {
         let c = Collection::from_path("./tests/collections/spec_example.xml".into()).unwrap();
 
         assert_eq!(c.version, "0.10");
 
         let first = c.components.get(0).unwrap();
-        assert_eq!(first._type, ComponentType::DesktopApplication);
+        assert_eq!(first.kind, ComponentKind::DesktopApplication);
 
         assert_eq!(first.provides, vec![Provide::Binary("firefox".into())]);
         assert_eq!(
@@ -95,7 +96,7 @@ mod tests {
         );
 
         let second = c.components.get(1).unwrap();
-        assert_eq!(second._type, ComponentType::Generic);
+        assert_eq!(second.kind, ComponentKind::Generic);
         assert_eq!(
             second.provides,
             vec![
@@ -107,19 +108,19 @@ mod tests {
         );
 
         let third = c.components.get(2).unwrap();
-        assert_eq!(third._type, ComponentType::Font);
+        assert_eq!(third.kind, ComponentKind::Font);
         assert_eq!(
             third.provides,
             vec![Provide::Font("LinLibertine_M.otf".into())]
         );
     }
     #[test]
-    fn collection_test_2() {
+    fn generic_collection() {
         let c = Collection::from_path("./tests/collections/fedora-other-repos.xml".into()).unwrap();
 
         assert_eq!(c.version, "0.8");
         c.components.iter().for_each(|comp| {
-            assert_eq!(comp._type, ComponentType::Generic);
+            assert_eq!(comp.kind, ComponentKind::Generic);
         });
 
         assert_eq!(
@@ -128,12 +129,12 @@ mod tests {
         );
     }
     #[test]
-    fn collection_test_3() {
+    fn web_collection() {
         let c = Collection::from_path("./tests/collections/fedora-web-apps.xml".into()).unwrap();
 
         assert_eq!(c.version, "0.8");
         let comp = c.components.get(0).unwrap();
-        assert_eq!(comp._type, ComponentType::WebApplication);
+        assert_eq!(comp.kind, ComponentKind::WebApplication);
         assert_eq!(comp.icons, vec![
             Icon::Remote{
                 url: Url::from_str("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap(),
@@ -141,5 +142,13 @@ mod tests {
                 height: None
             }
         ]);
+        assert_eq!(
+            comp.categories,
+            vec![Category::Education, Category::Literature,]
+        );
+
+        let keywords = vec!["book", "ebook", "reader"];
+
+        assert_eq!(comp.keywords, Some(TranslatableVec::with_default(keywords)))
     }
 }

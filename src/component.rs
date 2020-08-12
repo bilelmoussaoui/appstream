@@ -1,6 +1,6 @@
 use super::de::*;
 use super::enums::{
-    Bundle, Category, ComponentType, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
+    Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
 };
 use super::translatable_string::{TranslatableString, TranslatableVec};
 use super::{AppId, ContentRating, Language, License, Release, Screenshot};
@@ -18,7 +18,7 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Component {
     #[serde(rename = "type", default)]
-    pub _type: ComponentType,
+    pub kind: ComponentKind,
     #[serde(deserialize_with = "app_id_deserialize")]
     pub id: AppId,
     #[serde(rename = "name", deserialize_with = "translatable_deserialize")]
@@ -74,7 +74,7 @@ pub struct Component {
     pub kudos: Vec<Kudo>,
 
     #[serde(default, deserialize_with = "keywords_deserialize")]
-    pub keywords: TranslatableVec,
+    pub keywords: Option<TranslatableVec>,
     #[serde(default, deserialize_with = "content_rating_deserialize")]
     pub content_rating: Option<ContentRating>,
     #[serde(default, deserialize_with = "provides_deserialize")]
@@ -108,9 +108,9 @@ impl Component {
 mod tests {
 
     use super::Component;
-    use crate::enums::{ComponentType, Launchable, ProjectUrl, Provide};
+    use crate::enums::{ComponentKind, FirmwareKind, Launchable, ProjectUrl, Provide};
     use crate::translatable_string::TranslatableString;
-    use crate::{AppId, Language, Release, ReleaseType};
+    use crate::{AppId, Image, Language, Release, ReleaseKind, Screenshot};
     use chrono::{TimeZone, Utc};
     use std::convert::TryFrom;
     use std::str::FromStr;
@@ -119,7 +119,11 @@ mod tests {
     #[test]
     fn desktop_application_component() {
         let c: Component = Component::from_path("./tests/desktop.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::DesktopApplication);
+        assert_eq!(c.kind, ComponentKind::DesktopApplication);
+        assert_eq!(
+            c.id,
+            AppId::try_from("org.gnome.gnome-power-statistics").unwrap()
+        );
         assert_eq!(
             c.provides,
             vec![
@@ -133,19 +137,54 @@ mod tests {
                 "org.gnome.gnome-power-statistics.desktop".to_string()
             )]
         );
+        assert_eq!(
+            c.screenshots,
+            vec![
+                Screenshot {
+                    is_default: true,
+                    caption: Some(TranslatableString::with_default("The options dialog")),
+                    videos: vec![],
+                    images: vec![Image::Source {
+                        url: Url::from_str("http://www.hughsie.com/en_US/main.png").unwrap(),
+                        width: None,
+                        height: None
+                    },]
+                },
+                Screenshot {
+                    is_default: false,
+                    caption: None,
+                    videos: vec![],
+                    images: vec![Image::Source {
+                        url: Url::from_str("http://www.hughsie.com/en_US/preferences.png").unwrap(),
+                        width: None,
+                        height: None
+                    }]
+                }
+            ]
+        );
+        assert_eq!(
+            c.releases,
+            vec![Release {
+                version: "3.12.2".into(),
+                date: Some(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0)),
+                date_eol: None,
+                kind: ReleaseKind::default(),
+                sizes: vec![]
+            },]
+        );
         assert_eq!(c.project_group, Some("GNOME".into()));
     }
 
     #[test]
     fn runtime_component() {
         let c: Component = Component::from_path("./tests/runtime.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::Runtime);
+        assert_eq!(c.kind, ComponentKind::Runtime);
     }
 
     #[test]
     fn os_component() {
         let c: Component = Component::from_path("./tests/os.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::OS);
+        assert_eq!(c.kind, ComponentKind::OS);
         assert_eq!(
             c.releases,
             vec![
@@ -153,14 +192,14 @@ mod tests {
                     version: "10.0".into(),
                     date: None,
                     date_eol: None,
-                    _type: ReleaseType::Development,
+                    kind: ReleaseKind::Development,
                     sizes: vec![]
                 },
                 Release {
                     version: "9.0".into(),
                     date: Some(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0)),
                     date_eol: Some(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0)),
-                    _type: ReleaseType::default(),
+                    kind: ReleaseKind::default(),
                     sizes: vec![]
                 },
             ]
@@ -170,7 +209,7 @@ mod tests {
     #[test]
     fn localization_component() {
         let c = Component::from_path("./tests/localization.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::Localization);
+        assert_eq!(c.kind, ComponentKind::Localization);
         assert_eq!(
             c.extends,
             vec![
@@ -184,15 +223,15 @@ mod tests {
             c.languages,
             vec![
                 Language {
-                    identifier: "de_DE".into(),
+                    locale: "de_DE".into(),
                     percentage: None
                 },
                 Language {
-                    identifier: "de_AT".into(),
+                    locale: "de_AT".into(),
                     percentage: Some(96)
                 },
                 Language {
-                    identifier: "de".into(),
+                    locale: "de".into(),
                     percentage: Some(100)
                 },
             ]
@@ -202,7 +241,7 @@ mod tests {
     #[test]
     fn driver_component() {
         let c: Component = Component::from_path("./tests/driver.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::Driver);
+        assert_eq!(c.kind, ComponentKind::Driver);
         assert_eq!(
             c.provides,
             vec![Provide::Modalias(
@@ -214,24 +253,24 @@ mod tests {
     #[test]
     fn firmware_component() {
         let c = Component::from_path("./tests/firmware.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::Firmware);
+        assert_eq!(c.kind, ComponentKind::Firmware);
         assert_eq!(
             c.developer_name,
             Some(TranslatableString::with_default("Hughski Limited"))
         );
         assert_eq!(
             c.provides,
-            vec![
-                // Todo: add type="flashed" into account
-                Provide::Firmware("84f40464-9272-4ef7-9399-cd95f12da696".into())
-            ]
+            vec![Provide::Firmware {
+                kind: FirmwareKind::Flashed,
+                item: "84f40464-9272-4ef7-9399-cd95f12da696".into()
+            }]
         )
     }
 
     #[test]
     fn input_method_component() {
         let c = Component::from_path("./tests/input-method.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::InputMethod);
+        assert_eq!(c.kind, ComponentKind::InputMethod);
         assert_eq!(c.metadata_license, Some("FSFAP".into()));
         assert_eq!(c.name, TranslatableString::with_default("Mathwriter"));
         assert_eq!(
@@ -251,13 +290,13 @@ mod tests {
     #[test]
     fn codec_component() {
         let c = Component::from_path("./tests/codec.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::Codec);
+        assert_eq!(c.kind, ComponentKind::Codec);
     }
 
     #[test]
     fn icon_theme_component() {
         let c = Component::from_path("./tests/icon-theme.xml".into()).unwrap();
-        assert_eq!(c._type, ComponentType::IconTheme);
+        assert_eq!(c.kind, ComponentKind::IconTheme);
         assert_eq!(c.metadata_license, Some("FSFAP".into()));
         assert_eq!(c.project_license, Some("GPL-3.0".into()));
         assert_eq!(c.name, TranslatableString::with_default("Papirus"));
@@ -273,7 +312,7 @@ mod tests {
     fn addon_component() {
         let c = Component::from_path("./tests/addon.xml".into()).unwrap();
 
-        assert_eq!(c._type, ComponentType::Addon);
+        assert_eq!(c.kind, ComponentKind::Addon);
         assert_eq!(c.name, TranslatableString::with_default("Code Assistance"));
         assert_eq!(c.update_contact, Some("developer_AT_example.com".into()));
         assert_eq!(
@@ -296,7 +335,7 @@ mod tests {
     #[test]
     fn font_component() {
         let c = Component::from_path("./tests/font.xml".into()).unwrap();
-
+        assert_eq!(c.kind, ComponentKind::Font);
         assert_eq!(c.metadata_license, Some("MIT".into()));
         assert_eq!(c.project_license, Some("OFL-1.1".into()));
         assert_eq!(c.name, TranslatableString::with_default("Lato"));
@@ -326,7 +365,7 @@ mod tests {
             &ProjectUrl::Homepage(Url::from_str("http://www.example.org").unwrap())
         );
         assert_eq!(c.metadata_license, Some("CC0-1.0".into()));
-        assert_eq!(c._type, ComponentType::Generic);
+        assert_eq!(c.kind, ComponentKind::Generic);
         assert_eq!(c.name, TranslatableString::with_default("Foo Bar"));
         assert_eq!(
             c.summary,
@@ -349,7 +388,7 @@ mod tests {
             vec![Release {
                 version: "1.2".into(),
                 date_eol: None,
-                _type: ReleaseType::default(),
+                kind: ReleaseKind::default(),
                 date: Some(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0)),
                 sizes: vec![]
             }]

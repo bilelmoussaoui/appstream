@@ -5,7 +5,7 @@ use url::Url;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
-pub enum ComponentType {
+pub enum ComponentKind {
     Runtime,
     #[serde(alias = "console")]
     ConsoleApplication,
@@ -28,9 +28,9 @@ pub enum ComponentType {
     Codec,
 }
 
-impl Default for ComponentType {
+impl Default for ComponentKind {
     fn default() -> Self {
-        ComponentType::Generic
+        ComponentKind::Generic
     }
 }
 
@@ -84,12 +84,24 @@ pub enum Kudo {
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
+pub enum FirmwareKind {
+    Flashed,
+    Runtime,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
 pub enum Provide {
     Library(PathBuf),
     Binary(String),
     Font(String),
     Modalias(String),
-    Firmware(String),
+    Firmware {
+        #[serde(rename = "type")]
+        kind: FirmwareKind,
+        #[serde(rename = "$value")]
+        item: String,
+    },
     Python2(String),
     Python3(String),
     DBus(String),
@@ -101,7 +113,13 @@ pub enum Provide {
 fn test_provide_firmware() {
     let x = r"<firmware type='runtime'>ipw2200-bss.fw</firmware>";
     let p: Provide = quick_xml::de::from_str(&x).unwrap();
-    assert_eq!(p, Provide::Firmware("ipw2200-bss.fw".into()));
+    assert_eq!(
+        p,
+        Provide::Firmware {
+            kind: FirmwareKind::Runtime,
+            item: "ipw2200-bss.fw".into()
+        }
+    );
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]

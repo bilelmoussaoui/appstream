@@ -14,21 +14,21 @@ pub struct Release {
     pub date_eol: Option<DateTime<Utc>>,
     pub version: String,
     #[serde(rename = "type", default)]
-    pub _type: ReleaseType,
+    pub kind: ReleaseKind,
     #[serde(default, rename = "size")]
     pub sizes: Vec<ReleaseSize>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
-pub enum ReleaseType {
+pub enum ReleaseKind {
     Stable,
     Development,
 }
 
-impl Default for ReleaseType {
+impl Default for ReleaseKind {
     fn default() -> Self {
-        ReleaseType::Stable
+        ReleaseKind::Stable
     }
 }
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -40,7 +40,7 @@ pub enum ReleaseSize {
 
 #[cfg(test)]
 mod tests {
-    use super::{Release, ReleaseSize, ReleaseType};
+    use super::{Release, ReleaseKind, ReleaseSize};
     use chrono::TimeZone;
     use quick_xml::de::from_str;
     #[test]
@@ -67,7 +67,7 @@ mod tests {
                 Release {
                     date: Some(chrono::Utc.datetime_from_str("1424116753", "%s").unwrap()),
                     date_eol: None,
-                    _type: ReleaseType::default(),
+                    kind: ReleaseKind::default(),
                     version: "1.8".to_string(),
                     sizes: vec![
                         ReleaseSize::Download(12345678),
@@ -77,14 +77,14 @@ mod tests {
                 Release {
                     date: Some(chrono::Utc.datetime_from_str("1397253600", "%s").unwrap()),
                     date_eol: None,
-                    _type: ReleaseType::default(),
+                    kind: ReleaseKind::default(),
                     version: "1.2".to_string(),
                     sizes: vec![]
                 },
                 Release {
                     date: Some(chrono::Utc.datetime_from_str("1345932000", "%s").unwrap()),
                     date_eol: None,
-                    _type: ReleaseType::default(),
+                    kind: ReleaseKind::default(),
                     version: "1.0".to_string(),
                     sizes: vec![]
                 }
