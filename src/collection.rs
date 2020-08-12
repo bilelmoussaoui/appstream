@@ -18,7 +18,8 @@ pub struct Collection {
     pub origin: Option<String>,
     #[serde(rename = "component", default)]
     pub components: Vec<Component>,
-    // TODO: architecture
+    #[serde(default)]
+    pub architecture: Option<String>,
 }
 
 impl Collection {

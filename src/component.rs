@@ -61,6 +61,8 @@ pub struct Component {
     pub launchables: Vec<Launchable>,
     #[serde(default)]
     pub pkgname: Option<String>,
+    #[serde(default)]    
+    pub source_pkgname: Option<String>,
     #[serde(rename = "bundle", deserialize_with = "bundle_deserialize", default)]
     pub bundle: Vec<Bundle>,
     #[serde(default, deserialize_with = "releases_deserialize")]

@@ -65,6 +65,7 @@ pub struct CollectionBuilder {
     pub version: String,
     pub origin: Option<String>,
     pub components: Vec<Component>,
+    pub architecture: Option<String>,
 }
 
 #[allow(dead_code)]
@@ -74,7 +75,13 @@ impl CollectionBuilder {
             version: version.to_string(),
             origin: None,
             components: vec![],
+            architecture: None,
         }
+    }
+
+    pub fn architecture(mut self, architecture: &str) -> Self {
+        self.architecture = Some(architecture.to_string());
+        self
     }
 
     pub fn origin(mut self, origin: &str) -> Self {
@@ -92,6 +99,7 @@ impl CollectionBuilder {
             version: self.version,
             origin: self.origin,
             components: self.components,
+            architecture: self.architecture,
         }
     }
 }
@@ -123,6 +131,7 @@ pub struct ComponentBuilder {
     pub content_rating: Option<ContentRating>,
     pub provides: Vec<Provide>,
     pub translation: Vec<Translation>,
+    pub source_pkgname: Option<String>,
 }
 
 #[allow(dead_code)]
@@ -155,6 +164,7 @@ impl ComponentBuilder {
             content_rating: None,
             provides: vec![],
             translation: vec![],
+            source_pkgname: None,
         }
     }
 
@@ -248,6 +258,11 @@ impl ComponentBuilder {
         self
     }
 
+    pub fn source_pkgname(mut self, source_pkgname: &str) -> Self {
+        self.source_pkgname = Some(source_pkgname.to_string());
+        self
+    }
+
     pub fn update_contact(mut self, update_contact: &str) -> Self {
         self.update_contact = Some(update_contact.to_string());
         self
@@ -281,6 +296,7 @@ impl ComponentBuilder {
             content_rating: self.content_rating,
             provides: self.provides,
             translation: self.translation,
+            source_pkgname: self.source_pkgname,
         }
     }
 }
