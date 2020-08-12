@@ -115,13 +115,13 @@ mod tests {
 
     use super::Component;
     use crate::enums::{
-        ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind, Kudo,
-        Launchable, ProjectUrl, Provide, Translation,
+        ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind,
+        ImageKind, Kudo, Launchable, ProjectUrl, Provide, Translation,
     };
     use crate::translatable_string::{TranslatableString, TranslatableVec};
     use crate::{
-        ArtifactBuilder, ComponentBuilder, ContentRating, Image, LanguageBuilder, ReleaseBuilder,
-        ReleaseKind, ScreenshotBuilder,
+        ArtifactBuilder, ComponentBuilder, ContentRating, ImageBuilder, LanguageBuilder,
+        ReleaseBuilder, ReleaseKind, ScreenshotBuilder,
     };
     use chrono::{TimeZone, Utc};
     use std::str::FromStr;
@@ -202,21 +202,23 @@ mod tests {
             .screenshot(
                 ScreenshotBuilder::new()
                     .caption(TranslatableString::with_default("The options dialog"))
-                    .image(Image::Source {
-                        url: Url::from_str("http://www.hughsie.com/en_US/main.png").unwrap(),
-                        width: None,
-                        height: None,
-                    })
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("http://www.hughsie.com/en_US/main.png").unwrap(),
+                        )
+                        .build(),
+                    )
                     .build(),
             )
             .screenshot(
                 ScreenshotBuilder::new()
                     .set_default(false)
-                    .image(Image::Source {
-                        url: Url::from_str("http://www.hughsie.com/en_US/preferences.png").unwrap(),
-                        width: None,
-                        height: None,
-                    })
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("http://www.hughsie.com/en_US/preferences.png").unwrap(),
+                        )
+                        .build(),
+                    )
                     .build(),
             )
             .release(
@@ -351,11 +353,16 @@ mod tests {
             .metadata_license("FSFAP".into())
             .project_license("GPL-3.0".into())
             .summary(TranslatableString::with_default("A free and open source icon theme for Linux, based on the Paper Icon Set"))
-            .screenshot(ScreenshotBuilder::new().image(Image::Source {
-                width: None,
-                height:None,
-                url: Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
-            }).build())
+            .screenshot(
+                ScreenshotBuilder::new()
+                .image(
+                    ImageBuilder::new(
+                        Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
+                    )
+                    .build()
+                )
+                .build()
+            )
             .build();
 
         assert_eq!(c1, c2);
@@ -562,31 +569,47 @@ mod tests {
             .language(LanguageBuilder::new("sv").percentage(100).build())
             .language(LanguageBuilder::new("tr").percentage(100).build())
             .screenshot(ScreenshotBuilder::new()
-                    .image(Image::Source {
-                        url: Url::from_str("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png").unwrap(),
-                        width: None,
-                        height: None,
-                    })
-                    .image(Image::Thumbnail {
-                        url: Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap(),
-                        width: 624,
-                        height: 351,
-                    })
-                    .image(Image::Thumbnail {
-                        url: Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap(),
-                        width: 112,
-                        height: 63,
-                    })
-                    .image(Image::Thumbnail {
-                        url: Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap(),
-                        width: 224,
-                        height: 126,
-                    })
-                    .image(Image::Thumbnail {
-                        url: Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap(),
-                        width: 752,
-                        height: 423,
-                    }).build()
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png").unwrap()
+                        ).build()
+                    )
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                        )
+                        .kind(ImageKind::Thumbnail)
+                        .width(624)
+                        .height(351)
+                        .build()
+                    )
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                        )
+                        .kind(ImageKind::Thumbnail)
+                        .width(112)
+                        .height(63)
+                        .build()
+                    )
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                        )
+                        .kind(ImageKind::Thumbnail)
+                        .width(224)
+                        .height(126)
+                        .build()
+                    )
+                    .image(
+                        ImageBuilder::new(
+                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                        )
+                        .kind(ImageKind::Thumbnail)
+                        .width(752)
+                        .height(423)
+                        .build()
+                    ).build()
                 )
             .build();
 

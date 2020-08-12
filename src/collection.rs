@@ -52,10 +52,11 @@ impl Collection {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::{Category, ComponentKind, Icon, Image, ProjectUrl, Provide};
+    use crate::enums::{Category, ComponentKind, ImageKind, Icon, ProjectUrl, Provide};
     use crate::TranslatableVec;
     use crate::{
-        CollectionBuilder, ComponentBuilder, ReleaseBuilder, ScreenshotBuilder, TranslatableString,
+        CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
+        TranslatableString,
     };
     use std::str::FromStr;
     use url::Url;
@@ -77,16 +78,21 @@ mod tests {
             .summary(TranslatableString::with_default("Web browser").and_locale("fr_FR", "Navigateur web"))
             .url(ProjectUrl::Homepage(Url::from_str("https://www.mozilla.com").unwrap()))
             .screenshot(
-                ScreenshotBuilder::new().image(Image::Source {
-                    url: Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap(),
-                    width: Some(800),
-                    height: Some(600),
-                })
-                .image(Image::Thumbnail {
-                    url: Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png").unwrap(),
-                    width: 200,
-                    height: 150,
-                }).build()
+                ScreenshotBuilder::new()
+                .image(
+                    ImageBuilder::new(Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap())
+                        .width(800)
+                        .height(600)
+                        .build(),
+                )
+                .image(
+                    ImageBuilder::new(Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png").unwrap())
+                        .kind(ImageKind::Thumbnail)
+                        .width(200)
+                        .height(150)
+                        .build(),
+                )
+                .build()
             )
             .provide(Provide::Binary("firefox".into()))
             .mimetype("text/html")

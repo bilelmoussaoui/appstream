@@ -1,6 +1,4 @@
-use super::enums::{
-    Bundle, Category, Icon, Image, Kudo, Launchable, ProjectUrl, Provide, Translation,
-};
+use super::enums::{Bundle, Category, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation};
 use super::translatable_string::{TranslatableString, TranslatableVec};
 use super::{AppId, Artifact, ContentRating, Language, License, Release, Screenshot};
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
@@ -352,42 +350,6 @@ where
 
     let s: PScreenshot = PScreenshot::deserialize(deserializer)?;
     Ok(s.screenshots)
-}
-
-pub(crate) fn screenshot_image_deserialize<'de, D>(deserializer: D) -> Result<Vec<Image>, D::Error>
-where
-    D: de::Deserializer<'de>,
-{
-    #[derive(Debug, Deserialize)]
-    struct PImage {
-        #[serde(rename = "type", default)]
-        pub _type: Option<String>,
-        width: Option<u32>,
-        height: Option<u32>,
-        #[serde(rename = "$value")]
-        url: Url,
-    };
-
-    let pimages: Vec<PImage> = Vec::deserialize(deserializer)?;
-    Ok(pimages
-        .into_iter()
-        .map(
-            |pi| match pi._type.unwrap_or_else(|| "source".to_string()).as_ref() {
-                "thumbnail" => Image::Thumbnail {
-                    url: pi.url,
-                    width: pi.width.expect("screenshots thumbnails must have a width"),
-                    height: pi
-                        .height
-                        .expect("screenshots thumbnails must have a height"),
-                },
-                _ => Image::Source {
-                    url: pi.url,
-                    width: pi.width,
-                    height: pi.height,
-                },
-            },
-        )
-        .collect::<Vec<Image>>())
 }
 
 pub(crate) fn screenshot_type_deserialize<'de, D>(deserializer: D) -> Result<bool, D::Error>

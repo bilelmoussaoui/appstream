@@ -350,18 +350,10 @@ pub enum Icon {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
-pub enum Image {
-    Source {
-        url: Url,
-        width: Option<u32>,
-        height: Option<u32>,
-    },
-    Thumbnail {
-        url: Url,
-        width: u32,
-        height: u32,
-    },
+#[serde(rename_all = "lowercase")]
+pub enum ImageKind {
+    Source,
+    Thumbnail,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, EnumString)]

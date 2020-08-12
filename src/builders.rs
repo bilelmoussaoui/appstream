@@ -1,6 +1,6 @@
 use super::enums::*;
 use super::{
-    AppId, Artifact, Collection, Component, ContentRating, Language, License, Release,
+    AppId, Artifact, Collection, Component, ContentRating, Image, Language, License, Release,
     ReleaseUrgency, Screenshot, Video,
 };
 use super::{TranslatableString, TranslatableVec};
@@ -324,6 +324,49 @@ impl ComponentBuilder {
             provides: self.provides,
             translations: self.translations,
             source_pkgname: self.source_pkgname,
+        }
+    }
+}
+
+pub struct ImageBuilder {
+    pub width: Option<u32>,
+    pub height: Option<u32>,
+    pub url: Url,
+    pub kind: ImageKind,
+}
+
+#[allow(dead_code)]
+impl ImageBuilder {
+    pub fn new(url: Url) -> Self {
+        Self {
+            width: None,
+            height: None,
+            url,
+            kind: ImageKind::Source,
+        }
+    }
+
+    pub fn kind(mut self, kind: ImageKind) -> Self {
+        self.kind = kind;
+        self
+    }
+
+    pub fn width(mut self, width: u32) -> Self {
+        self.width = Some(width);
+        self
+    }
+
+    pub fn height(mut self, height: u32) -> Self {
+        self.height = Some(height);
+        self
+    }
+
+    pub fn build(self) -> Image {
+        Image {
+            width: self.width,
+            height: self.height,
+            url: self.url,
+            kind: self.kind,
         }
     }
 }

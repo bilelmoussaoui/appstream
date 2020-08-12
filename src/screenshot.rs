@@ -1,5 +1,5 @@
 use super::de::*;
-use super::enums::Image;
+use super::enums::ImageKind;
 use super::TranslatableString;
 use serde::{Deserialize, Serialize};
 use url::Url;
@@ -14,11 +14,7 @@ pub struct Screenshot {
     pub is_default: bool,
     #[serde(deserialize_with = "some_translatable_deserialize", default)]
     pub caption: Option<TranslatableString>,
-    #[serde(
-        rename = "image",
-        deserialize_with = "screenshot_image_deserialize",
-        default
-    )]
+    #[serde(rename = "image", default)]
     pub images: Vec<Image>,
     #[serde(rename = "video", default)]
     pub videos: Vec<Video>,
@@ -49,10 +45,22 @@ pub struct Video {
     pub url: Url,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct Image {
+    #[serde(rename = "type")]
+    pub kind: ImageKind,
+    #[serde(default)]
+    pub width: Option<u32>,
+    #[serde(default)]
+    pub height: Option<u32>,
+    #[serde(rename = "$value")]
+    pub url: Url,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builders::{ScreenshotBuilder, VideoBuilder};
+    use crate::builders::{ImageBuilder, ScreenshotBuilder, VideoBuilder};
     use quick_xml;
     use std::str::FromStr;
 
@@ -64,11 +72,11 @@ mod tests {
             </screenshot>";
         let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
 
-        let s2 = ScreenshotBuilder::new().image(Image::Source{
-            url: Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap(),
-            width: None,
-            height: None
-        }).build();
+        let s2 = ScreenshotBuilder::new().image(
+                ImageBuilder::new(Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap())
+                .build()
+            )
+            .build();
 
         assert_eq!(s1, s2);
     }
@@ -90,23 +98,30 @@ mod tests {
                 TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
                     .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
             )
-            .images(vec![
-                Image::Source {
-                    url: Url::from_str("https://www.example.org/en_US/main.png").unwrap(),
-                    width: Some(800),
-                    height: Some(600),
-                },
-                Image::Thumbnail {
-                    url: Url::from_str("https://www.example.org/en_US/main-large.png").unwrap(),
-                    width: 752,
-                    height: 423,
-                },
-                Image::Thumbnail {
-                    url: Url::from_str("https://www.example.org/en_US/main-small.png").unwrap(),
-                    width: 112,
-                    height: 63,
-                },
-            ])
+            .image(
+                ImageBuilder::new(Url::from_str("https://www.example.org/en_US/main.png").unwrap())
+                    .width(800)
+                    .height(600)
+                    .build(),
+            )
+            .image(
+                ImageBuilder::new(
+                    Url::from_str("https://www.example.org/en_US/main-large.png").unwrap(),
+                )
+                .width(752)
+                .height(423)
+                .kind(ImageKind::Thumbnail)
+                .build(),
+            )
+            .image(
+                ImageBuilder::new(
+                    Url::from_str("https://www.example.org/en_US/main-small.png").unwrap(),
+                )
+                .width(112)
+                .height(63)
+                .kind(ImageKind::Thumbnail)
+                .build(),
+            )
             .build();
         assert_eq!(s1, s2);
     }
