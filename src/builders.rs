@@ -109,6 +109,7 @@ pub struct ComponentBuilder {
     pub id: AppId,
     pub name: TranslatableString,
     pub summary: Option<TranslatableString>,
+    pub description: Option<TranslatableString>,
     pub project_license: Option<License>,
     pub metadata_license: Option<License>,
     pub project_group: Option<String>,
@@ -142,6 +143,7 @@ impl ComponentBuilder {
             id,
             name,
             summary: None,
+            description: None,
             project_license: None,
             metadata_license: None,
             project_group: None,
@@ -180,6 +182,11 @@ impl ComponentBuilder {
 
     pub fn summary(mut self, summary: TranslatableString) -> Self {
         self.summary = Some(summary);
+        self
+    }
+
+    pub fn description(mut self, description: TranslatableString) -> Self {
+        self.description = Some(description);
         self
     }
 

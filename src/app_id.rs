@@ -15,7 +15,6 @@ impl std::convert::From<String> for AppId {
     }
 }
 
-
 impl Into<String> for AppId {
     fn into(self) -> String {
         self.0

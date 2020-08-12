@@ -61,7 +61,7 @@ pub struct Component {
     pub launchables: Vec<Launchable>,
     #[serde(default)]
     pub pkgname: Option<String>,
-    #[serde(default)]    
+    #[serde(default)]
     pub source_pkgname: Option<String>,
     #[serde(rename = "bundle", deserialize_with = "bundle_deserialize", default)]
     pub bundle: Vec<Bundle>,
@@ -115,8 +115,8 @@ mod tests {
     };
     use crate::translatable_string::TranslatableString;
     use crate::{
-        ArtifactBuilder, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder,
-        ReleaseKind, ScreenshotBuilder,
+        ArtifactBuilder, ComponentBuilder, Image, LanguageBuilder, ReleaseBuilder, ReleaseKind,
+        ScreenshotBuilder,
     };
     use chrono::{TimeZone, Utc};
     use std::str::FromStr;

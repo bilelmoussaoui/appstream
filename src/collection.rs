@@ -1,5 +1,4 @@
-use super::AppId;
-use super::Component;
+use super::{AppId, Component};
 use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
@@ -45,7 +44,7 @@ impl Collection {
     pub fn find_by_id(&self, id: AppId) -> Vec<&Component> {
         self.components
             .iter()
-            .filter(|c| c.id.0 == id.0)
+            .filter(|c| c.id == id)
             .collect::<Vec<&Component>>()
     }
 }
@@ -56,8 +55,7 @@ mod tests {
     use crate::enums::{Category, ComponentKind, Icon, Image, ProjectUrl, Provide};
     use crate::TranslatableVec;
     use crate::{
-        CollectionBuilder, ComponentBuilder, ReleaseBuilder, ScreenshotBuilder,
-        TranslatableString,
+        CollectionBuilder, ComponentBuilder, ReleaseBuilder, ScreenshotBuilder, TranslatableString,
     };
     use std::str::FromStr;
     use url::Url;

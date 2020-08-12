@@ -85,15 +85,11 @@ mod tests {
         </screenshot>";
         let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
 
-        let mut caption =
-            TranslatableString::with_default("FooBar showing kitchen-sink functionality.");
-        caption.add_for_locale(
-            Some("de"),
-            "FooBar beim Ausführen der Spühlbecken-Funktion.",
-        );
-
         let s2 = ScreenshotBuilder::new()
-            .caption(caption)
+            .caption(
+                TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
+                    .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
+            )
             .images(vec![
                 Image::Source {
                     url: Url::from_str("https://www.example.org/en_US/main.png").unwrap(),
