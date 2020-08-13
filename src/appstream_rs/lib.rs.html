@@ -106,6 +106,8 @@
 <span id="106">106</span>
 <span id="107">107</span>
 <span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Appstream</span>
 <span class="doccomment">//!</span>
@@ -179,6 +181,8 @@
 <span class="doccomment">//! use appstream_rs::{Collection, Component};</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let collection = Collection::from_path(&quot;/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml&quot;.into()).unwrap();</span>
+<span class="doccomment">//! #[cfg(feature=&quot;gzip&quot;)]</span>
+<span class="doccomment">//! let collection = Collection::from_gzipped(&quot;/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz&quot;.into()).unwrap();</span>
 <span class="doccomment">//! // Find a specific application by id</span>
 <span class="doccomment">//! println!(&quot;{:#?}&quot;, collection.find_by_id(&quot;org.gnome.design.Contrast&quot;.into()));</span>
 <span class="doccomment">//!</span>
