@@ -14,10 +14,10 @@
 //!
 //! # Examples
 //! ```
-//! use appstream_rs::Component;
-//! use appstream_rs::builders::{ComponentBuilder, ReleaseBuilder};
-//! use appstream_rs::types::TranslatableString;
-//! use appstream_rs::enums::{Provide, ProjectUrl};
+//! use appstream::Component;
+//! use appstream::builders::{ComponentBuilder, ReleaseBuilder};
+//! use appstream::types::TranslatableString;
+//! use appstream::enums::{Provide, ProjectUrl};
 //! use url::Url;
 //! use chrono::{Utc, TimeZone};
 //!
@@ -67,7 +67,7 @@
 //!
 //! The library can parse a collection of components as well
 //! ```no_run
-//! use appstream_rs::{Collection, Component};
+//! use appstream::{Collection, Component};
 //!
 //! let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into()).unwrap();
 //! #[cfg(feature="gzip")]

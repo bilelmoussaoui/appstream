@@ -1,10 +1,10 @@
 [package]
-name = "appstream-rs"
+name = "appstream"
 version = "0.1.0"
 authors = ["Bilal Elmoussaoui <bil.elmoussaoui@gmail.com>"]
 edition = "2018"
 description = "Appstream files parser"
-repository = "https://github.com/bilelmoussaoui/appstream-rs"
+repository = "https://github.com/bilelmoussaoui/appstream"
 keywords = ["appstream", "xml", "parser", "metainfo", "appdata"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
