@@ -744,15 +744,15 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">builders</span>::{
+        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ImageBuilder</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
+        <span class="ident">ScreenshotBuilder</span>,
+    };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{
         <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>,
-        <span class="ident">ImageKind</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
+        <span class="ident">ImageKind</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">ReleaseKind</span>, <span class="ident">Translation</span>,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ContentRating</span>, <span class="ident">ImageBuilder</span>, <span class="ident">LanguageBuilder</span>,
-        <span class="ident">ReleaseBuilder</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ScreenshotBuilder</span>,
-    };
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">ContentRating</span>, <span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
