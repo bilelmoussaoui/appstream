@@ -616,6 +616,13 @@
 <span id="616">616</span>
 <span id="617">617</span>
 <span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -734,7 +741,7 @@
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{
-        <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>,
+        <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>,
         <span class="ident">ImageKind</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
@@ -1164,9 +1171,16 @@
             .<span class="ident">translation</span>(<span class="ident">Translation</span>::<span class="ident">Gettext</span>(<span class="string">&quot;contrast&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">launchable</span>(<span class="ident">Launchable</span>::<span class="ident">DesktopId</span>(<span class="string">&quot;org.gnome.design.Contrast.desktop&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Bilal Elmoussaoui&quot;</span>))
-            .<span class="ident">icon</span>(<span class="kw">crate</span>::<span class="ident">Icon</span>::<span class="ident">Cached</span>(<span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">icon</span>(<span class="kw">crate</span>::<span class="ident">Icon</span>::<span class="ident">Cached</span>(<span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">content_rating</span>(<span class="ident">ContentRating</span> {
+            .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Cached</span> {
+                <span class="ident">path</span>: <span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>(),
+                <span class="ident">width</span>: <span class="prelude-val">Some</span>(<span class="number">64</span>),
+                <span class="ident">height</span>: <span class="prelude-val">Some</span>(<span class="number">64</span>),
+            })
+            .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Cached</span> {
+                <span class="ident">path</span>: <span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>(),
+                <span class="ident">width</span>: <span class="prelude-val">Some</span>(<span class="number">128</span>),
+                <span class="ident">height</span>: <span class="prelude-val">Some</span>(<span class="number">128</span>),
+            }).<span class="ident">content_rating</span>(<span class="ident">ContentRating</span> {
                 <span class="ident">attributes</span>: <span class="macro">vec</span><span class="macro">!</span>[],
                 <span class="ident">version</span>: <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>
             })
