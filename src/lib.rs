@@ -66,7 +66,7 @@
 //! ```
 //!
 //! The library can parse a collection of components as well
-//! ```
+//! ```no_run
 //! use appstream_rs::{Collection, Component};
 //!
 //! let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into()).unwrap();
