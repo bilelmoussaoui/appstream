@@ -1,6 +1,6 @@
 [package]
 name = "appstream"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Bilal Elmoussaoui <bil.elmoussaoui@gmail.com>"]
 edition = "2018"
 description = "Appstream files parser"
@@ -19,7 +19,6 @@ serde = { version = "1.0", features = [ "derive" ] }
 serde_derive = "1.0"
 quick-xml = { version = "0.17", features = [ "serialize" ] }
 anyhow = "1.0"
-serde_json = "1.0"
 strum = "0.18"
 strum_macros = "0.18"
 
