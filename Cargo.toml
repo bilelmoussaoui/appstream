@@ -6,7 +6,7 @@ edition = "2018"
 description = "Appstream files parser"
 repository = "https://github.com/bilelmoussaoui/appstream"
 keywords = ["appstream", "xml", "parser", "metainfo", "appdata"]
-license-file = "./LICENSE"
+license = "MIT"
 
 [features]
 gzip = ["flate2"]
