@@ -70,6 +70,8 @@
 //! use appstream_rs::{Collection, Component};
 //!
 //! let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into()).unwrap();
+//! #[cfg(feature="gzip")]
+//! let collection = Collection::from_gzipped("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz".into()).unwrap();
 //! // Find a specific application by id
 //! println!("{:#?}", collection.find_by_id("org.gnome.design.Contrast".into()));
 //!
