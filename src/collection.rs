@@ -52,7 +52,7 @@ impl Collection {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::{Category, ComponentKind, ImageKind, Icon, ProjectUrl, Provide};
+    use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
     use crate::TranslatableVec;
     use crate::{
         CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
@@ -106,7 +106,11 @@ mod tests {
             .category(Category::Unknown("network".into()))
             .category(Category::Unknown("webbrowser".into()))
             .icon(Icon::Stock("web-browser".into()))
-            .icon(Icon::Cached("firefox.png".into()))
+            .icon(Icon::Cached {
+                path: "firefox.png".into(),
+                width: None,
+                height: None
+            })
             .build()
         )
         .component(

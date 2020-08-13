@@ -141,7 +141,11 @@ where
                     width: pi.width,
                     height: pi.height,
                 },
-                _ => Icon::Cached(pi.path),
+                _ => Icon::Cached {
+                    path: pi.path.into(),
+                    width: pi.width,
+                    height: pi.height,
+                },
             },
         )
         .collect::<Vec<Icon>>())

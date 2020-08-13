@@ -336,7 +336,11 @@ pub enum ContentState {
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum Icon {
     Stock(String),
-    Cached(String),
+    Cached {
+        path: PathBuf,
+        width: Option<u32>,
+        height: Option<u32>,
+    },
     Remote {
         url: Url,
         width: Option<u32>,

@@ -115,7 +115,7 @@ mod tests {
 
     use super::Component;
     use crate::enums::{
-        ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind,
+        ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind, Icon,
         ImageKind, Kudo, Launchable, ProjectUrl, Provide, Translation,
     };
     use crate::translatable_string::{TranslatableString, TranslatableVec};
@@ -545,9 +545,16 @@ mod tests {
             .translation(Translation::Gettext("contrast".into()))
             .launchable(Launchable::DesktopId("org.gnome.design.Contrast.desktop".into()))
             .developer_name(TranslatableString::with_default("Bilal Elmoussaoui"))
-            .icon(crate::Icon::Cached("org.gnome.design.Contrast.png".into()))
-            .icon(crate::Icon::Cached("org.gnome.design.Contrast.png".into()))
-            .content_rating(ContentRating {
+            .icon(Icon::Cached {
+                path: "org.gnome.design.Contrast.png".into(),
+                width: Some(64),
+                height: Some(64),
+            })
+            .icon(Icon::Cached {
+                path: "org.gnome.design.Contrast.png".into(),
+                width: Some(128),
+                height: Some(128),
+            }).content_rating(ContentRating {
                 attributes: vec![],
                 version: ContentRatingVersion::Oars1_0
             })
