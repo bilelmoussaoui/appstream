@@ -1,7 +1,7 @@
 # appstream
 Appstream files parser using Rust & quick-xml
 
-![Crates.io](https://img.shields.io/crates/v/appstream) ![CI](https://github.com/bilelmoussaoui/appstream/workflows/CI/badge.svg)
+[![](https://docs.rs/appstream/badge.svg)](https://docs.rs/appstream/) [![](https://img.shields.io/crates/v/appstream)](https://crates.io/crates/appstream) ![](https://github.com/bilelmoussaoui/appstream/workflows/CI/badge.svg)
 
 Specifications: [https://www.freedesktop.org/software/appstream/docs/](https://www.freedesktop.org/software/appstream/docs/)
 
