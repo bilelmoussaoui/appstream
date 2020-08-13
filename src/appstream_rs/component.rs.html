@@ -623,13 +623,17 @@
 <span id="623">623</span>
 <span id="624">624</span>
 <span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
     <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
 };
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">AppId</span>, <span class="ident">ContentRating</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">Release</span>, <span class="ident">Screenshot</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::{
+    <span class="ident">AppId</span>, <span class="ident">ContentRating</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">Release</span>, <span class="ident">Screenshot</span>, <span class="ident">TranslatableString</span>,
+    <span class="ident">TranslatableVec</span>,
+};
 <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">read</span>::<span class="ident">GzDecoder</span>;

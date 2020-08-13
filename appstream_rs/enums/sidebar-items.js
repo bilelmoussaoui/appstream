@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ArtifactKind",""],["Bundle",""],["Category",""],["Checksum",""],["ComponentKind",""],["ContentAttribute",""],["ContentRatingVersion",""],["ContentState",""],["FirmwareKind",""],["Icon",""],["ImageKind",""],["Kudo",""],["Launchable",""],["ProjectUrl",""],["Provide",""],["ReleaseKind",""],["ReleaseUrgency",""],["Size",""],["Translation",""]]});

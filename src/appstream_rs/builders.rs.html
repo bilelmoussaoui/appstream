@@ -590,13 +590,15 @@
 <span id="590">590</span>
 <span id="591">591</span>
 <span id="592">592</span>
+<span id="593">593</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>::<span class="ident">Collection</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">component</span>::<span class="ident">Component</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">super</span>::{
-    <span class="ident">AppId</span>, <span class="ident">Artifact</span>, <span class="ident">Collection</span>, <span class="ident">Component</span>, <span class="ident">ContentRating</span>, <span class="ident">Image</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">Release</span>,
-    <span class="ident">ReleaseUrgency</span>, <span class="ident">Screenshot</span>, <span class="ident">Video</span>,
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::{
+    <span class="ident">AppId</span>, <span class="ident">Artifact</span>, <span class="ident">ContentRating</span>, <span class="ident">Image</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">Release</span>, <span class="ident">Screenshot</span>,
+    <span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>, <span class="ident">Video</span>,
 };
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">Utc</span>};
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 

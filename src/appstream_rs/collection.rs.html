@@ -231,8 +231,10 @@
 <span id="231">231</span>
 <span id="232">232</span>
 <span id="233">233</span>
+<span id="234">234</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">AppId</span>, <span class="ident">Component</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">AppId</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
 <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">read</span>::<span class="ident">GzDecoder</span>;
