@@ -116,15 +116,15 @@ impl Component {
 mod tests {
 
     use super::Component;
+    use crate::builders::{
+        ArtifactBuilder, ComponentBuilder, ImageBuilder, LanguageBuilder, ReleaseBuilder,
+        ScreenshotBuilder,
+    };
     use crate::enums::{
         ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind, Icon,
-        ImageKind, Kudo, Launchable, ProjectUrl, Provide, Translation,
+        ImageKind, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, Translation,
     };
-    use crate::translatable_string::{TranslatableString, TranslatableVec};
-    use crate::{
-        ArtifactBuilder, ComponentBuilder, ContentRating, ImageBuilder, LanguageBuilder,
-        ReleaseBuilder, ReleaseKind, ScreenshotBuilder,
-    };
+    use crate::types::{ContentRating, TranslatableString, TranslatableVec};
     use chrono::{TimeZone, Utc};
     use std::str::FromStr;
     use url::Url;

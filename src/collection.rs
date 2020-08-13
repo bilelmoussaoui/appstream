@@ -53,12 +53,11 @@ impl Collection {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
-    use crate::TranslatableVec;
-    use crate::{
+    use crate::builders::{
         CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
-        TranslatableString,
     };
+    use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
+    use crate::types::{TranslatableString, TranslatableVec};
     use std::str::FromStr;
     use url::Url;
 

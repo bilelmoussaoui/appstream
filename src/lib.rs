@@ -18,6 +18,8 @@
 //! use appstream_rs::builders::{ComponentBuilder, ReleaseBuilder};
 //! use appstream_rs::types::TranslatableString;
 //! use appstream_rs::enums::{Provide, ProjectUrl};
+//! use url::Url;
+//! use chrono::{Utc, TimeZone};
 //!
 //! let xml = r"<?xml version='1.0' encoding='UTF-8'?>
 //!                 <component>
@@ -47,7 +49,7 @@
 //!     .metadata_license("CC0-1.0".into())
 //!     .summary(TranslatableString::with_default("A foo-ish bar"))
 //!     .url(ProjectUrl::Homepage(
-//!         Url::from_str("http://www.example.org").unwrap(),
+//!         Url::parse("http://www.example.org").unwrap(),
 //!     ))
 //!     .developer_name(TranslatableString::with_default("FooBar Team"))
 //!     .provide(Provide::Library("libfoobar.so.2".into()))
@@ -65,15 +67,15 @@
 //!
 //! The library can parse a collection of components as well
 //! ```
-//! use appstream_rs::Collection;
+//! use appstream_rs::{Collection, Component};
 //!
-//! let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml").unwrap();
+//! let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into()).unwrap();
 //! // Find a specific application by id
 //! println!("{:#?}", collection.find_by_id("org.gnome.design.Contrast".into()));
 //!
 //! // Find the list of gedit plugins
 //! collection.components.iter()
-//!     .filter(|c| c.extends.contains("org.gnome.gedit".into()))
+//!     .filter(|c| c.extends.contains(&"org.gnome.gedit".into()))
 //!     .collect::<Vec<&Component>>();
 //! ```
 //!
