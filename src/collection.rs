@@ -1,4 +1,5 @@
-use super::{AppId, Component};
+use super::types::AppId;
+use super::Component;
 use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;

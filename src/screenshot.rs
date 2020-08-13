@@ -1,6 +1,6 @@
 use super::de::*;
 use super::enums::ImageKind;
-use super::TranslatableString;
+use super::types::TranslatableString;
 use serde::{Deserialize, Serialize};
 use url::Url;
 

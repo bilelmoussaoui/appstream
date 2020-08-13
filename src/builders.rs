@@ -1,9 +1,10 @@
+use super::collection::Collection;
+use super::component::Component;
 use super::enums::*;
-use super::{
-    AppId, Artifact, Collection, Component, ContentRating, Image, Language, License, Release,
-    ReleaseUrgency, Screenshot, Video,
+use super::types::{
+    AppId, Artifact, ContentRating, Image, Language, License, Release, Screenshot,
+    TranslatableString, TranslatableVec, Video,
 };
-use super::{TranslatableString, TranslatableVec};
 use chrono::{DateTime, Utc};
 use url::Url;
 

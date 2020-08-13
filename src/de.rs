@@ -1,6 +1,8 @@
 use super::enums::{Bundle, Category, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation};
-use super::translatable_string::{TranslatableString, TranslatableVec};
-use super::{AppId, Artifact, ContentRating, Language, License, Release, Screenshot};
+use super::types::{
+    AppId, Artifact, ContentRating, Language, License, Release, Screenshot, TranslatableString,
+    TranslatableVec,
+};
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 use serde::de;
 use serde::Deserialize;

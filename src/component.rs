@@ -2,8 +2,10 @@ use super::de::*;
 use super::enums::{
     Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
 };
-use super::translatable_string::{TranslatableString, TranslatableVec};
-use super::{AppId, ContentRating, Language, License, Release, Screenshot};
+use super::types::{
+    AppId, ContentRating, Language, License, Release, Screenshot, TranslatableString,
+    TranslatableVec,
+};
 use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
