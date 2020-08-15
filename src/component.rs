@@ -478,7 +478,7 @@ mod tests {
     #[test]
     fn contrast_metainfo_component() {
         let c1: Component =
-            Component::from_path("./tests/org.gnome.design.Contrast.xml".into()).unwrap();
+            Component::from_path("./tests/app-org.gnome.design.Contrast.xml".into()).unwrap();
 
         let name = TranslatableString::with_default("Contrast")
             .and_locale("cs", "Kontrast")

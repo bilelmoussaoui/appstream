@@ -209,10 +209,15 @@ where
     }
 
     let k: Kudos = Kudos::deserialize(deserializer)?;
-    Ok(k.kudos
+    let kudos = k
+        .kudos
         .into_iter()
-        .map(|k| Kudo::from_str(&k).unwrap())
-        .collect::<Vec<Kudo>>())
+        .map(|k| Kudo::from_str(&k))
+        .filter(|r| r.is_ok())
+        .map(|r| r.unwrap())
+        .collect::<Vec<Kudo>>();
+
+    Ok(kudos)
 }
 
 pub(crate) fn languages_deserialize<'de, D>(deserializer: D) -> Result<Vec<Language>, D::Error>
@@ -431,6 +436,7 @@ where
 
     Ok(urls
         .into_iter()
+        .filter(|u| !u.url.is_empty())
         .map(|u| {
             let url = Url::from_str(&u.url).expect("Failed to parse url, invalid");
             match u._type.as_str() {

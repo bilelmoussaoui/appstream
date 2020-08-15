@@ -58,6 +58,7 @@ mod tests {
     };
     use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
     use crate::types::{TranslatableString, TranslatableVec};
+    use anyhow::Result;
     use std::str::FromStr;
     use url::Url;
 
@@ -229,5 +230,49 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+    }
+
+    #[test]
+    fn endless_os_collection() {
+        let c1: Result<Collection> =
+            Collection::from_path("./tests/collections/endless-apps.xml".into());
+        assert_eq!(c1.is_ok(), true);
+        let collection = c1.unwrap();
+        assert_eq!(631, collection.components.len());
+        assert_eq!(Some("flatpak".into()), collection.origin);
+        assert_eq!("0.8", collection.version);
+    }
+
+    #[test]
+    fn gnome_collection() {
+        let c1: Result<Collection> =
+            Collection::from_path("./tests/collections/gnome-apps.xml".into());
+        assert_eq!(c1.is_ok(), true);
+        let collection = c1.unwrap();
+        assert_eq!(24, collection.components.len());
+        assert_eq!(Some("flatpak".into()), collection.origin);
+        assert_eq!("0.8", collection.version);
+    }
+
+    #[test]
+    fn kde_collection() {
+        let c1: Result<Collection> =
+            Collection::from_path("./tests/collections/kde-apps.xml".into());
+        assert_eq!(c1.is_ok(), true);
+        let collection = c1.unwrap();
+        assert_eq!(69, collection.components.len());
+        assert_eq!(Some("flatpak".into()), collection.origin);
+        assert_eq!("0.8", collection.version);
+    }
+
+    #[test]
+    fn flathub_collection() {
+        let c1: Result<Collection> =
+            Collection::from_path("./tests/collections/flathub-apps.xml".into());
+        assert_eq!(c1.is_ok(), true);
+        let collection = c1.unwrap();
+        assert_eq!(376, collection.components.len());
+        assert_eq!(Some("flatpak".into()), collection.origin);
+        assert_eq!("0.8", collection.version);
     }
 }
