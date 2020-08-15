@@ -275,7 +275,6 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
-<span id="278">278</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">AppId</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
@@ -338,7 +337,6 @@
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">ImageKind</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
     <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -356,17 +354,17 @@
             .<span class="ident">project_license</span>(<span class="string">&quot;MPL-2.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">keywords</span>(<span class="ident">TranslatableVec</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;internet&quot;</span>,<span class="string">&quot;web&quot;</span>, <span class="string">&quot;browser&quot;</span>]).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;navigateur&quot;</span>]))
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Web browser&quot;</span>).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="string">&quot;Navigateur web&quot;</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://www.mozilla.com&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.mozilla.com&quot;</span>).<span class="ident">unwrap</span>()))
             .<span class="ident">screenshot</span>(
                 <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
                 .<span class="ident">image</span>(
-                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png&quot;</span>).<span class="ident">unwrap</span>())
+                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png&quot;</span>).<span class="ident">unwrap</span>())
                         .<span class="ident">width</span>(<span class="number">800</span>)
                         .<span class="ident">height</span>(<span class="number">600</span>)
                         .<span class="ident">build</span>(),
                 )
                 .<span class="ident">image</span>(
-                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png&quot;</span>).<span class="ident">unwrap</span>())
+                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png&quot;</span>).<span class="ident">unwrap</span>())
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">200</span>)
                         .<span class="ident">height</span>(<span class="number">150</span>)
@@ -400,7 +398,7 @@
             )
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The PulseAudio sound server&quot;</span>))
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-2.0+&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://www.freedesktop.org/wiki/Software/PulseAudio/&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.freedesktop.org/wiki/Software/PulseAudio/&quot;</span>).<span class="ident">unwrap</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libpulse-simple.so.0&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libpulse.so.0&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;start-pulseaudio-kde&quot;</span>.<span class="ident">into</span>()))
@@ -498,12 +496,12 @@
                 .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Remote</span>{
                     <span class="ident">width</span>: <span class="prelude-val">None</span>,
                     <span class="ident">height</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png&quot;</span>).<span class="ident">unwrap</span>()
+                    <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png&quot;</span>).<span class="ident">unwrap</span>()
                 })
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Education</span>)
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Literature</span>)
                 .<span class="ident">keywords</span>(<span class="ident">TranslatableVec</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;book&quot;</span>, <span class="string">&quot;ebook&quot;</span>, <span class="string">&quot;reader&quot;</span>]))
-                .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://read.amazon.com&quot;</span>).<span class="ident">unwrap</span>()))
+                .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://read.amazon.com&quot;</span>).<span class="ident">unwrap</span>()))
                 .<span class="ident">build</span>()
             )
             .<span class="ident">build</span>();

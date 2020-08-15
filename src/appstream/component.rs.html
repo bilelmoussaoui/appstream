@@ -624,7 +624,6 @@
 <span id="624">624</span>
 <span id="625">625</span>
 <span id="626">626</span>
-<span id="627">627</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -754,7 +753,6 @@
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">ContentRating</span>, <span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -773,7 +771,7 @@
             ))
             .<span class="ident">update_contact</span>(<span class="string">&quot;developer_AT_example.com&quot;</span>)
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://projects.gnome.org/gedit&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://projects.gnome.org/gedit&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">extend</span>(<span class="string">&quot;org.gnome.gedit&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">build</span>();
@@ -825,7 +823,7 @@
                 <span class="string">&quot;org.gnome.gnome-power-statistics.desktop&quot;</span>.<span class="ident">to_string</span>(),
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.gnome.org/projects/en_US/gnome-power-manager&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.gnome.org/projects/en_US/gnome-power-manager&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;gnome-power-statistics&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Id</span>(<span class="string">&quot;gnome-power-statistics.desktop&quot;</span>.<span class="ident">into</span>()))
@@ -834,7 +832,7 @@
                     .<span class="ident">caption</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The options dialog&quot;</span>))
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>).<span class="ident">unwrap</span>(),
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>).<span class="ident">unwrap</span>(),
                         )
                         .<span class="ident">build</span>(),
                     )
@@ -845,7 +843,7 @@
                     .<span class="ident">set_default</span>(<span class="bool-val">false</span>)
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>).<span class="ident">unwrap</span>(),
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>).<span class="ident">unwrap</span>(),
                         )
                         .<span class="ident">build</span>(),
                     )
@@ -877,7 +875,7 @@
                 <span class="string">&quot;pci:v000010DEd*sv*sd*bc03sc00i00*&quot;</span>.<span class="ident">into</span>(),
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.nvidia.com/Download/index.aspx&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.nvidia.com/Download/index.aspx&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
@@ -896,7 +894,7 @@
                 <span class="string">&quot;Firmware for the ColorHugALS Ambient Light Sensor&quot;</span>,
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughski.com/&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-2.0+&quot;</span>.<span class="ident">into</span>())
@@ -910,7 +908,7 @@
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2015</span>, <span class="number">2</span>, <span class="number">16</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">artifact</span>(
                         <span class="ident">ArtifactBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>).<span class="ident">unwrap</span>(), 
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>).<span class="ident">unwrap</span>(), 
                             <span class="ident">ArtifactKind</span>::<span class="ident">Binary</span>
                         )
                         .<span class="ident">build</span>()
@@ -957,7 +955,7 @@
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;A foo-ish bar&quot;</span>))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://www.example.org&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.example.org&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;FooBar Team&quot;</span>))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libfoobar.so.2&quot;</span>.<span class="ident">into</span>()))
@@ -987,7 +985,7 @@
                 <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
                 .<span class="ident">image</span>(
                     <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                        <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>()
+                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>()
                     )
                     .<span class="ident">build</span>()
                 )
@@ -1012,7 +1010,7 @@
                 <span class="string">&quot;Math symbols input method&quot;</span>,
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://github.com/mike-fabian/ibus-table-others&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://github.com/mike-fabian/ibus-table-others&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">build</span>();
 
@@ -1036,7 +1034,7 @@
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.gwenview.desktop&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.dolphin.desktop&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;http://i18n.kde.org/team-infos.php?teamcode=de&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://i18n.kde.org/team-infos.php?teamcode=de&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de_DE&quot;</span>).<span class="ident">build</span>())
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de_AT&quot;</span>).<span class="ident">percentage</span>(<span class="number">96</span>).<span class="ident">build</span>())
@@ -1057,7 +1055,7 @@
                 <span class="string">&quot;The universal operating system&quot;</span>,
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://www.debian.org/&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.debian.org/&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The Debian Project&quot;</span>))
@@ -1090,7 +1088,7 @@
                 <span class="string">&quot;Basic libraries to run Linux desktop applications&quot;</span>,
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://freedesktop-sdk.gitlab.io/&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://freedesktop-sdk.gitlab.io/&quot;</span>).<span class="ident">unwrap</span>(),
             ))
             .<span class="ident">release</span>(<span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;10.0&quot;</span>).<span class="ident">build</span>())
             .<span class="ident">release</span>(
@@ -1168,10 +1166,10 @@
                 <span class="ident">sdk</span>: <span class="string">&quot;org.gnome.Sdk/x86_64/3.36&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">id</span>: <span class="string">&quot;app/org.gnome.design.Contrast/x86_64/stable&quot;</span>.<span class="ident">into</span>()
             })
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>).<span class="ident">unwrap</span>()))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Donation</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>).<span class="ident">unwrap</span>()))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>).<span class="ident">unwrap</span>()))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Translate</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Donation</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Translate</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>).<span class="ident">unwrap</span>()))
             .<span class="ident">translation</span>(<span class="ident">Translation</span>::<span class="ident">Gettext</span>(<span class="string">&quot;contrast&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">launchable</span>(<span class="ident">Launchable</span>::<span class="ident">DesktopId</span>(<span class="string">&quot;org.gnome.design.Contrast.desktop&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Bilal Elmoussaoui&quot;</span>))
@@ -1208,12 +1206,12 @@
             .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>).<span class="ident">unwrap</span>()
                         ).<span class="ident">build</span>()
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">624</span>)
@@ -1222,7 +1220,7 @@
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">112</span>)
@@ -1231,7 +1229,7 @@
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">224</span>)
@@ -1240,7 +1238,7 @@
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">752</span>)

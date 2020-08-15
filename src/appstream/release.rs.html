@@ -167,7 +167,6 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
-<span id="170">170</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{<span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Checksum</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseUrgency</span>, <span class="ident">Size</span>};
@@ -219,7 +218,6 @@
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ArtifactKind</span>, <span class="ident">Checksum</span>, <span class="ident">Release</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseUrgency</span>, <span class="ident">Size</span>, <span class="ident">Url</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">builders</span>::{<span class="ident">ArtifactBuilder</span>, <span class="ident">ReleaseBuilder</span>};
     <span class="kw">use</span> <span class="ident">quick_xml</span>::<span class="ident">de</span>::<span class="ident">from_str</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
 
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
 
@@ -263,10 +261,10 @@
             <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;1.2&quot;</span>)
                 .<span class="ident">urgency</span>(<span class="ident">ReleaseUrgency</span>::<span class="ident">High</span>)
                 .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2014</span>, <span class="number">4</span>, <span class="number">12</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
-                .<span class="ident">url</span>(<span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://example.org/releases/version-1.2.html&quot;</span>).<span class="ident">unwrap</span>())
+                .<span class="ident">url</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.org/releases/version-1.2.html&quot;</span>).<span class="ident">unwrap</span>())
                 .<span class="ident">artifact</span>(
                     <span class="ident">ArtifactBuilder</span>::<span class="ident">new</span>(
-                        <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://example.com/mytarball.bin.tar.xz&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.com/mytarball.bin.tar.xz&quot;</span>).<span class="ident">unwrap</span>(),
                         <span class="ident">ArtifactKind</span>::<span class="ident">Binary</span>,
                     )
                     .<span class="ident">platform</span>(<span class="string">&quot;x86_64-linux-gnu&quot;</span>)
@@ -278,7 +276,7 @@
                 )
                 .<span class="ident">artifact</span>(
                     <span class="ident">ArtifactBuilder</span>::<span class="ident">new</span>(
-                        <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://example.com/mytarball.bin.exe&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.com/mytarball.bin.exe&quot;</span>).<span class="ident">unwrap</span>(),
                         <span class="ident">ArtifactKind</span>::<span class="ident">Binary</span>,
                     )
                     .<span class="ident">platform</span>(<span class="string">&quot;win32&quot;</span>)
@@ -286,7 +284,7 @@
                 )
                 .<span class="ident">artifact</span>(
                     <span class="ident">ArtifactBuilder</span>::<span class="ident">new</span>(
-                        <span class="ident">Url</span>::<span class="ident">from_str</span>(<span class="string">&quot;https://example.com/mytarball.tar.xz&quot;</span>).<span class="ident">unwrap</span>(),
+                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.com/mytarball.tar.xz&quot;</span>).<span class="ident">unwrap</span>(),
                         <span class="ident">ArtifactKind</span>::<span class="ident">Source</span>,
                     )
                     .<span class="ident">checksum</span>(<span class="ident">Checksum</span>::<span class="ident">Sha256</span>(<span class="string">&quot;....&quot;</span>.<span class="ident">into</span>()))
