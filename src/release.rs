@@ -48,7 +48,6 @@ mod tests {
     use super::{ArtifactKind, Checksum, Release, ReleaseKind, ReleaseUrgency, Size, Url};
     use crate::builders::{ArtifactBuilder, ReleaseBuilder};
     use quick_xml::de::from_str;
-    use std::str::FromStr;
 
     use chrono::{TimeZone, Utc};
 
@@ -92,10 +91,10 @@ mod tests {
             ReleaseBuilder::new("1.2")
                 .urgency(ReleaseUrgency::High)
                 .date(Utc.ymd(2014, 4, 12).and_hms_milli(0, 0, 0, 0))
-                .url(Url::from_str("https://example.org/releases/version-1.2.html").unwrap())
+                .url(Url::parse("https://example.org/releases/version-1.2.html").unwrap())
                 .artifact(
                     ArtifactBuilder::new(
-                        Url::from_str("https://example.com/mytarball.bin.tar.xz").unwrap(),
+                        Url::parse("https://example.com/mytarball.bin.tar.xz").unwrap(),
                         ArtifactKind::Binary,
                     )
                     .platform("x86_64-linux-gnu")
@@ -107,7 +106,7 @@ mod tests {
                 )
                 .artifact(
                     ArtifactBuilder::new(
-                        Url::from_str("https://example.com/mytarball.bin.exe").unwrap(),
+                        Url::parse("https://example.com/mytarball.bin.exe").unwrap(),
                         ArtifactKind::Binary,
                     )
                     .platform("win32")
@@ -115,7 +114,7 @@ mod tests {
                 )
                 .artifact(
                     ArtifactBuilder::new(
-                        Url::from_str("https://example.com/mytarball.tar.xz").unwrap(),
+                        Url::parse("https://example.com/mytarball.tar.xz").unwrap(),
                         ArtifactKind::Source,
                     )
                     .checksum(Checksum::Sha256("....".into()))

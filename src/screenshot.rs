@@ -62,7 +62,6 @@ mod tests {
     use super::*;
     use crate::builders::{ImageBuilder, ScreenshotBuilder, VideoBuilder};
     use quick_xml;
-    use std::str::FromStr;
 
     #[test]
     fn default_screenshot() {
@@ -73,7 +72,7 @@ mod tests {
         let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
 
         let s2 = ScreenshotBuilder::new().image(
-                ImageBuilder::new(Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap())
+                ImageBuilder::new(Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap())
                 .build()
             )
             .build();
@@ -99,14 +98,14 @@ mod tests {
                     .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
             )
             .image(
-                ImageBuilder::new(Url::from_str("https://www.example.org/en_US/main.png").unwrap())
+                ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png").unwrap())
                     .width(800)
                     .height(600)
                     .build(),
             )
             .image(
                 ImageBuilder::new(
-                    Url::from_str("https://www.example.org/en_US/main-large.png").unwrap(),
+                    Url::parse("https://www.example.org/en_US/main-large.png").unwrap(),
                 )
                 .width(752)
                 .height(423)
@@ -115,7 +114,7 @@ mod tests {
             )
             .image(
                 ImageBuilder::new(
-                    Url::from_str("https://www.example.org/en_US/main-small.png").unwrap(),
+                    Url::parse("https://www.example.org/en_US/main-small.png").unwrap(),
                 )
                 .width(112)
                 .height(63)
@@ -137,13 +136,11 @@ mod tests {
         let s2 = ScreenshotBuilder::new()
             .set_default(false)
             .video(
-                VideoBuilder::new(
-                    Url::from_str("https://example.com/foobar/screencast.mkv").unwrap(),
-                )
-                .width(1600)
-                .height(900)
-                .codec("av1")
-                .build(),
+                VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv").unwrap())
+                    .width(1600)
+                    .height(900)
+                    .codec("av1")
+                    .build(),
             )
             .build();
         assert_eq!(s1, s2);

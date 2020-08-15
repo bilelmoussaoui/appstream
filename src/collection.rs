@@ -59,7 +59,6 @@ mod tests {
     use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
     use crate::types::{TranslatableString, TranslatableVec};
     use anyhow::Result;
-    use std::str::FromStr;
     use url::Url;
 
     #[test]
@@ -77,17 +76,17 @@ mod tests {
             .project_license("MPL-2.0".into())
             .keywords(TranslatableVec::with_default(vec!["internet","web", "browser"]).and_locale("fr_FR", vec!["navigateur"]))
             .summary(TranslatableString::with_default("Web browser").and_locale("fr_FR", "Navigateur web"))
-            .url(ProjectUrl::Homepage(Url::from_str("https://www.mozilla.com").unwrap()))
+            .url(ProjectUrl::Homepage(Url::parse("https://www.mozilla.com").unwrap()))
             .screenshot(
                 ScreenshotBuilder::new()
                 .image(
-                    ImageBuilder::new(Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap())
+                    ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap())
                         .width(800)
                         .height(600)
                         .build(),
                 )
                 .image(
-                    ImageBuilder::new(Url::from_str("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png").unwrap())
+                    ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png").unwrap())
                         .kind(ImageKind::Thumbnail)
                         .width(200)
                         .height(150)
@@ -121,7 +120,7 @@ mod tests {
             )
             .summary(TranslatableString::with_default("The PulseAudio sound server"))
             .project_license("GPL-2.0+".into())
-            .url(ProjectUrl::Homepage(Url::from_str("https://www.freedesktop.org/wiki/Software/PulseAudio/").unwrap()))
+            .url(ProjectUrl::Homepage(Url::parse("https://www.freedesktop.org/wiki/Software/PulseAudio/").unwrap()))
             .provide(Provide::Library("libpulse-simple.so.0".into()))
             .provide(Provide::Library("libpulse.so.0".into()))
             .provide(Provide::Binary("start-pulseaudio-kde".into()))
@@ -219,12 +218,12 @@ mod tests {
                 .icon(Icon::Remote{
                     width: None,
                     height: None,
-                    url: Url::from_str("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap()
+                    url: Url::parse("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap()
                 })
                 .category(Category::Education)
                 .category(Category::Literature)
                 .keywords(TranslatableVec::with_default(vec!["book", "ebook", "reader"]))
-                .url(ProjectUrl::Homepage(Url::from_str("https://read.amazon.com").unwrap()))
+                .url(ProjectUrl::Homepage(Url::parse("https://read.amazon.com").unwrap()))
                 .build()
             )
             .build();

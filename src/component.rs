@@ -126,7 +126,6 @@ mod tests {
     };
     use crate::types::{ContentRating, TranslatableString, TranslatableVec};
     use chrono::{TimeZone, Utc};
-    use std::str::FromStr;
     use url::Url;
 
     #[test]
@@ -145,7 +144,7 @@ mod tests {
             ))
             .update_contact("developer_AT_example.com")
             .url(ProjectUrl::Homepage(
-                Url::from_str("http://projects.gnome.org/gedit").unwrap(),
+                Url::parse("http://projects.gnome.org/gedit").unwrap(),
             ))
             .extend("org.gnome.gedit".into())
             .build();
@@ -197,7 +196,7 @@ mod tests {
                 "org.gnome.gnome-power-statistics.desktop".to_string(),
             ))
             .url(ProjectUrl::Homepage(
-                Url::from_str("http://www.gnome.org/projects/en_US/gnome-power-manager").unwrap(),
+                Url::parse("http://www.gnome.org/projects/en_US/gnome-power-manager").unwrap(),
             ))
             .provide(Provide::Binary("gnome-power-statistics".into()))
             .provide(Provide::Id("gnome-power-statistics.desktop".into()))
@@ -206,7 +205,7 @@ mod tests {
                     .caption(TranslatableString::with_default("The options dialog"))
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("http://www.hughsie.com/en_US/main.png").unwrap(),
+                            Url::parse("http://www.hughsie.com/en_US/main.png").unwrap(),
                         )
                         .build(),
                     )
@@ -217,7 +216,7 @@ mod tests {
                     .set_default(false)
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("http://www.hughsie.com/en_US/preferences.png").unwrap(),
+                            Url::parse("http://www.hughsie.com/en_US/preferences.png").unwrap(),
                         )
                         .build(),
                     )
@@ -249,7 +248,7 @@ mod tests {
                 "pci:v000010DEd*sv*sd*bc03sc00i00*".into(),
             ))
             .url(ProjectUrl::Homepage(
-                Url::from_str("http://www.nvidia.com/Download/index.aspx").unwrap(),
+                Url::parse("http://www.nvidia.com/Download/index.aspx").unwrap(),
             ))
             .build();
         assert_eq!(c1, c2);
@@ -268,7 +267,7 @@ mod tests {
                 "Firmware for the ColorHugALS Ambient Light Sensor",
             ))
             .url(ProjectUrl::Homepage(
-                Url::from_str("http://www.hughski.com/").unwrap(),
+                Url::parse("http://www.hughski.com/").unwrap(),
             ))
             .metadata_license("CC0-1.0".into())
             .project_license("GPL-2.0+".into())
@@ -282,7 +281,7 @@ mod tests {
                     .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
                     .artifact(
                         ArtifactBuilder::new(
-                            Url::from_str("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab").unwrap(), 
+                            Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab").unwrap(), 
                             ArtifactKind::Binary
                         )
                         .build()
@@ -329,7 +328,7 @@ mod tests {
             .metadata_license("CC0-1.0".into())
             .summary(TranslatableString::with_default("A foo-ish bar"))
             .url(ProjectUrl::Homepage(
-                Url::from_str("http://www.example.org").unwrap(),
+                Url::parse("http://www.example.org").unwrap(),
             ))
             .developer_name(TranslatableString::with_default("FooBar Team"))
             .provide(Provide::Library("libfoobar.so.2".into()))
@@ -359,7 +358,7 @@ mod tests {
                 ScreenshotBuilder::new()
                 .image(
                     ImageBuilder::new(
-                        Url::from_str("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
+                        Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
                     )
                     .build()
                 )
@@ -384,7 +383,7 @@ mod tests {
                 "Math symbols input method",
             ))
             .url(ProjectUrl::Homepage(
-                Url::from_str("https://github.com/mike-fabian/ibus-table-others").unwrap(),
+                Url::parse("https://github.com/mike-fabian/ibus-table-others").unwrap(),
             ))
             .build();
 
@@ -408,7 +407,7 @@ mod tests {
             .extend("org.kde.gwenview.desktop".into())
             .extend("org.kde.dolphin.desktop".into())
             .url(ProjectUrl::Homepage(
-                Url::from_str("http://i18n.kde.org/team-infos.php?teamcode=de").unwrap(),
+                Url::parse("http://i18n.kde.org/team-infos.php?teamcode=de").unwrap(),
             ))
             .language(LanguageBuilder::new("de_DE").build())
             .language(LanguageBuilder::new("de_AT").percentage(96).build())
@@ -429,7 +428,7 @@ mod tests {
                 "The universal operating system",
             ))
             .url(ProjectUrl::Homepage(
-                Url::from_str("https://www.debian.org/").unwrap(),
+                Url::parse("https://www.debian.org/").unwrap(),
             ))
             .metadata_license("FSFAP".into())
             .developer_name(TranslatableString::with_default("The Debian Project"))
@@ -462,7 +461,7 @@ mod tests {
                 "Basic libraries to run Linux desktop applications",
             ))
             .url(ProjectUrl::Homepage(
-                Url::from_str("https://freedesktop-sdk.gitlab.io/").unwrap(),
+                Url::parse("https://freedesktop-sdk.gitlab.io/").unwrap(),
             ))
             .release(ReleaseBuilder::new("10.0").build())
             .release(
@@ -540,10 +539,10 @@ mod tests {
                 sdk: "org.gnome.Sdk/x86_64/3.36".into(),
                 id: "app/org.gnome.design.Contrast/x86_64/stable".into()
             })
-            .url(ProjectUrl::BugTracker(Url::from_str("https://gitlab.gnome.org/World/design/contrast/issues").unwrap()))
-            .url(ProjectUrl::Donation(Url::from_str("https://liberapay.com/bielmoussaoui").unwrap()))
-            .url(ProjectUrl::Homepage(Url::from_str("https://gitlab.gnome.org/World/design/contrast").unwrap()))
-            .url(ProjectUrl::Translate(Url::from_str("https://l10n.gnome.org/module/contrast/").unwrap()))
+            .url(ProjectUrl::BugTracker(Url::parse("https://gitlab.gnome.org/World/design/contrast/issues").unwrap()))
+            .url(ProjectUrl::Donation(Url::parse("https://liberapay.com/bielmoussaoui").unwrap()))
+            .url(ProjectUrl::Homepage(Url::parse("https://gitlab.gnome.org/World/design/contrast").unwrap()))
+            .url(ProjectUrl::Translate(Url::parse("https://l10n.gnome.org/module/contrast/").unwrap()))
             .translation(Translation::Gettext("contrast".into()))
             .launchable(Launchable::DesktopId("org.gnome.design.Contrast.desktop".into()))
             .developer_name(TranslatableString::with_default("Bilal Elmoussaoui"))
@@ -580,12 +579,12 @@ mod tests {
             .screenshot(ScreenshotBuilder::new()
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png").unwrap()
+                            Url::parse("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png").unwrap()
                         ).build()
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(624)
@@ -594,7 +593,7 @@ mod tests {
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(112)
@@ -603,7 +602,7 @@ mod tests {
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(224)
@@ -612,7 +611,7 @@ mod tests {
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::from_str("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(752)

@@ -139,7 +139,7 @@ where
                     height: pi.height,
                 },
                 "remote" => Icon::Remote {
-                    url: Url::from_str(&pi.path).unwrap(),
+                    url: Url::parse(&pi.path).unwrap(),
                     width: pi.width,
                     height: pi.height,
                 },
@@ -253,7 +253,7 @@ where
         .map(|l| match l._type.as_ref() {
             "desktop-id" => Launchable::DesktopId(l.val),
             "service" => Launchable::Service(l.val),
-            "url" => Launchable::Url(Url::from_str(&l.val).unwrap()),
+            "url" => Launchable::Url(Url::parse(&l.val).unwrap()),
             "cockpit-manifest" => Launchable::CockpitManifest(l.val),
             _ => Launchable::Unknown(l.val),
         })
@@ -438,7 +438,7 @@ where
         .into_iter()
         .filter(|u| !u.url.is_empty())
         .map(|u| {
-            let url = Url::from_str(&u.url).expect("Failed to parse url, invalid");
+            let url = Url::parse(&u.url).expect("Failed to parse url, invalid");
             match u._type.as_str() {
                 "homepage" => ProjectUrl::Homepage(url),
                 "help" => ProjectUrl::Help(url),
