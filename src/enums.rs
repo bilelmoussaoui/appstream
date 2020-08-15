@@ -1,10 +1,10 @@
 use serde::{Deserialize, Serialize};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
-use strum_macros::EnumString;
+use strum_macros::{EnumString, ToString};
 use url::Url;
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ArtifactKind {
     Source,
@@ -25,7 +25,7 @@ pub enum Bundle {
     Tarball(String),
 }
 
-#[derive(Clone, Debug, EnumString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "PascalCase")]
 pub enum Category {
     // Main categories
@@ -193,7 +193,7 @@ pub enum Checksum {
     Blake2s(String),
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Serialize, ToString, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub enum ComponentKind {
     Runtime,
@@ -353,14 +353,14 @@ pub enum Icon {
     },
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ImageKind {
     Source,
     Thumbnail,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, EnumString)]
+#[derive(Clone, Debug, Deserialize, ToString, Serialize, PartialEq, EnumString)]
 pub enum Kudo {
     AppMenu,
     HiDpiIcon,
@@ -392,7 +392,7 @@ pub enum ProjectUrl {
     Unknown(Url),
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub enum ReleaseKind {
     Stable,
@@ -412,7 +412,7 @@ pub enum Size {
     Installed(u64),
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ReleaseUrgency {
     Low,
@@ -427,7 +427,7 @@ impl Default for ReleaseUrgency {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, ToString, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum FirmwareKind {
     Flashed,
