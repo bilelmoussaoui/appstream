@@ -52,7 +52,7 @@ impl Serialize for TranslatableString {
     {
         let mut map = serializer.serialize_map(Some(self.0.len()))?;
         for (locale, text) in self.0.iter() {
-            map.serialize_entry(locale, text).unwrap();
+            map.serialize_entry(locale, text)?;
         }
         map.end()
     }
