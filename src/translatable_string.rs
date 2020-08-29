@@ -1,9 +1,10 @@
-use serde::Serialize;
+use serde::ser::SerializeMap;
+use serde::{Serialize, Serializer};
 use std::collections::BTreeMap;
 
 pub const DEFAULT_LOCALE: &str = "C";
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct TranslatableString(pub BTreeMap<String, String>, bool);
 
 impl Default for TranslatableString {
@@ -41,6 +42,19 @@ impl TranslatableString {
 
     pub fn get_for_locale(&self, locale: &str) -> Option<&String> {
         self.0.get(locale)
+    }
+}
+
+impl Serialize for TranslatableString {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut map = serializer.serialize_map(Some(self.0.len()))?;
+        for (locale, text) in self.0.iter() {
+            map.serialize_entry(locale, text).unwrap();
+        }
+        map.end()
     }
 }
 

@@ -12,11 +12,11 @@ pub struct Screenshot {
         default
     )]
     pub is_default: bool,
-    #[serde(deserialize_with = "some_translatable_deserialize", default)]
+    #[serde(deserialize_with = "some_translatable_deserialize", default, skip_serializing_if = "Option::is_none")]
     pub caption: Option<TranslatableString>,
-    #[serde(rename = "image", default)]
+    #[serde(rename = "image", default, skip_serializing_if = "Vec::is_empty")]
     pub images: Vec<Image>,
-    #[serde(rename = "video", default)]
+    #[serde(rename = "video", default, skip_serializing_if = "Vec::is_empty")]
     pub videos: Vec<Video>,
 }
 
@@ -33,13 +33,13 @@ impl Default for Screenshot {
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Video {
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub width: Option<u32>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub codec: Option<String>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub container: Option<String>,
     #[serde(rename = "$value")]
     pub url: Url,
@@ -49,9 +49,9 @@ pub struct Video {
 pub struct Image {
     #[serde(rename = "type")]
     pub kind: ImageKind,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub width: Option<u32>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
     #[serde(rename = "$value")]
     pub url: Url,

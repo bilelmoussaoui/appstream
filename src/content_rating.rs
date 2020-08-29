@@ -5,6 +5,6 @@ use serde::{Deserialize, Serialize};
 pub struct ContentRating {
     #[serde(rename = "type", default)]
     pub version: ContentRatingVersion,
-    #[serde(rename = "content_attribute", default)]
+    #[serde(rename = "content_attribute", default, skip_serializing_if = "Vec::is_empty")]
     pub attributes: Vec<ContentAttribute>,
 }

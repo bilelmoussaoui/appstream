@@ -15,6 +15,7 @@ pub enum ArtifactKind {
 pub enum Bundle {
     Limba(String),
     Flatpak {
+        #[serde(skip_serializing_if = "Option::is_none")]
         runtime: Option<String>,
         sdk: String,
         #[serde(rename = "$value", default)]
@@ -338,17 +339,23 @@ pub enum Icon {
     Stock(String),
     Cached {
         path: PathBuf,
+        #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
     Remote {
         url: Url,
+        #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
     Local {
         path: PathBuf,
+        #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
 }
