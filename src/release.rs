@@ -13,7 +13,11 @@ pub struct Release {
         skip_serializing_if = "Option::is_none"
     )]
     pub date: Option<DateTime<Utc>>,
-    #[serde(deserialize_with = "timestamp_deserialize", default, skip_serializing_if = "Option::is_none")]
+    #[serde(
+        deserialize_with = "timestamp_deserialize",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
     pub date_eol: Option<DateTime<Utc>>,
     pub version: String,
     #[serde(rename = "type", default)]
@@ -22,7 +26,11 @@ pub struct Release {
     pub sizes: Vec<Size>,
     #[serde(default)]
     pub urgency: ReleaseUrgency,
-    #[serde(default, deserialize_with = "artifacts_deserialize", skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        deserialize_with = "artifacts_deserialize",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub artifacts: Vec<Artifact>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<Url>,

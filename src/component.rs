@@ -20,38 +20,49 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all(serialize = "PascalCase"))]
 pub struct Component {
-    #[serde(rename(deserialize = "type", serialize = "Type"), default)]
-    pub kind: ComponentKind,
-    #[serde(deserialize_with = "app_id_deserialize", rename(serialize = "ID"))]
-    pub id: AppId,
-    #[serde(deserialize_with = "translatable_deserialize")]
-    pub name: TranslatableString,
     #[serde(
-        deserialize_with = "some_translatable_deserialize",
-        default
+        rename(deserialize = "type", serialize = "Type"),
+        default,
+        alias = "Type"
     )]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kind: ComponentKind,
+    #[serde(
+        deserialize_with = "app_id_deserialize",
+        rename(serialize = "ID"),
+        alias = "ID"
+    )]
+    pub id: AppId,
+    #[serde(deserialize_with = "translatable_deserialize", alias = "Name")]
+    pub name: TranslatableString,
+    #[serde(deserialize_with = "some_translatable_deserialize", default)]
+    #[serde(skip_serializing_if = "Option::is_none", alias = "Summary")]
     pub summary: Option<TranslatableString>,
     #[serde(
         default,
         deserialize_with = "license_deserialize",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        alias = "ProjectLicense"
     )]
     pub project_license: Option<License>,
     #[serde(
         default,
         deserialize_with = "license_deserialize",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        alias = "MetadataLicense"
     )]
     pub metadata_license: Option<License>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none", alias = "ProjectGroup")]
     pub project_group: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        skip_serializing_if = "Option::is_none",
+        alias = "CompulsoryForDesktop"
+    )]
     pub compulsory_for_desktop: Option<String>,
     #[serde(
         default,
         deserialize_with = "extends_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Extends"
     )]
     pub extends: Vec<AppId>,
 
@@ -59,103 +70,122 @@ pub struct Component {
         rename(deserialize = "icon", serialize = "Icon"),
         deserialize_with = "icon_deserialize",
         default,
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Icon"
     )]
     pub icons: Vec<Icon>,
     #[serde(
         deserialize_with = "screenshots_deserialize",
         default,
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Screenshots"
     )]
     pub screenshots: Vec<Screenshot>,
     #[serde(
         rename(deserialize = "url", serialize = "Url"),
         deserialize_with = "urls_deserialize",
         default,
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Url"
     )]
     pub urls: Vec<ProjectUrl>,
     #[serde(
         deserialize_with = "some_translatable_deserialize",
-        default
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "DeveloperName"
     )]
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub developer_name: Option<TranslatableString>,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none", alias = "UpdateContact")]
     pub update_contact: Option<String>,
     #[serde(
         default,
         deserialize_with = "category_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Categories"
     )]
     pub categories: Vec<Category>,
     #[serde(
         rename(deserialize = "launchable", serialize = "Launchable"),
         deserialize_with = "launchable_deserialize",
-        default
+        default,
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Launchable"
     )]
-    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub launchables: Vec<Launchable>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(default, skip_serializing_if = "Option::is_none", alias = "PkgName")]
     pub pkgname: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[serde(
+        default,
+        skip_serializing_if = "Option::is_none",
+        alias = "SourcePkgname"
+    )]
     pub source_pkgname: Option<String>,
     #[serde(
         rename(deserialize = "bundle", serialize = "Bundles"),
         deserialize_with = "bundle_deserialize",
         default,
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Bundle"
     )]
     pub bundles: Vec<Bundle>,
     #[serde(
         default,
         deserialize_with = "releases_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Releases"
     )]
     pub releases: Vec<Release>,
     #[serde(
         deserialize_with = "languages_deserialize",
         default,
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Languages"
     )]
     pub languages: Vec<Language>,
 
     #[serde(
         default,
         deserialize_with = "mimetypes_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Mimetypes"
     )]
     pub mimetypes: Vec<String>,
     #[serde(
         default,
         deserialize_with = "kudos_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Kudos"
     )]
     pub kudos: Vec<Kudo>,
 
     #[serde(
         default,
         deserialize_with = "keywords_deserialize",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        alias = "Keywords"
     )]
     pub keywords: Option<TranslatableVec>,
     #[serde(
         default,
         deserialize_with = "content_rating_deserialize",
-        skip_serializing_if = "Option::is_none"
+        skip_serializing_if = "Option::is_none",
+        alias = "ContentRating"
     )]
     pub content_rating: Option<ContentRating>,
     #[serde(
         default,
         deserialize_with = "provides_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Provides"
     )]
     pub provides: Vec<Provide>,
     #[serde(
         default,
         rename(deserialize = "translation", serialize = "Translation"),
         deserialize_with = "translation_deserialize",
-        skip_serializing_if = "Vec::is_empty"
+        skip_serializing_if = "Vec::is_empty",
+        alias = "Translation"
     )]
     pub translations: Vec<Translation>,
 }

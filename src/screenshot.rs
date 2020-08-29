@@ -12,7 +12,11 @@ pub struct Screenshot {
         default
     )]
     pub is_default: bool,
-    #[serde(deserialize_with = "some_translatable_deserialize", default, skip_serializing_if = "Option::is_none")]
+    #[serde(
+        deserialize_with = "some_translatable_deserialize",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
     pub caption: Option<TranslatableString>,
     #[serde(rename = "image", default, skip_serializing_if = "Vec::is_empty")]
     pub images: Vec<Image>,
