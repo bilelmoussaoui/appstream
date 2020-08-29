@@ -12,11 +12,12 @@ use std::io::prelude::*;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
+#[serde(rename_all(serialize = "PascalCase"))]
 pub struct Collection {
     pub version: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
-    #[serde(rename = "component", default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(rename(deserialize = "component", serialize = "Component"), default, skip_serializing_if = "Vec::is_empty")]
     pub components: Vec<Component>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
