@@ -101,7 +101,7 @@ pub struct Component {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_pkgname: Option<String>,
     #[serde(
-        rename(deserialize = "bundle", serialize = "Bundle"),
+        rename(deserialize = "bundle", serialize = "Bundles"),
         deserialize_with = "bundle_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty"

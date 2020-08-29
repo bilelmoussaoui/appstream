@@ -18,7 +18,7 @@ pub enum Bundle {
         #[serde(skip_serializing_if = "Option::is_none")]
         runtime: Option<String>,
         sdk: String,
-        #[serde(rename = "$value", default)]
+        #[serde(rename(deserialize = "$value", serialize = "id"))]
         id: String,
     },
     AppImage(String),
@@ -451,7 +451,7 @@ pub enum Provide {
     Firmware {
         #[serde(rename = "type")]
         kind: FirmwareKind,
-        #[serde(rename = "$value")]
+        #[serde(rename(deserialize = "$value", serialize = "item"))]
         item: String,
     },
     Python2(String),
