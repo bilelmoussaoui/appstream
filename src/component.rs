@@ -21,7 +21,7 @@ use std::path::PathBuf;
 #[serde(rename_all(serialize = "PascalCase"))]
 pub struct Component {
     #[serde(
-        rename(deserialize = "type", serialize = "Type"),
+        rename = "type",
         default,
         alias = "Type"
     )]
@@ -67,7 +67,7 @@ pub struct Component {
     pub extends: Vec<AppId>,
 
     #[serde(
-        rename(deserialize = "icon", serialize = "Icon"),
+        rename = "icon",
         deserialize_with = "icon_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty",
@@ -82,7 +82,7 @@ pub struct Component {
     )]
     pub screenshots: Vec<Screenshot>,
     #[serde(
-        rename(deserialize = "url", serialize = "Url"),
+        rename = "url",
         deserialize_with = "urls_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty",
@@ -106,7 +106,7 @@ pub struct Component {
     )]
     pub categories: Vec<Category>,
     #[serde(
-        rename(deserialize = "launchable", serialize = "Launchable"),
+        rename = "launchable",
         deserialize_with = "launchable_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty",
@@ -122,7 +122,7 @@ pub struct Component {
     )]
     pub source_pkgname: Option<String>,
     #[serde(
-        rename(deserialize = "bundle", serialize = "Bundles"),
+        rename = "bundle",
         deserialize_with = "bundle_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty",
@@ -182,7 +182,7 @@ pub struct Component {
     pub provides: Vec<Provide>,
     #[serde(
         default,
-        rename(deserialize = "translation", serialize = "Translation"),
+        rename = "translation",
         deserialize_with = "translation_deserialize",
         skip_serializing_if = "Vec::is_empty",
         alias = "Translation"

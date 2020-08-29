@@ -19,7 +19,7 @@ pub struct Collection {
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "Origin")]
     pub origin: Option<String>,
     #[serde(
-        rename(deserialize = "component", serialize = "Component"),
+        rename = "component",
         default,
         skip_serializing_if = "Vec::is_empty",
         alias = "Component"
