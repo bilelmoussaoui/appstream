@@ -45,7 +45,7 @@ impl Serialize for Screenshot {
         let mut thumbnails = Vec::new();
 
         #[derive(Serialize)]
-        struct ScreenshotObject{
+        struct ScreenshotObject {
             url: Url,
             #[serde(skip_serializing_if = "Option::is_none")]
             width: Option<u32>,
@@ -53,10 +53,10 @@ impl Serialize for Screenshot {
             height: Option<u32>,
         }
 
-        for image in &self.images{
-            match image.kind{
+        for image in &self.images {
+            match image.kind {
                 ImageKind::Thumbnail => {
-                    let o = ScreenshotObject{
+                    let o = ScreenshotObject {
                         url: image.url.clone(),
                         width: image.width.clone(),
                         height: image.height.clone(),
@@ -64,7 +64,7 @@ impl Serialize for Screenshot {
                     thumbnails.insert(0, o);
                 }
                 ImageKind::Source => {
-                    let o = ScreenshotObject{
+                    let o = ScreenshotObject {
                         url: image.url.clone(),
                         width: image.width.clone(),
                         height: image.height.clone(),
