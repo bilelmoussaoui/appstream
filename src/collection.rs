@@ -13,9 +13,8 @@ use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Collection {
-    #[serde(alias = "Version")]
     pub version: String,
-    #[serde(default, skip_serializing_if = "Option::is_none", alias = "Origin")]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
     #[serde(rename = "component", default, skip_serializing_if = "Vec::is_empty")]
     pub components: Vec<Component>,
