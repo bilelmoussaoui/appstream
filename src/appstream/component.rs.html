@@ -624,6 +624,77 @@
 <span id="624">624</span>
 <span id="625">625</span>
 <span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
@@ -650,70 +721,141 @@
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ComponentKind</span>,
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;app_id_deserialize&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">AppId</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;name&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;translatable_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;translatable_deserialize&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
     <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;summary&quot;</span>,
         <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;some_translatable_deserialize&quot;</span>,
-        <span class="ident">default</span>
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
     )]</span>
     <span class="kw">pub</span> <span class="ident">summary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;license_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;license_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">project_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;license_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;license_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">metadata_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">project_group</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">compulsory_for_desktop</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;extends_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;extends_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">extends</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AppId</span><span class="op">&gt;</span>,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;icon&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;icon_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;icon&quot;</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;icon_deserialize&quot;</span>,
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">icons</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Icon</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;screenshots_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;screenshots_deserialize&quot;</span>,
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">screenshots</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Screenshot</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;url&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;urls_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;url&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;urls&quot;</span>),
+        <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;urls&quot;</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;urls_deserialize&quot;</span>,
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">urls</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ProjectUrl</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;developer_name&quot;</span>,
         <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;some_translatable_deserialize&quot;</span>,
-        <span class="ident">default</span>
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
     )]</span>
     <span class="kw">pub</span> <span class="ident">developer_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">update_contact</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;category_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;category_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">categories</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Category</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;launchable&quot;</span>,
+        <span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;launchable&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;launchables&quot;</span>),
+        <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;launchables&quot;</span>,
         <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;launchable_deserialize&quot;</span>,
-        <span class="ident">default</span>
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
     )]</span>
     <span class="kw">pub</span> <span class="ident">launchables</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Launchable</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;bundle&quot;</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;bundle_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;bundle&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;bundles&quot;</span>),
+        <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;bundles&quot;</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;bundle_deserialize&quot;</span>,
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">bundles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;releases_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;releases_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">releases</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Release</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;languages_deserialize&quot;</span>, <span class="ident">default</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;languages_deserialize&quot;</span>,
+        <span class="ident">default</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">languages</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Language</span><span class="op">&gt;</span>,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;mimetypes_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;mimetypes_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">mimetypes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;kudos_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;kudos_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">kudos</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Kudo</span><span class="op">&gt;</span>,
 
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;keywords_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;keywords_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">keywords</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableVec</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;content_rating_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;content_rating_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">content_rating</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ContentRating</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;provides_deserialize&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;provides_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
+    )]</span>
     <span class="kw">pub</span> <span class="ident">provides</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Provide</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">serde</span>(
         <span class="ident">default</span>,
         <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;translation&quot;</span>,
-        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;translation_deserialize&quot;</span>
+        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;translation_deserialize&quot;</span>,
+        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
     )]</span>
     <span class="kw">pub</span> <span class="ident">translations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Translation</span><span class="op">&gt;</span>,
 }
