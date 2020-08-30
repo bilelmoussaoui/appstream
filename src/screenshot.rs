@@ -1,7 +1,7 @@
 use super::de::*;
 use super::enums::ImageKind;
 use super::types::TranslatableString;
-use serde::ser::{SerializeMap, SerializeSeq};
+use serde::ser::SerializeMap;
 use serde::{Deserialize, Serialize, Serializer};
 use url::Url;
 
@@ -41,7 +41,7 @@ impl Serialize for Screenshot {
     where
         S: Serializer,
     {
-        let mut screenshot_map = serializer.serialize_map(Some(1))?;
+        let mut screenshot_map = serializer.serialize_map(None)?;
         let mut thumbnails = Vec::new();
 
         #[derive(Serialize)]

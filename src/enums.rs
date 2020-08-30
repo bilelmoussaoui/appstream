@@ -1,4 +1,5 @@
-use serde::{Deserialize, Serialize};
+use serde::ser::SerializeMap;
+use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
 use strum_macros::{EnumString, ToString};
@@ -11,7 +12,7 @@ pub enum ArtifactKind {
     Binary,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all(serialize = "kebab-case"))]
 pub enum Bundle {
     Limba(String),
@@ -25,6 +26,44 @@ pub enum Bundle {
     AppImage(String),
     Snap(String),
     Tarball(String),
+}
+
+impl Serialize for Bundle {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut bundle_map = serializer.serialize_map(None)?;
+
+        match self {
+            Bundle::Limba(id) => {
+                bundle_map.serialize_entry("type", "limba")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+            Bundle::Flatpak { runtime, sdk, id } => {
+                bundle_map.serialize_entry("type", "flatpak")?;
+                bundle_map.serialize_entry("id", id)?;
+                bundle_map.serialize_entry("sdk", sdk)?;
+                if runtime.is_some() {
+                    bundle_map.serialize_entry("runtime", runtime.as_ref().unwrap())?;
+                }
+            }
+            Bundle::AppImage(id) => {
+                bundle_map.serialize_entry("type", "appimage")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+            Bundle::Snap(id) => {
+                bundle_map.serialize_entry("type", "snap")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+            Bundle::Tarball(id) => {
+                bundle_map.serialize_entry("type", "tarball")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+        }
+
+        bundle_map.end()
+    }
 }
 
 #[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
