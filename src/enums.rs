@@ -6,7 +6,7 @@ use strum_macros::{EnumString, ToString};
 use url::Url;
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
+#[serde(rename_all = "lowercase")]
 pub enum ArtifactKind {
     Source,
     Binary,
@@ -375,7 +375,7 @@ pub enum ContentState {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all(serialize = "kebab-case"))]
+#[serde(rename_all(serialize = "lowercase"))]
 pub enum Icon {
     Stock(String),
     Cached {
@@ -402,7 +402,7 @@ pub enum Icon {
 }
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
+#[serde(rename_all = "lowercase")]
 pub enum ImageKind {
     Source,
     Thumbnail,
@@ -420,7 +420,7 @@ pub enum Kudo {
 }
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
-#[serde(rename_all(serialize = "kebab-case"))]
+#[serde(rename_all(serialize = "lowercase"))]
 pub enum Launchable {
     DesktopId(String),
     Service(String),
@@ -462,7 +462,7 @@ pub enum Size {
 }
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
+#[serde(rename_all = "lowercase")]
 pub enum ReleaseUrgency {
     Low,
     Medium,
@@ -477,7 +477,7 @@ impl Default for ReleaseUrgency {
 }
 
 #[derive(Clone, Debug, ToString, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
+#[serde(rename_all = "lowercase")]
 pub enum FirmwareKind {
     Flashed,
     Runtime,

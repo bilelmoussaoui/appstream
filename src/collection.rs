@@ -18,18 +18,9 @@ pub struct Collection {
     pub version: String,
     #[serde(default, skip_serializing_if = "Option::is_none", alias = "Origin")]
     pub origin: Option<String>,
-    #[serde(
-        rename(deserialize = "component", serialize = "Component"),
-        default,
-        skip_serializing_if = "Vec::is_empty",
-        alias = "Component"
-    )]
+    #[serde(rename = "component", default, skip_serializing_if = "Vec::is_empty")]
     pub components: Vec<Component>,
-    #[serde(
-        default,
-        skip_serializing_if = "Option::is_none",
-        alias = "Architecture"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
 }
 
