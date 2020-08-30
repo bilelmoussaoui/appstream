@@ -13,7 +13,6 @@ pub enum ArtifactKind {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
-#[serde(rename_all(serialize = "kebab-case"))]
 pub enum Bundle {
     Limba(String),
     Flatpak {
@@ -375,7 +374,6 @@ pub enum ContentState {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all(serialize = "lowercase"))]
 pub enum Icon {
     Stock(String),
     Cached {
@@ -420,7 +418,6 @@ pub enum Kudo {
 }
 
 #[derive(Clone, Debug, Serialize, PartialEq)]
-#[serde(rename_all(serialize = "lowercase"))]
 pub enum Launchable {
     DesktopId(String),
     Service(String),

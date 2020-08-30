@@ -12,7 +12,6 @@ use std::io::prelude::*;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
-#[serde(rename_all(serialize = "PascalCase"))]
 pub struct Collection {
     #[serde(alias = "Version")]
     pub version: String,
