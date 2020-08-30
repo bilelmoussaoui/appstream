@@ -41,7 +41,7 @@ where
         _type: String,
         runtime: Option<String>,
         sdk: String,
-        #[serde(rename = "$value", default)]
+        #[serde(rename(deserialize = "$value", serialize = "id"))]
         id: String,
     };
 

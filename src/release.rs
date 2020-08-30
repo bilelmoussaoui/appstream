@@ -9,27 +9,36 @@ pub struct Release {
     #[serde(
         deserialize_with = "timestamp_deserialize",
         alias = "timestamp",
-        default
+        default,
+        skip_serializing_if = "Option::is_none"
     )]
     pub date: Option<DateTime<Utc>>,
-    #[serde(deserialize_with = "timestamp_deserialize", default)]
+    #[serde(
+        deserialize_with = "timestamp_deserialize",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
     pub date_eol: Option<DateTime<Utc>>,
     pub version: String,
     #[serde(rename = "type", default)]
     pub kind: ReleaseKind,
-    #[serde(default, rename = "size")]
+    #[serde(default, rename = "size", skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
     #[serde(default)]
     pub urgency: ReleaseUrgency,
-    #[serde(default, deserialize_with = "artifacts_deserialize")]
+    #[serde(
+        default,
+        deserialize_with = "artifacts_deserialize",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub artifacts: Vec<Artifact>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<Url>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Artifact {
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
     #[serde(rename = "type")]
     pub kind: ArtifactKind,

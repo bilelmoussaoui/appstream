@@ -1,4 +1,5 @@
-use serde::{Deserialize, Serialize};
+use serde::ser::{SerializeMap, SerializeStruct};
+use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
 use strum_macros::{EnumString, ToString};
@@ -11,18 +12,57 @@ pub enum ArtifactKind {
     Binary,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub enum Bundle {
     Limba(String),
     Flatpak {
+        #[serde(skip_serializing_if = "Option::is_none")]
         runtime: Option<String>,
         sdk: String,
-        #[serde(rename = "$value", default)]
+        #[serde(rename(deserialize = "$value", serialize = "id"))]
         id: String,
     },
     AppImage(String),
     Snap(String),
     Tarball(String),
+}
+
+impl Serialize for Bundle {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut bundle_map = serializer.serialize_map(None)?;
+
+        match self {
+            Bundle::Limba(id) => {
+                bundle_map.serialize_entry("type", "limba")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+            Bundle::Flatpak { runtime, sdk, id } => {
+                bundle_map.serialize_entry("type", "flatpak")?;
+                bundle_map.serialize_entry("id", id)?;
+                bundle_map.serialize_entry("sdk", sdk)?;
+                if runtime.is_some() {
+                    bundle_map.serialize_entry("runtime", runtime.as_ref().unwrap())?;
+                }
+            }
+            Bundle::AppImage(id) => {
+                bundle_map.serialize_entry("type", "appimage")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+            Bundle::Snap(id) => {
+                bundle_map.serialize_entry("type", "snap")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+            Bundle::Tarball(id) => {
+                bundle_map.serialize_entry("type", "tarball")?;
+                bundle_map.serialize_entry("id", id)?;
+            }
+        }
+
+        bundle_map.end()
+    }
 }
 
 #[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
@@ -333,24 +373,78 @@ pub enum ContentState {
     Intense,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub enum Icon {
     Stock(String),
     Cached {
         path: PathBuf,
+        #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
     Remote {
         url: Url,
+        #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
     Local {
         path: PathBuf,
+        #[serde(skip_serializing_if = "Option::is_none")]
         width: Option<u32>,
+        #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
+}
+
+impl Serialize for Icon {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match self {
+            Icon::Stock(path) => {
+                let mut s = serializer.serialize_struct("icon", 2)?;
+                s.serialize_field("type", "stock")?;
+                s.serialize_field("name", &path)?;
+                s.end()
+            }
+            Icon::Remote { url, width, height } => {
+                let mut s = serializer.serialize_struct("icon", 4)?;
+                s.serialize_field("type", "remote")?;
+                s.serialize_field("url", &url)?;
+                s.serialize_field("width", &width)?;
+                s.serialize_field("height", &height)?;
+                s.end()
+            }
+            Icon::Cached {
+                path,
+                width,
+                height,
+            } => {
+                let mut s = serializer.serialize_struct("icon", 4)?;
+                s.serialize_field("type", "cached")?;
+                s.serialize_field("path", &path)?;
+                s.serialize_field("width", &width)?;
+                s.serialize_field("height", &height)?;
+                s.end()
+            }
+            Icon::Local {
+                path,
+                width,
+                height,
+            } => {
+                let mut s = serializer.serialize_struct("icon", 4)?;
+                s.serialize_field("type", "local")?;
+                s.serialize_field("path", &path)?;
+                s.serialize_field("width", &width)?;
+                s.serialize_field("height", &height)?;
+                s.end()
+            }
+        }
+    }
 }
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
@@ -371,7 +465,7 @@ pub enum Kudo {
     UserDocs,
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Launchable {
     DesktopId(String),
     Service(String),
@@ -380,7 +474,39 @@ pub enum Launchable {
     Unknown(String),
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+impl Serialize for Launchable {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("launchable", 2)?;
+        match self {
+            Launchable::DesktopId(app_id) => {
+                s.serialize_field("type", "desktop_id")?;
+                s.serialize_field("name", &app_id)?;
+            }
+            Launchable::Service(name) => {
+                s.serialize_field("type", "service")?;
+                s.serialize_field("name", &name)?;
+            }
+            Launchable::Url(url) => {
+                s.serialize_field("type", "url")?;
+                s.serialize_field("name", &url)?;
+            }
+            Launchable::CockpitManifest(manifest) => {
+                s.serialize_field("type", "cockpit_manifest")?;
+                s.serialize_field("name", &manifest)?;
+            }
+            Launchable::Unknown(name) => {
+                s.serialize_field("type", "unknown")?;
+                s.serialize_field("name", &name)?;
+            }
+        }
+        s.end()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum ProjectUrl {
     Donation(Url),
     Translate(Url),
@@ -390,6 +516,50 @@ pub enum ProjectUrl {
     Faq(Url),
     Contact(Url),
     Unknown(Url),
+}
+
+impl Serialize for ProjectUrl {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("url", 2)?;
+        match self {
+            ProjectUrl::Donation(url) => {
+                s.serialize_field("type", "donation")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Translate(url) => {
+                s.serialize_field("type", "translate")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Homepage(url) => {
+                s.serialize_field("type", "homepage")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::BugTracker(url) => {
+                s.serialize_field("type", "bugtracker")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Help(url) => {
+                s.serialize_field("type", "help")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Faq(url) => {
+                s.serialize_field("type", "faq")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Contact(url) => {
+                s.serialize_field("type", "contact")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Unknown(url) => {
+                s.serialize_field("type", "unknown")?;
+                s.serialize_field("url", &url)?;
+            }
+        }
+        s.end()
+    }
 }
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
@@ -444,7 +614,7 @@ pub enum Provide {
     Firmware {
         #[serde(rename = "type")]
         kind: FirmwareKind,
-        #[serde(rename = "$value")]
+        #[serde(rename(deserialize = "$value", serialize = "item"))]
         item: String,
     },
     Python2(String),
@@ -455,7 +625,7 @@ pub enum Provide {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "kebab-case", tag = "type", content = "$value")]
+#[serde(rename_all = "kebab-case", tag = "type", content = "name")]
 pub enum Translation {
     Gettext(String),
     Qt(String),

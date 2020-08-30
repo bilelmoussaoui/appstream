@@ -14,11 +14,11 @@ use std::path::PathBuf;
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub struct Collection {
     pub version: String,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
-    #[serde(rename = "component", default)]
+    #[serde(rename = "component", default, skip_serializing_if = "Vec::is_empty")]
     pub components: Vec<Component>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
 }
 
