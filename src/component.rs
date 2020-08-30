@@ -25,8 +25,11 @@ pub struct Component {
     pub id: AppId,
     #[serde(deserialize_with = "translatable_deserialize")]
     pub name: TranslatableString,
-    #[serde(deserialize_with = "some_translatable_deserialize", default)]
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(
+        deserialize_with = "some_translatable_deserialize",
+        default,
+        skip_serializing_if = "Option::is_none"
+    )]
     pub summary: Option<TranslatableString>,
     #[serde(
         default,
