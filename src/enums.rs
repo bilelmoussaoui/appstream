@@ -491,25 +491,25 @@ impl Serialize for Launchable {
     {
         let mut s = serializer.serialize_struct("launchable", 2)?;
         match self {
-            Launchable::DesktopId(url) => {
+            Launchable::DesktopId(app_id) => {
                 s.serialize_field("type", "desktop_id")?;
-                s.serialize_field("name", &url)?;
+                s.serialize_field("name", &app_id)?;
             }
-            Launchable::Service(url) => {
+            Launchable::Service(name) => {
                 s.serialize_field("type", "service")?;
-                s.serialize_field("name", &url)?;
+                s.serialize_field("name", &name)?;
             }
             Launchable::Url(url) => {
                 s.serialize_field("type", "url")?;
                 s.serialize_field("name", &url)?;
             }
-            Launchable::CockpitManifest(url) => {
+            Launchable::CockpitManifest(manifest) => {
                 s.serialize_field("type", "cockpit_manifest")?;
-                s.serialize_field("name", &url)?;
+                s.serialize_field("name", &manifest)?;
             }
-            Launchable::Unknown(url) => {
+            Launchable::Unknown(name) => {
                 s.serialize_field("type", "unknown")?;
-                s.serialize_field("name", &url)?;
+                s.serialize_field("name", &name)?;
             }
         }
         s.end()
