@@ -90,7 +90,8 @@ pub struct Component {
     )]
     pub categories: Vec<Category>,
     #[serde(
-        rename = "launchable",
+        rename(deserialize = "launchable", serialize = "launchables"),
+        alias = "launchables",
         deserialize_with = "launchable_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty"
