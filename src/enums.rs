@@ -1,4 +1,4 @@
-use serde::ser::SerializeMap;
+use serde::ser::{SerializeMap, SerializeStruct};
 use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
@@ -475,7 +475,7 @@ pub enum Kudo {
     UserDocs,
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Launchable {
     DesktopId(String),
     Service(String),
@@ -484,7 +484,39 @@ pub enum Launchable {
     Unknown(String),
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq)]
+impl Serialize for Launchable {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("launchable", 2)?;
+        match self {
+            Launchable::DesktopId(url) => {
+                s.serialize_field("type", "desktop_id")?;
+                s.serialize_field("name", &url)?;
+            }
+            Launchable::Service(url) => {
+                s.serialize_field("type", "service")?;
+                s.serialize_field("name", &url)?;
+            }
+            Launchable::Url(url) => {
+                s.serialize_field("type", "url")?;
+                s.serialize_field("name", &url)?;
+            }
+            Launchable::CockpitManifest(url) => {
+                s.serialize_field("type", "cockpit_manifest")?;
+                s.serialize_field("name", &url)?;
+            }
+            Launchable::Unknown(url) => {
+                s.serialize_field("type", "unknown")?;
+                s.serialize_field("name", &url)?;
+            }
+        }
+        s.end()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub enum ProjectUrl {
     Donation(Url),
     Translate(Url),
@@ -494,6 +526,50 @@ pub enum ProjectUrl {
     Faq(Url),
     Contact(Url),
     Unknown(Url),
+}
+
+impl Serialize for ProjectUrl {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut s = serializer.serialize_struct("url", 2)?;
+        match self {
+            ProjectUrl::Donation(url) => {
+                s.serialize_field("type", "donation")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Translate(url) => {
+                s.serialize_field("type", "translate")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Homepage(url) => {
+                s.serialize_field("type", "homepage")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::BugTracker(url) => {
+                s.serialize_field("type", "bugtracker")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Help(url) => {
+                s.serialize_field("type", "help")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Faq(url) => {
+                s.serialize_field("type", "faq")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Contact(url) => {
+                s.serialize_field("type", "contact")?;
+                s.serialize_field("url", &url)?;
+            }
+            ProjectUrl::Unknown(url) => {
+                s.serialize_field("type", "unknown")?;
+                s.serialize_field("url", &url)?;
+            }
+        }
+        s.end()
+    }
 }
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
