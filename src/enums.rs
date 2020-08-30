@@ -559,7 +559,7 @@ pub enum Provide {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "kebab-case", tag = "type", content = "$value")]
+#[serde(rename_all = "kebab-case", tag = "type", content = "name")]
 pub enum Translation {
     Gettext(String),
     Qt(String),

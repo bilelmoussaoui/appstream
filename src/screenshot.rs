@@ -18,7 +18,12 @@ pub struct Screenshot {
         skip_serializing_if = "Option::is_none"
     )]
     pub caption: Option<TranslatableString>,
-    #[serde(rename = "image", default, skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        rename(deserialize = "image", serialize = "images"),
+        alias = "images",
+        default,
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub images: Vec<Image>,
     #[serde(rename = "video", default, skip_serializing_if = "Vec::is_empty")]
     pub videos: Vec<Video>,

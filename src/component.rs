@@ -68,7 +68,8 @@ pub struct Component {
     )]
     pub screenshots: Vec<Screenshot>,
     #[serde(
-        rename = "url",
+        rename(deserialize = "url", serialize = "urls"),
+        alias = "urls",
         deserialize_with = "urls_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty"
@@ -100,7 +101,8 @@ pub struct Component {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_pkgname: Option<String>,
     #[serde(
-        rename = "bundle",
+        rename(deserialize = "bundle", serialize = "bundles"),
+        alias = "bundles",
         deserialize_with = "bundle_deserialize",
         default,
         skip_serializing_if = "Vec::is_empty"
