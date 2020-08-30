@@ -7,31 +7,38 @@ use url::Url;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Release {
     #[serde(
-        deserialize_with = "timestamp_deserialize",
-        alias = "timestamp",
         default,
+        alias = "timestamp",
+        deserialize_with = "timestamp_deserialize",
         skip_serializing_if = "Option::is_none"
     )]
     pub date: Option<DateTime<Utc>>,
+
     #[serde(
-        deserialize_with = "timestamp_deserialize",
         default,
+        deserialize_with = "timestamp_deserialize",
         skip_serializing_if = "Option::is_none"
     )]
     pub date_eol: Option<DateTime<Utc>>,
+
     pub version: String,
+
     #[serde(rename = "type", default)]
     pub kind: ReleaseKind,
+
     #[serde(default, rename = "size", skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
+
     #[serde(default)]
     pub urgency: ReleaseUrgency,
+
     #[serde(
         default,
         deserialize_with = "artifacts_deserialize",
         skip_serializing_if = "Vec::is_empty"
     )]
     pub artifacts: Vec<Artifact>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<Url>,
 }
@@ -40,15 +47,20 @@ pub struct Release {
 pub struct Artifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
+
     #[serde(rename = "type")]
     pub kind: ArtifactKind,
-    #[serde(default, rename = "size")]
+
+    #[serde(default, rename = "size", skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
+
     #[serde(rename = "location")]
     pub url: Url,
-    #[serde(default, rename = "checksum")]
+
+    #[serde(default, rename = "checksum", skip_serializing_if = "Vec::is_empty")]
     pub checksums: Vec<Checksum>,
-    #[serde(default, rename = "bundle")]
+
+    #[serde(default, rename = "bundle", skip_serializing_if = "Vec::is_empty")]
     pub bundles: Vec<Bundle>,
 }
 
