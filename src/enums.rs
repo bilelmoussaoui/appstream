@@ -373,7 +373,7 @@ pub enum ContentState {
     Intense,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub enum Icon {
     Stock(String),
     Cached {
@@ -397,6 +397,64 @@ pub enum Icon {
         #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
+}
+
+impl Serialize for Icon {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        #[derive(Serialize, Default)]
+        struct IconObject {
+            #[serde(rename = "type")]
+            pub icon_type: String,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            pub name: Option<String>,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            pub path: Option<PathBuf>,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            pub url: Option<Url>,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            pub width: Option<u32>,
+            #[serde(skip_serializing_if = "Option::is_none")]
+            pub height: Option<u32>,
+        }
+        let mut icon_object = IconObject::default();
+
+        match self {
+            Icon::Stock(name) => {
+                icon_object.icon_type = "stock".to_string();
+                icon_object.name = Some(name.clone());
+            }
+            Icon::Cached {
+                path,
+                width,
+                height,
+            } => {
+                icon_object.icon_type = "cached".to_string();
+                icon_object.path = Some(path.clone());
+                icon_object.width = width.clone();
+                icon_object.height = height.clone();
+            }
+            Icon::Remote { url, width, height } => {
+                icon_object.icon_type = "remote".to_string();
+                icon_object.url = Some(url.clone());
+                icon_object.width = width.clone();
+                icon_object.height = height.clone();
+            }
+            Icon::Local {
+                path,
+                width,
+                height,
+            } => {
+                icon_object.icon_type = "local".to_string();
+                icon_object.path = Some(path.clone());
+                icon_object.width = width.clone();
+                icon_object.height = height.clone();
+            }
+        }
+        serializer.serialize_some(&icon_object)
+    }
 }
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
