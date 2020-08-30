@@ -404,56 +404,46 @@ impl Serialize for Icon {
     where
         S: Serializer,
     {
-        #[derive(Serialize, Default)]
-        struct IconObject {
-            #[serde(rename = "type")]
-            pub icon_type: String,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            pub name: Option<String>,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            pub path: Option<PathBuf>,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            pub url: Option<Url>,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            pub width: Option<u32>,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            pub height: Option<u32>,
-        }
-        let mut icon_object = IconObject::default();
-
         match self {
-            Icon::Stock(name) => {
-                icon_object.icon_type = "stock".to_string();
-                icon_object.name = Some(name.clone());
+            Icon::Stock(path) => {
+                let mut s = serializer.serialize_struct("icon", 2)?;
+                s.serialize_field("type", "stock")?;
+                s.serialize_field("name", &path)?;
+                s.end()
+            }
+            Icon::Remote { url, width, height } => {
+                let mut s = serializer.serialize_struct("icon", 4)?;
+                s.serialize_field("type", "remote")?;
+                s.serialize_field("url", &url)?;
+                s.serialize_field("width", &width)?;
+                s.serialize_field("height", &height)?;
+                s.end()
             }
             Icon::Cached {
                 path,
                 width,
                 height,
             } => {
-                icon_object.icon_type = "cached".to_string();
-                icon_object.path = Some(path.clone());
-                icon_object.width = *width;
-                icon_object.height = *height;
-            }
-            Icon::Remote { url, width, height } => {
-                icon_object.icon_type = "remote".to_string();
-                icon_object.url = Some(url.clone());
-                icon_object.width = *width;
-                icon_object.height = *height;
+                let mut s = serializer.serialize_struct("icon", 4)?;
+                s.serialize_field("type", "cached")?;
+                s.serialize_field("path", &path)?;
+                s.serialize_field("width", &width)?;
+                s.serialize_field("height", &height)?;
+                s.end()
             }
             Icon::Local {
                 path,
                 width,
                 height,
             } => {
-                icon_object.icon_type = "local".to_string();
-                icon_object.path = Some(path.clone());
-                icon_object.width = *width;
-                icon_object.height = *height;
+                let mut s = serializer.serialize_struct("icon", 4)?;
+                s.serialize_field("type", "local")?;
+                s.serialize_field("path", &path)?;
+                s.serialize_field("width", &width)?;
+                s.serialize_field("height", &height)?;
+                s.end()
             }
         }
-        serializer.serialize_some(&icon_object)
     }
 }
 
