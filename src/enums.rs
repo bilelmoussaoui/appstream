@@ -433,14 +433,14 @@ impl Serialize for Icon {
             } => {
                 icon_object.icon_type = "cached".to_string();
                 icon_object.path = Some(path.clone());
-                icon_object.width = width.clone();
-                icon_object.height = height.clone();
+                icon_object.width = *width;
+                icon_object.height = *height;
             }
             Icon::Remote { url, width, height } => {
                 icon_object.icon_type = "remote".to_string();
                 icon_object.url = Some(url.clone());
-                icon_object.width = width.clone();
-                icon_object.height = height.clone();
+                icon_object.width = *width;
+                icon_object.height = *height;
             }
             Icon::Local {
                 path,
@@ -449,8 +449,8 @@ impl Serialize for Icon {
             } => {
                 icon_object.icon_type = "local".to_string();
                 icon_object.path = Some(path.clone());
-                icon_object.width = width.clone();
-                icon_object.height = height.clone();
+                icon_object.width = *width;
+                icon_object.height = *height;
             }
         }
         serializer.serialize_some(&icon_object)
