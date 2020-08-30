@@ -1,11 +1,10 @@
 use super::de::*;
 use super::enums::ImageKind;
 use super::types::TranslatableString;
-use serde::ser::SerializeMap;
-use serde::{Deserialize, Serialize, Serializer};
+use serde::{Deserialize, Serialize};
 use url::Url;
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Screenshot {
     #[serde(
         rename(deserialize = "type", serialize = "default"),
@@ -33,50 +32,6 @@ impl Default for Screenshot {
             images: vec![],
             videos: vec![],
         }
-    }
-}
-
-impl Serialize for Screenshot {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let mut screenshot_map = serializer.serialize_map(None)?;
-        let mut thumbnails = Vec::new();
-
-        #[derive(Serialize)]
-        struct ScreenshotObject {
-            url: Url,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            width: Option<u32>,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            height: Option<u32>,
-        }
-
-        for image in &self.images {
-            match image.kind {
-                ImageKind::Thumbnail => {
-                    let o = ScreenshotObject {
-                        url: image.url.clone(),
-                        width: image.width.clone(),
-                        height: image.height.clone(),
-                    };
-                    thumbnails.insert(0, o);
-                }
-                ImageKind::Source => {
-                    let o = ScreenshotObject {
-                        url: image.url.clone(),
-                        width: image.width.clone(),
-                        height: image.height.clone(),
-                    };
-                    screenshot_map.serialize_entry("source-image", &o)?;
-                }
-            }
-        }
-
-        screenshot_map.serialize_entry("default", &self.is_default)?;
-        screenshot_map.serialize_entry("thumbnails", &thumbnails)?;
-        screenshot_map.end()
     }
 }
 
