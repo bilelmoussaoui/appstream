@@ -2,7 +2,7 @@ use serde::ser::{SerializeMap, SerializeStruct};
 use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
-use strum_macros::{EnumString, ToString};
+use strum_macros::{AsRefStr, EnumString, ToString};
 use url::Url;
 
 #[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
@@ -19,8 +19,8 @@ pub enum Bundle {
         #[serde(skip_serializing_if = "Option::is_none")]
         runtime: Option<String>,
         sdk: String,
-        #[serde(rename(deserialize = "$value", serialize = "id"))]
-        id: String,
+        #[serde(rename(deserialize = "$value", serialize = "ref"))]
+        reference: String,
     },
     AppImage(String),
     Snap(String),
@@ -39,9 +39,13 @@ impl Serialize for Bundle {
                 bundle_map.serialize_entry("type", "limba")?;
                 bundle_map.serialize_entry("id", id)?;
             }
-            Bundle::Flatpak { runtime, sdk, id } => {
+            Bundle::Flatpak {
+                runtime,
+                sdk,
+                reference,
+            } => {
                 bundle_map.serialize_entry("type", "flatpak")?;
-                bundle_map.serialize_entry("id", id)?;
+                bundle_map.serialize_entry("ref", reference)?;
                 bundle_map.serialize_entry("sdk", sdk)?;
                 if runtime.is_some() {
                     bundle_map.serialize_entry("runtime", runtime.as_ref().unwrap())?;
@@ -233,7 +237,7 @@ pub enum Checksum {
     Blake2s(String),
 }
 
-#[derive(Clone, Debug, Serialize, ToString, Deserialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, Serialize, ToString, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub enum ComponentKind {
     Runtime,
@@ -261,6 +265,28 @@ pub enum ComponentKind {
 impl Default for ComponentKind {
     fn default() -> Self {
         ComponentKind::Generic
+    }
+}
+
+impl From<&str> for ComponentKind {
+    fn from(c: &str) -> Self {
+        match c {
+            "runtime" => ComponentKind::Runtime,
+            "console" | "console-application" => ComponentKind::ConsoleApplication,
+            "desktop" | "desktop-application" => ComponentKind::DesktopApplication,
+            "webapp" => ComponentKind::WebApplication,
+            "inputmethod" => ComponentKind::InputMethod,
+            "operating-system" => ComponentKind::OS,
+            "theme" => ComponentKind::Theme,
+            "firmware" => ComponentKind::Firmware,
+            "addon" => ComponentKind::Addon,
+            "font" => ComponentKind::Font,
+            "icontheme" => ComponentKind::IconTheme,
+            "driver" => ComponentKind::Driver,
+            "codec" => ComponentKind::Codec,
+            "localization" => ComponentKind::Localization,
+            _ => ComponentKind::default(),
+        }
     }
 }
 

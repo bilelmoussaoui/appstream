@@ -94,6 +94,7 @@ mod license;
 mod release;
 mod screenshot;
 mod translatable_string;
+mod xml;
 
 pub mod types {
     pub use crate::app_id::AppId;

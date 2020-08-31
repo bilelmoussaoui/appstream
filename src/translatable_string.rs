@@ -1,16 +1,30 @@
 use serde::ser::SerializeMap;
-use serde::{Serialize, Serializer};
+use serde::{Deserialize, Serialize, Serializer};
 use std::collections::BTreeMap;
 
 pub const DEFAULT_LOCALE: &str = "C";
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
 pub struct TranslatableString(pub BTreeMap<String, String>, bool);
 
 impl Default for TranslatableString {
     fn default() -> Self {
         Self(BTreeMap::new(), false)
     }
+}
+
+fn element_to_xml(e: &xmltree::Element) -> String {
+    e.children
+        .iter()
+        .map(|node| match node {
+            xmltree::XMLNode::Element(c) => {
+                format!("<{}>{}</{}>", c.name, element_to_xml(c), c.name)
+            }
+            xmltree::XMLNode::Text(t) => t.clone(),
+            _ => "".to_string(),
+        })
+        .collect::<Vec<String>>()
+        .join("")
 }
 
 impl TranslatableString {
@@ -27,6 +41,15 @@ impl TranslatableString {
 
     pub fn set_is_markup(&mut self, is_markup: bool) {
         self.1 = is_markup;
+    }
+
+    pub fn add_for_element(&mut self, element: &xmltree::Element) {
+        let locale = element.attributes.get("lang").map(|l| l.as_str());
+        if self.1 {
+            self.add_for_locale(locale, &element_to_xml(element));
+        } else {
+            self.add_for_locale(locale, &element.get_text().unwrap().into_owned());
+        }
     }
 
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
@@ -79,6 +102,13 @@ impl TranslatableVec {
             self.add_for_locale(Some(locale), w);
         });
         self
+    }
+
+    pub fn add_for_element(&mut self, element: &xmltree::Element) {
+        self.add_for_locale(
+            element.attributes.get("lang").map(|l| l.as_str()),
+            &element.get_text().unwrap().into_owned(),
+        );
     }
 
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {

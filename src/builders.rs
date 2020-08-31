@@ -107,8 +107,8 @@ impl CollectionBuilder {
 
 pub struct ComponentBuilder {
     pub kind: ComponentKind,
-    pub id: AppId,
-    pub name: TranslatableString,
+    pub id: Option<AppId>,
+    pub name: Option<TranslatableString>,
     pub summary: Option<TranslatableString>,
     pub description: Option<TranslatableString>,
     pub project_license: Option<License>,
@@ -136,13 +136,12 @@ pub struct ComponentBuilder {
     pub source_pkgname: Option<String>,
 }
 
-#[allow(dead_code)]
-impl ComponentBuilder {
-    pub fn new(id: AppId, name: TranslatableString) -> Self {
+impl Default for ComponentBuilder {
+    fn default() -> Self {
         Self {
             kind: ComponentKind::Generic,
-            id,
-            name,
+            id: None,
+            name: None,
             summary: None,
             description: None,
             project_license: None,
@@ -169,6 +168,19 @@ impl ComponentBuilder {
             translations: vec![],
             source_pkgname: None,
         }
+    }
+}
+
+#[allow(dead_code)]
+impl ComponentBuilder {
+    pub fn id(mut self, id: AppId) -> Self {
+        self.id = Some(id);
+        self
+    }
+
+    pub fn name(mut self, name: TranslatableString) -> Self {
+        self.name = Some(name);
+        self
     }
 
     pub fn content_rating(mut self, content_rating: ContentRating) -> Self {
@@ -208,6 +220,11 @@ impl ComponentBuilder {
 
     pub fn keywords(mut self, keywords: TranslatableVec) -> Self {
         self.keywords = Some(keywords);
+        self
+    }
+
+    pub fn compulsory_for_desktop(mut self, compulsory_for_desktop: &str) -> Self {
+        self.compulsory_for_desktop = Some(compulsory_for_desktop.to_string());
         self
     }
 
@@ -299,9 +316,10 @@ impl ComponentBuilder {
     pub fn build(self) -> Component {
         Component {
             kind: self.kind,
-            id: self.id,
-            name: self.name,
+            id: self.id.expect("An 'id' is required"),
+            name: self.name.expect("A 'name' is required"),
             summary: self.summary,
+            description: self.description,
             project_license: self.project_license,
             metadata_license: self.metadata_license,
             project_group: self.project_group,

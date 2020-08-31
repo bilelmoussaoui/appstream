@@ -1,3 +1,4 @@
+use super::builders::ComponentBuilder;
 use super::de::*;
 use super::enums::{
     Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
@@ -34,6 +35,9 @@ pub struct Component {
         skip_serializing_if = "Option::is_none"
     )]
     pub summary: Option<TranslatableString>,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<TranslatableString>,
 
     #[serde(
         default,

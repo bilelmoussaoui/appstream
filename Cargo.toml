@@ -21,6 +21,7 @@ quick-xml = { version = "0.17", features = [ "serialize" ] }
 anyhow = "1.0"
 strum = "0.18"
 strum_macros = "0.18"
+xmltree = "*"
 
 [dependencies.flate2]
 version = "1.0"

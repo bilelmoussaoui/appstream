@@ -50,7 +50,7 @@ where
         .into_iter()
         .map(|b| match b._type.as_ref() {
             "flatpak" => Bundle::Flatpak {
-                id: b.id,
+                reference: b.id,
                 sdk: b.sdk,
                 runtime: b.runtime,
             },

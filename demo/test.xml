@@ -1,0 +1,136 @@
+<component type="desktop">
+    <id>org.gnome.design.Contrast</id>
+    <translation type="gettext">contrast</translation>
+    <name>Contrast</name>
+    <name xml:lang="cs">Kontrast</name>
+    <name xml:lang="da">Kontrast</name>
+    <name xml:lang="de">Kontrast</name>
+    <name xml:lang="es">Contraste</name>
+    <name xml:lang="eu">Kontrastea</name>
+    <name xml:lang="fi">Kontrasti</name>
+    <name xml:lang="hu">Kontraszt</name>
+    <name xml:lang="id">Kontras</name>
+    <name xml:lang="pl">Kontrast</name>
+    <name xml:lang="pt_BR">Contraste</name>
+    <name xml:lang="sv">Kontrast</name>
+    <name xml:lang="tr">Kontrast</name>
+    <summary>Check contrast between two colors</summary>
+    <summary xml:lang="cs">Zkontrolujte kontrast mezi dvěma barvami</summary>
+    <summary xml:lang="da">Undersøg kontrasten mellem to farver</summary>
+    <summary xml:lang="de">Kontrast zwischen zwei Farben vergleichen</summary>
+    <summary xml:lang="en_GB">Check contrast between two colours</summary>
+    <summary xml:lang="es">Comprobar el contraste entre dos colores</summary>
+    <summary xml:lang="eu">Aztertu bi koloreren arteko kontrastea</summary>
+    <summary xml:lang="fi">Tarkista kahden värin välinen kontrasti</summary>
+    <summary xml:lang="fur">Controle il contrast tra doi colôrs</summary>
+    <summary xml:lang="hu">Kontraszt ellenőrzése két szín között</summary>
+    <summary xml:lang="id">Periksa kontras antara dua warna</summary>
+    <summary xml:lang="pl">Sprawdzanie kontrastu między dwoma kolorami</summary>
+    <summary xml:lang="pt_BR">Verifique o contraste entre duas cores</summary>
+    <summary xml:lang="sv">Kontrollera kontrast mellan två färger</summary>
+    <summary xml:lang="tr">İki renk arasındaki karşıtlığı gözden geçir</summary>
+    <developer_name>Bilal Elmoussaoui</developer_name>
+    <description><p>Contrast checks whether the contrast between two colors meet the WCAG requirements.</p></description>
+    <description xml:lang="cs"><p>Kontroluje kontrast mezi dvěma zadanými barvami, jestli vyhovuje požadavkům pravidel pro bezbariérové weby (WCAG).</p></description>
+    <description xml:lang="es"><p>Contraste comprueba la diferencia de contraste entre dos colores que cumplen los requisitos WCAG.</p></description>
+    <description xml:lang="eu"><p>Kontrastea aplikazioak bi koloreren arteko kontrasteak WCAG eskakizunak betetzen dituen ala ez egiaztatzen du.</p></description>
+    <description xml:lang="fur"><p>Contrast al controle se il contrast tra doi colôrs al sodisfe i recuisîts WCAG.</p></description>
+    <description xml:lang="hu"><p>A Kontraszt azt ellenőrzi, hogy a két szín közti kontraszt megfelel-e a WCAG követelményeinek.</p></description>
+    <description xml:lang="id"><p>Kontras memeriksa apakah kontras antara dua warna memenuhi persyaratan WCAG.</p></description>
+    <description xml:lang="pl"><p>Sprawdzanie, czy kontrast między dwoma kolorami spełnia wymagania WCAG.</p></description>
+    <description xml:lang="pt_BR"><p>Contraste verifica se o contraste entre duas cores atende os requisitos WCAG.</p></description>
+    <description xml:lang="sv"><p>Kontrast kontrollerar om kontrasten mellan två färger uppfyller WCAG-kraven.</p></description>
+    <description xml:lang="tr"><p>Contrast, iki renk arasındaki karşıtlığın WCAG gereksinimlerini karşılayıp karşılamadığını gözden geçirir.</p></description>
+    <icon type="cached" height="64" width="64">org.gnome.design.Contrast.png</icon>
+    <icon type="cached" height="128" width="128">org.gnome.design.Contrast.png</icon>
+    <categories>
+      <category>Utility</category>
+    </categories>
+    <keywords>
+      <keyword>Color</keyword>
+      <keyword>Contrast</keyword>
+      <keyword>GNOME</keyword>
+      <keyword>GTK</keyword>
+      <keyword xml:lang="cs">barva</keyword>
+      <keyword xml:lang="cs">kontrast</keyword>
+      <keyword xml:lang="da">Farve</keyword>
+      <keyword xml:lang="da">Kontrast</keyword>
+      <keyword xml:lang="de">Farbe</keyword>
+      <keyword xml:lang="de">Farben</keyword>
+      <keyword xml:lang="de">GTK+</keyword>
+      <keyword xml:lang="de">Kontrast</keyword>
+      <keyword xml:lang="en_GB">Colour</keyword>
+      <keyword xml:lang="es">Contraste</keyword>
+      <keyword xml:lang="eu">Kolorea</keyword>
+      <keyword xml:lang="eu">Kontrastea</keyword>
+      <keyword xml:lang="fi">kontrasti</keyword>
+      <keyword xml:lang="fi">väri</keyword>
+      <keyword xml:lang="fur">Colôr</keyword>
+      <keyword xml:lang="hu">kontraszt</keyword>
+      <keyword xml:lang="hu">szín</keyword>
+      <keyword xml:lang="id">Kontras</keyword>
+      <keyword xml:lang="id">Warna</keyword>
+      <keyword xml:lang="pl">Colour</keyword>
+      <keyword xml:lang="pl">GTK+</keyword>
+      <keyword xml:lang="pl">Kolor</keyword>
+      <keyword xml:lang="pl">Kolory</keyword>
+      <keyword xml:lang="pl">Kontrast</keyword>
+      <keyword xml:lang="pt_BR">Contraste</keyword>
+      <keyword xml:lang="pt_BR">cor</keyword>
+      <keyword xml:lang="sv">Färg</keyword>
+      <keyword xml:lang="sv">Kontrast</keyword>
+      <keyword xml:lang="tr">Karşıtlık</keyword>
+      <keyword xml:lang="tr">Kontrast</keyword>
+      <keyword xml:lang="tr">Renk</keyword>
+    </keywords>
+    <kudos>
+      <kudo>HiDpiIcon</kudo>
+      <kudo>HighContrast</kudo>
+      <kudo>ModernToolkit</kudo>
+    </kudos>
+    <project_license>GPL-3.0+</project_license>
+    <url type="bugtracker">https://gitlab.gnome.org/World/design/contrast/issues</url>
+    <url type="donation">https://liberapay.com/bielmoussaoui</url>
+    <url type="homepage">https://gitlab.gnome.org/World/design/contrast</url>
+    <url type="translate">https://l10n.gnome.org/module/contrast/</url>
+    <project_group>GNOME</project_group>
+    <screenshots>
+      <screenshot type="default">
+        <image type="source">https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png</image>
+        <image type="thumbnail" height="351" width="624">https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png</image>
+        <image type="thumbnail" height="63" width="112">https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png</image>
+        <image type="thumbnail" height="126" width="224">https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png</image>
+        <image type="thumbnail" height="423" width="752">https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png</image>
+      </screenshot>
+    </screenshots>
+    <content_rating type="oars-1.0"/>
+    <releases>
+      <release timestamp="1582329600" version="0.0.3">
+        <description><p>Stylesheet fixes</p><p>Translations updates</p></description>
+      </release>
+      <release timestamp="1566691200" version="0.0.2">
+        <description><p>Translations updates</p></description>
+      </release>
+      <release timestamp="1565136000" version="0.0.1">
+        <description><p>First release of Contrast</p></description>
+      </release>
+    </releases>
+    <launchable type="desktop-id">org.gnome.design.Contrast.desktop</launchable>
+    <languages>
+      <lang percentage="100">cs</lang>
+      <lang percentage="93">da</lang>
+      <lang percentage="93">de</lang>
+      <lang percentage="93">en_GB</lang>
+      <lang percentage="100">es</lang>
+      <lang percentage="100">eu</lang>
+      <lang percentage="86">fi</lang>
+      <lang percentage="100">fur</lang>
+      <lang percentage="100">hu</lang>
+      <lang percentage="100">id</lang>
+      <lang percentage="100">pl</lang>
+      <lang percentage="100">pt_BR</lang>
+      <lang percentage="100">sv</lang>
+      <lang percentage="100">tr</lang>
+    </languages>
+    <bundle type="flatpak" runtime="org.gnome.Platform/x86_64/3.36" sdk="org.gnome.Sdk/x86_64/3.36">app/org.gnome.design.Contrast/x86_64/stable</bundle>
+  </component>
