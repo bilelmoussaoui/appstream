@@ -102,7 +102,9 @@ pub mod types {
     pub use crate::license::License;
     pub use crate::release::{Artifact, Release};
     pub use crate::screenshot::{Image, Screenshot, Video};
-    pub use crate::translatable_string::{TranslatableString, TranslatableVec};
+    pub use crate::translatable_string::{
+        MarkupTranslatableString, TranslatableList, TranslatableString,
+    };
 }
 pub use collection::Collection;
 pub use component::Component;

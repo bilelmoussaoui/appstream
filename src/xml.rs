@@ -14,8 +14,8 @@ use super::enums::{
     ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
 };
 use super::types::{
-    AppId, Artifact, ContentRating, Image, Language, License, Release, Screenshot,
-    TranslatableString, TranslatableVec, Video,
+    AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
+    Screenshot, TranslatableList, TranslatableString, Video,
 };
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 
@@ -141,9 +141,8 @@ impl TryFrom<&Element> for Component {
         let mut name = TranslatableString::default();
         let mut summary = TranslatableString::default();
         let mut developer_name = TranslatableString::default();
-        let mut keywords = TranslatableVec::default();
-        let mut description = TranslatableString::default();
-        description.set_is_markup(true);
+        let mut keywords = TranslatableList::default();
+        let mut description = MarkupTranslatableString::default();
         for node in &e.children {
             if let xmltree::XMLNode::Element(ref e) = node {
                 match &*e.name {

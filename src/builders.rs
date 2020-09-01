@@ -2,8 +2,8 @@ use super::collection::Collection;
 use super::component::Component;
 use super::enums::*;
 use super::types::{
-    AppId, Artifact, ContentRating, Image, Language, License, Release, Screenshot,
-    TranslatableString, TranslatableVec, Video,
+    AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
+    Screenshot, TranslatableList, TranslatableString, Video,
 };
 use chrono::{DateTime, Utc};
 use url::Url;
@@ -122,7 +122,7 @@ pub struct ComponentBuilder {
     pub id: Option<AppId>,
     pub name: Option<TranslatableString>,
     pub summary: Option<TranslatableString>,
-    pub description: Option<TranslatableString>,
+    pub description: Option<MarkupTranslatableString>,
     pub project_license: Option<License>,
     pub metadata_license: Option<License>,
     pub project_group: Option<String>,
@@ -141,7 +141,7 @@ pub struct ComponentBuilder {
     pub languages: Vec<Language>,
     pub mimetypes: Vec<String>,
     pub kudos: Vec<Kudo>,
-    pub keywords: Option<TranslatableVec>,
+    pub keywords: Option<TranslatableList>,
     pub content_rating: Option<ContentRating>,
     pub provides: Vec<Provide>,
     pub translations: Vec<Translation>,
@@ -219,9 +219,8 @@ impl ComponentBuilder {
         self
     }
 
-    pub fn description(mut self, mut description: TranslatableString) -> Self {
+    pub fn description(mut self, description: MarkupTranslatableString) -> Self {
         if !description.is_empty() {
-            description.set_is_markup(true);
             self.description = Some(description);
         }
         self
@@ -237,7 +236,7 @@ impl ComponentBuilder {
         self
     }
 
-    pub fn keywords(mut self, keywords: TranslatableVec) -> Self {
+    pub fn keywords(mut self, keywords: TranslatableList) -> Self {
         if !keywords.is_empty() {
             self.keywords = Some(keywords);
         }

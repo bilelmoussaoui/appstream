@@ -2,8 +2,8 @@ use super::enums::{
     Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
 };
 use super::types::{
-    AppId, ContentRating, Language, License, Release, Screenshot, TranslatableString,
-    TranslatableVec,
+    AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Screenshot,
+    TranslatableList, TranslatableString,
 };
 use anyhow::Result;
 #[cfg(feature = "gzip")]
@@ -30,7 +30,7 @@ pub struct Component {
     pub summary: Option<TranslatableString>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub description: Option<TranslatableString>,
+    pub description: Option<MarkupTranslatableString>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub project_license: Option<License>,
@@ -90,7 +90,7 @@ pub struct Component {
     pub kudos: Vec<Kudo>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub keywords: Option<TranslatableVec>,
+    pub keywords: Option<TranslatableList>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub content_rating: Option<ContentRating>,
@@ -134,7 +134,9 @@ mod tests {
         ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind, Icon,
         ImageKind, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, Translation,
     };
-    use crate::types::{ContentRating, TranslatableString, TranslatableVec};
+    use crate::types::{
+        ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString,
+    };
     use chrono::{TimeZone, Utc};
     use url::Url;
 
@@ -170,7 +172,7 @@ mod tests {
                 "GStreamer Multimedia Codecs - Extra",
             ))
             .kind(ComponentKind::Codec)
-            .description(TranslatableString::with_default(
+            .description(MarkupTranslatableString::with_default(
                 "<p>\n      This addon includes several additional codecs that are missing\n      something - perhaps a good code review, some documentation, a set of\n      tests, a real live maintainer, or some actual wide use.\n      However, they might be good enough to play your media files.\n    </p><p>\n      These codecs can be used to encode and decode media files where the\n      format is not patent encumbered.\n    </p><p>\n      A codec decodes audio and video for for playback or editing and is also\n      used for transmission or storage.\n      Different codecs are used in video-conferencing, streaming media and\n      video editing applications.\n    </p>"
             ))
             .metadata_license("CC0".into())
@@ -201,7 +203,7 @@ mod tests {
             .name(TranslatableString::with_default("Power Statistics"))
             .kind(ComponentKind::DesktopApplication)
             .summary(TranslatableString::with_default("Observe power management"))
-            .description(TranslatableString::with_default(
+            .description(MarkupTranslatableString::with_default(
                 "<p>\n      Power Statistics is a program used to view historical and current battery\n      information and will show programs running on your computer using power.\n        </p><p>Example list:</p><ul><li>First item</li><li>Second item</li></ul><p>\n      You probably only need to install this application if you are having problems\n      with your laptop battery, or are trying to work out what programs are using\n      significant amounts of power.\n        </p>"
             ))
             .metadata_license("FSFAP".into())
@@ -258,7 +260,7 @@ mod tests {
             .project_license("LicenseRef-proprietary:NVIDIA".into())
             .summary(TranslatableString::with_default("NVIDIA Graphics Driver"))
             .description(
-                TranslatableString::with_default(
+                MarkupTranslatableString::with_default(
                     "<p>\n      The NVIDIA Accelerated Linux Graphics Driver brings accelerated 2D\n      functionality and high-performance OpenGL support to Linux x86 with the\n      use of NVIDIA graphics processing units.\n    </p>"
                 )
             )
@@ -285,7 +287,7 @@ mod tests {
                 "Firmware for the ColorHugALS Ambient Light Sensor",
             ))
             .description(
-                TranslatableString::with_default(
+                MarkupTranslatableString::with_default(
                     "<p>\n      Updating the firmware on your ColorHugALS device improves performance and\n      adds new features.\n    </p>"
                 )
             )
@@ -329,7 +331,7 @@ mod tests {
                 "A sanserif type­face fam­ily",
             ))
             .description(
-                TranslatableString::with_default(
+                MarkupTranslatableString::with_default(
                     "<p>\n      Lato is a sanserif type\u{ad}face fam\u{ad}ily designed in the Sum\u{ad}mer 2010 by Warsaw-\u{200b}\u{200b}based designer\n      Łukasz Dziedzic (“Lato” means “Sum\u{ad}mer” in Pol\u{ad}ish). In Decem\u{ad}ber 2010 the Lato fam\u{ad}ily\n      was pub\u{ad}lished under the open-\u{200b}\u{200b}source Open Font License by his foundry tyPoland, with\n      sup\u{ad}port from Google.\n    </p>"
                 )
             )
@@ -379,7 +381,7 @@ mod tests {
             .metadata_license("FSFAP".into())
             .project_license("GPL-3.0".into())
             .description(
-                TranslatableString::with_default("<p>\n      Papirus is a free and open source SVG icon theme for Linux, based on Paper Icon Set\n      with a lot of new icons and a few extras, like Hardcode-Tray support, KDE colorscheme\n      support, Folder Color support, and others.\n      It is available in four variants:\n    </p><ul><li>Papirus</li><li>Papirus Dark</li><li>Papirus Light</li><li>ePapirus (for elementary OS and Pantheon Desktop)</li></ul>")
+                MarkupTranslatableString::with_default("<p>\n      Papirus is a free and open source SVG icon theme for Linux, based on Paper Icon Set\n      with a lot of new icons and a few extras, like Hardcode-Tray support, KDE colorscheme\n      support, Folder Color support, and others.\n      It is available in four variants:\n    </p><ul><li>Papirus</li><li>Papirus Dark</li><li>Papirus Light</li><li>ePapirus (for elementary OS and Pantheon Desktop)</li></ul>")
             )
             .summary(TranslatableString::with_default("A free and open source icon theme for Linux, based on the Paper Icon Set"))
             .screenshot(
@@ -409,7 +411,7 @@ mod tests {
             .summary(TranslatableString::with_default(
                 "Math symbols input method",
             ))
-            .description(TranslatableString::with_default(
+            .description(MarkupTranslatableString::with_default(
                 "<p>\n      The input method is designed for entering mathematical symbols.\n    </p><p>\n      Input methods are typing systems allowing users to input complex languages.\n      They are necessary because these contain too many characters to simply be laid\n      out on a traditional keyboard.\n    </p>"
             ))
             .url(ProjectUrl::Homepage(
@@ -454,7 +456,7 @@ mod tests {
         let c2 = ComponentBuilder::default()
             .id("org.debian.debian".into())
             .name(TranslatableString::with_default("Debian GNU/Linux"))
-            .description(TranslatableString::with_default(description))
+            .description(MarkupTranslatableString::with_default(description))
             .kind(ComponentKind::OS)
             .summary(TranslatableString::with_default(
                 "The universal operating system",
@@ -493,7 +495,7 @@ mod tests {
                 "Basic libraries to run Linux desktop applications",
             ))
             .description(
-                TranslatableString::with_default("<p>\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        </p>")
+                MarkupTranslatableString::with_default("<p>\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        </p>")
             )
             .url(ProjectUrl::Homepage(
                 Url::parse("https://freedesktop-sdk.gitlab.io/").unwrap(),
@@ -543,7 +545,7 @@ mod tests {
             .and_locale("pt_BR", "Verifique o contraste entre duas cores")
             .and_locale("sv", "Kontrollera kontrast mellan två färger")
             .and_locale("tr", "İki renk arasındaki karşıtlığı gözden geçir");
-        let keywords = TranslatableVec::with_default(vec!["Color", "Contrast", "GNOME", "GTK"])
+        let keywords = TranslatableList::with_default(vec!["Color", "Contrast", "GNOME", "GTK"])
             .and_locale("cs", vec!["barva", "kontrast"])
             .and_locale("da", vec!["Farve", "Kontrast"])
             .and_locale("de", vec!["Farbe", "Farben", "GTK+", "Kontrast"])
@@ -558,7 +560,7 @@ mod tests {
             .and_locale("pt_BR", vec!["Contraste", "cor"])
             .and_locale("sv", vec!["Färg", "Kontrast"])
             .and_locale("tr", vec!["Karşıtlık", "Kontrast", "Renk"]);
-        let description = TranslatableString::with_default("<p>Contrast checks whether the contrast between two colors meet the WCAG requirements.</p>")
+        let description = MarkupTranslatableString::with_default("<p>Contrast checks whether the contrast between two colors meet the WCAG requirements.</p>")
             .and_locale("cs", "<p>Kontroluje kontrast mezi dvěma zadanými barvami, jestli vyhovuje požadavkům pravidel pro bezbariérové weby (WCAG).</p>")
             .and_locale("es", "<p>Contraste comprueba la diferencia de contraste entre dos colores que cumplen los requisitos WCAG.</p>")
             .and_locale("eu", "<p>Kontrastea aplikazioak bi koloreren arteko kontrasteak WCAG eskakizunak betetzen dituen ala ez egiaztatzen du.</p>")

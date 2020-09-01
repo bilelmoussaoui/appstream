@@ -62,7 +62,7 @@ mod tests {
         CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
     };
     use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
-    use crate::types::{TranslatableString, TranslatableVec};
+    use crate::types::{MarkupTranslatableString, TranslatableList, TranslatableString};
     use anyhow::Result;
     use url::Url;
 
@@ -80,7 +80,7 @@ mod tests {
             .kind(ComponentKind::DesktopApplication)
             .pkgname("firefox-bin")
             .project_license("MPL-2.0".into())
-            .keywords(TranslatableVec::with_default(vec!["internet","web", "browser"]).and_locale("fr_FR", vec!["navigateur"]))
+            .keywords(TranslatableList::with_default(vec!["internet","web", "browser"]).and_locale("fr_FR", vec!["navigateur"]))
             .summary(TranslatableString::with_default("Web browser").and_locale("fr_FR", "Navigateur web"))
             .url(ProjectUrl::Homepage(Url::parse("https://www.mozilla.com").unwrap()))
             .screenshot(
@@ -221,7 +221,7 @@ mod tests {
                 .project_license("proprietary".into())
                 .summary(TranslatableString::with_default("Read instantly in your browser"))
                 .description(
-                    TranslatableString::with_default(
+                    MarkupTranslatableString::with_default(
                         "<p>\n        Buy Once, Read Everywhere: You don\'t need to own a Kindle device to\n        enjoy Kindle books.\n        Automatically save and synchronize your furthest page read, bookmarks,\n        notes, and highlights across all your devices.\n        That means you can start reading a book on one device, and pick up where\n        you left off on another device.\n            </p><p>\n        Read the first chapter of a book before you decide whether to buy it.\n        Read thousands of free books with a Kindle app, including popular\n        classics like The Adventures of Sherlock Holmes, Pride and Prejudice,\n        and Treasure Island.\n            </p><p>\n        To use the Kindle Cloud reader you must have Amazon.com account.\n            </p>"
                     )
                 )
@@ -232,7 +232,7 @@ mod tests {
                 })
                 .category(Category::Education)
                 .category(Category::Literature)
-                .keywords(TranslatableVec::with_default(vec!["book", "ebook", "reader"]))
+                .keywords(TranslatableList::with_default(vec!["book", "ebook", "reader"]))
                 .url(ProjectUrl::Homepage(Url::parse("https://read.amazon.com").unwrap()))
                 .build()
             )
