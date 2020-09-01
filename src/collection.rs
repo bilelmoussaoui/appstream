@@ -3,20 +3,27 @@ use super::Component;
 use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
-use quick_xml::de::from_str;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+use std::convert::TryFrom;
 #[cfg(feature = "gzip")]
+use std::fs::File;
 use std::fs::File;
 #[cfg(feature = "gzip")]
 use std::io::prelude::*;
+use std::io::BufReader;
 use std::path::PathBuf;
+use xmltree::Element;
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Collection {
     pub version: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
-    #[serde(default, rename = "component", skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        rename(deserialize = "component", serialize = "components"),
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub components: Vec<Component>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
@@ -24,9 +31,8 @@ pub struct Collection {
 
 impl Collection {
     pub fn from_path(path: PathBuf) -> Result<Self> {
-        let xml = std::fs::read_to_string(path)?;
-
-        let collection: Collection = from_str(&xml)?;
+        let file = BufReader::new(File::open(path)?);
+        let collection = Collection::try_from(&Element::parse(file)?)?;
         Ok(collection)
     }
 
@@ -67,8 +73,9 @@ mod tests {
 
         let c2 = CollectionBuilder::new("0.10")
         .component(
-            ComponentBuilder::new(
-                "org.mozilla.Firefox".into(),
+            ComponentBuilder::default()
+            .id("org.mozilla.Firefox".into())
+            .name(
                 TranslatableString::with_default("Firefox").and_locale("en_GB", "Firefoux")
             )
             .kind(ComponentKind::DesktopApplication)
@@ -78,7 +85,7 @@ mod tests {
             .summary(TranslatableString::with_default("Web browser").and_locale("fr_FR", "Navigateur web"))
             .url(ProjectUrl::Homepage(Url::parse("https://www.mozilla.com").unwrap()))
             .screenshot(
-                ScreenshotBuilder::new()
+                ScreenshotBuilder::default()
                 .image(
                     ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap())
                         .width(800)
@@ -114,8 +121,9 @@ mod tests {
             .build()
         )
         .component(
-            ComponentBuilder::new(
-                "org.freedesktop.PulseAudio".into(),
+            ComponentBuilder::default()
+            .id("org.freedesktop.PulseAudio".into())
+            .name(
                 TranslatableString::with_default("PulseAudio")
             )
             .summary(TranslatableString::with_default("The PulseAudio sound server"))
@@ -129,8 +137,11 @@ mod tests {
             .build()
         )
         .component(
-            ComponentBuilder::new(
-                "org.linuxlibertine.LinuxLibertine".into(),
+            ComponentBuilder::default()
+            .id(
+                "org.linuxlibertine.LinuxLibertine".into()
+            )
+            .name(
                 TranslatableString::with_default("Linux Libertine")
             )
             .kind(ComponentKind::Font)
@@ -149,52 +160,48 @@ mod tests {
 
         let c2 = CollectionBuilder::new("0.8")
             .component(
-                ComponentBuilder::new(
-                    "adobe-release-x86_64".into(),
-                    TranslatableString::with_default("Adobe"),
-                )
-                .pkgname("adobe-release-x86_64")
-                .metadata_license("CC0-1.0".into())
-                .summary(TranslatableString::with_default(
-                    "Adobe Repository Configuration",
-                ))
-                .build(),
+                ComponentBuilder::default()
+                    .id("adobe-release-x86_64".into())
+                    .name(TranslatableString::with_default("Adobe"))
+                    .pkgname("adobe-release-x86_64")
+                    .metadata_license("CC0-1.0".into())
+                    .summary(TranslatableString::with_default(
+                        "Adobe Repository Configuration",
+                    ))
+                    .build(),
             )
             .component(
-                ComponentBuilder::new(
-                    "livna-release".into(),
-                    TranslatableString::with_default("Livna"),
-                )
-                .pkgname("livna-release")
-                .metadata_license("CC0-1.0".into())
-                .summary(TranslatableString::with_default(
-                    "Livna Repository Configuration",
-                ))
-                .build(),
+                ComponentBuilder::default()
+                    .id("livna-release".into())
+                    .name(TranslatableString::with_default("Livna"))
+                    .pkgname("livna-release")
+                    .metadata_license("CC0-1.0".into())
+                    .summary(TranslatableString::with_default(
+                        "Livna Repository Configuration",
+                    ))
+                    .build(),
             )
             .component(
-                ComponentBuilder::new(
-                    "rpmfusion-free-release".into(),
-                    TranslatableString::with_default("RPM Fusion Free"),
-                )
-                .pkgname("rpmfusion-free-release")
-                .metadata_license("CC0-1.0".into())
-                .summary(TranslatableString::with_default(
-                    "RPM Fusion Repository Configuration",
-                ))
-                .build(),
+                ComponentBuilder::default()
+                    .id("rpmfusion-free-release".into())
+                    .name(TranslatableString::with_default("RPM Fusion Free"))
+                    .pkgname("rpmfusion-free-release")
+                    .metadata_license("CC0-1.0".into())
+                    .summary(TranslatableString::with_default(
+                        "RPM Fusion Repository Configuration",
+                    ))
+                    .build(),
             )
             .component(
-                ComponentBuilder::new(
-                    "rpmfusion-nonfree-release".into(),
-                    TranslatableString::with_default("RPM Fusion Non-Free"),
-                )
-                .pkgname("rpmfusion-nonfree-release")
-                .metadata_license("CC0-1.0".into())
-                .summary(TranslatableString::with_default(
-                    "RPM Fusion Repository Configuration",
-                ))
-                .build(),
+                ComponentBuilder::default()
+                    .id("rpmfusion-nonfree-release".into())
+                    .name(TranslatableString::with_default("RPM Fusion Non-Free"))
+                    .pkgname("rpmfusion-nonfree-release")
+                    .metadata_license("CC0-1.0".into())
+                    .summary(TranslatableString::with_default(
+                        "RPM Fusion Repository Configuration",
+                    ))
+                    .build(),
             )
             .build();
 
@@ -207,14 +214,18 @@ mod tests {
 
         let c2 = CollectionBuilder::new("0.8")
             .component(
-                ComponentBuilder::new(
-                    "epiphany-kindlecloud.desktop".into(),
-                    TranslatableString::with_default("Kindle Cloud Reader")
-                )
+                ComponentBuilder::default()
+                .id("epiphany-kindlecloud.desktop".into())
+                .name(TranslatableString::with_default("Kindle Cloud Reader"))
                 .kind(ComponentKind::WebApplication)
                 .metadata_license("CC0-1.0".into())
                 .project_license("proprietary".into())
                 .summary(TranslatableString::with_default("Read instantly in your browser"))
+                .description(
+                    TranslatableString::with_default(
+                        "<p>\n        Buy Once, Read Everywhere: You don\'t need to own a Kindle device to\n        enjoy Kindle books.\n        Automatically save and synchronize your furthest page read, bookmarks,\n        notes, and highlights across all your devices.\n        That means you can start reading a book on one device, and pick up where\n        you left off on another device.\n            </p><p>\n        Read the first chapter of a book before you decide whether to buy it.\n        Read thousands of free books with a Kindle app, including popular\n        classics like The Adventures of Sherlock Holmes, Pride and Prejudice,\n        and Treasure Island.\n            </p><p>\n        To use the Kindle Cloud reader you must have Amazon.com account.\n            </p>"
+                    )
+                )
                 .icon(Icon::Remote{
                     width: None,
                     height: None,
@@ -235,7 +246,7 @@ mod tests {
     fn endless_os_collection() {
         let c1: Result<Collection> =
             Collection::from_path("./tests/collections/endless-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
+        // assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
         assert_eq!(631, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
@@ -246,7 +257,7 @@ mod tests {
     fn gnome_collection() {
         let c1: Result<Collection> =
             Collection::from_path("./tests/collections/gnome-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
+        // assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
         assert_eq!(24, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
@@ -268,7 +279,7 @@ mod tests {
     fn flathub_collection() {
         let c1: Result<Collection> =
             Collection::from_path("./tests/collections/flathub-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
+        // assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
         assert_eq!(376, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);

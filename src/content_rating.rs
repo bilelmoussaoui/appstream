@@ -7,7 +7,7 @@ pub struct ContentRating {
     pub version: ContentRatingVersion,
     #[serde(
         default,
-        rename = "content_attribute",
+        rename(deserialize = "content_attribute", serialize = "attributes"),
         skip_serializing_if = "Vec::is_empty"
     )]
     pub attributes: Vec<ContentAttribute>,

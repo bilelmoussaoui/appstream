@@ -47,8 +47,8 @@ impl TranslatableString {
         let locale = element.attributes.get("lang").map(|l| l.as_str());
         if self.1 {
             self.add_for_locale(locale, &element_to_xml(element));
-        } else {
-            self.add_for_locale(locale, &element.get_text().unwrap().into_owned());
+        } else if let Some(text) = element.get_text() {
+            self.add_for_locale(locale, &text.into_owned());
         }
     }
 
@@ -66,6 +66,10 @@ impl TranslatableString {
     pub fn get_for_locale(&self, locale: &str) -> Option<&String> {
         self.0.get(locale)
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
 }
 
 impl Serialize for TranslatableString {
@@ -80,6 +84,8 @@ impl Serialize for TranslatableString {
         map.end()
     }
 }
+
+
 
 #[derive(Clone, Debug, Serialize, PartialEq, Default)]
 pub struct TranslatableVec(pub BTreeMap<String, Vec<String>>);
@@ -118,5 +124,9 @@ impl TranslatableVec {
                 sentenses.push(text.into());
             })
             .or_insert_with(|| vec![text.to_string()]);
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }

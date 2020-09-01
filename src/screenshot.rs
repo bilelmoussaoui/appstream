@@ -80,7 +80,7 @@ pub struct Image {
 mod tests {
     use super::*;
     use crate::builders::{ImageBuilder, ScreenshotBuilder, VideoBuilder};
-    use quick_xml;
+    use std::convert::TryFrom;
 
     #[test]
     fn default_screenshot() {
@@ -88,9 +88,11 @@ mod tests {
             <screenshot type='default'>
                 <image type='source'>https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png</image>
             </screenshot>";
-        let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
 
-        let s2 = ScreenshotBuilder::new().image(
+        let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
+        let s1 = Screenshot::try_from(&element).unwrap();
+
+        let s2 = ScreenshotBuilder::default().image(
                 ImageBuilder::new(Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap())
                 .build()
             )
@@ -109,9 +111,11 @@ mod tests {
             <image type='thumbnail' width='752' height='423'>https://www.example.org/en_US/main-large.png</image>
             <image type='thumbnail' width='112' height='63'>https://www.example.org/en_US/main-small.png</image>
         </screenshot>";
-        let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
 
-        let s2 = ScreenshotBuilder::new()
+        let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
+        let s1 = Screenshot::try_from(&element).unwrap();
+
+        let s2 = ScreenshotBuilder::default()
             .caption(
                 TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
                     .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
@@ -150,9 +154,10 @@ mod tests {
             <screenshot>
                 <video codec='av1' width='1600' height='900'>https://example.com/foobar/screencast.mkv</video>
             </screenshot>";
-        let s1: Screenshot = quick_xml::de::from_str(&xml).unwrap();
+        let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
+        let s1 = Screenshot::try_from(&element).unwrap();
 
-        let s2 = ScreenshotBuilder::new()
+        let s2 = ScreenshotBuilder::default()
             .set_default(false)
             .video(
                 VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv").unwrap())

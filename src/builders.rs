@@ -10,24 +10,36 @@ use url::Url;
 
 pub struct ArtifactBuilder {
     pub platform: Option<String>,
-    pub kind: ArtifactKind,
+    pub kind: Option<ArtifactKind>,
     pub sizes: Vec<Size>,
-    pub url: Url,
+    pub url: Option<Url>,
     pub checksums: Vec<Checksum>,
     pub bundles: Vec<Bundle>,
 }
 
-#[allow(dead_code)]
-impl ArtifactBuilder {
-    pub fn new(url: Url, kind: ArtifactKind) -> Self {
+impl Default for ArtifactBuilder {
+    fn default() -> Self {
         Self {
-            url,
-            kind,
+            url: None,
+            kind: None,
             sizes: vec![],
             checksums: vec![],
             platform: None,
             bundles: vec![],
         }
+    }
+}
+
+#[allow(dead_code)]
+impl ArtifactBuilder {
+    pub fn kind(mut self, kind: ArtifactKind) -> Self {
+        self.kind = Some(kind);
+        self
+    }
+
+    pub fn url(mut self, url: Url) -> Self {
+        self.url = Some(url);
+        self
     }
 
     pub fn bundle(mut self, bundle: Bundle) -> Self {
@@ -52,8 +64,8 @@ impl ArtifactBuilder {
 
     pub fn build(self) -> Artifact {
         Artifact {
-            url: self.url,
-            kind: self.kind,
+            url: self.url.expect("an artifact location is required"),
+            kind: self.kind.expect("artifact type is required"),
             sizes: self.sizes,
             checksums: self.checksums,
             platform: self.platform,
@@ -194,17 +206,24 @@ impl ComponentBuilder {
     }
 
     pub fn developer_name(mut self, developer_name: TranslatableString) -> Self {
-        self.developer_name = Some(developer_name);
+        if !developer_name.is_empty() {
+            self.developer_name = Some(developer_name);
+        }
         self
     }
 
     pub fn summary(mut self, summary: TranslatableString) -> Self {
-        self.summary = Some(summary);
+        if !summary.is_empty() {
+            self.summary = Some(summary);
+        }
         self
     }
 
-    pub fn description(mut self, description: TranslatableString) -> Self {
-        self.description = Some(description);
+    pub fn description(mut self, mut description: TranslatableString) -> Self {
+        if !description.is_empty() {
+            description.set_is_markup(true);
+            self.description = Some(description);
+        }
         self
     }
 
@@ -219,7 +238,9 @@ impl ComponentBuilder {
     }
 
     pub fn keywords(mut self, keywords: TranslatableVec) -> Self {
-        self.keywords = Some(keywords);
+        if !keywords.is_empty() {
+            self.keywords = Some(keywords);
+        }
         self
     }
 
@@ -468,6 +489,11 @@ impl ReleaseBuilder {
         self
     }
 
+    pub fn size(mut self, size: Size) -> Self {
+        self.sizes.push(size);
+        self
+    }
+
     pub fn sizes(mut self, sizes: Vec<Size>) -> Self {
         self.sizes = sizes;
         self
@@ -502,12 +528,10 @@ pub struct ScreenshotBuilder {
 
 #[allow(dead_code)]
 impl ScreenshotBuilder {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     pub fn caption(mut self, caption: TranslatableString) -> Self {
-        self.caption = Some(caption);
+        if !caption.is_empty() {
+            self.caption = Some(caption);
+        }
         self
     }
 

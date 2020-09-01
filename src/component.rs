@@ -1,4 +1,3 @@
-use super::builders::ComponentBuilder;
 use super::de::*;
 use super::enums::{
     Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
@@ -10,7 +9,6 @@ use super::types::{
 use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
-use quick_xml::de::from_str;
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "gzip")]
 use std::fs::File;
@@ -18,6 +16,10 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 
+use std::convert::TryFrom;
+use std::fs::File;
+use std::io::BufReader;
+use xmltree::Element;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Component {
     #[serde(rename = "type", default)]
@@ -26,7 +28,6 @@ pub struct Component {
     #[serde(deserialize_with = "app_id_deserialize")]
     pub id: AppId,
 
-    #[serde(deserialize_with = "translatable_deserialize")]
     pub name: TranslatableString,
 
     #[serde(
@@ -191,9 +192,8 @@ pub struct Component {
 
 impl Component {
     pub fn from_path(path: PathBuf) -> Result<Self> {
-        let xml = std::fs::read_to_string(path)?;
-
-        let component: Component = from_str(&xml)?;
+        let file = BufReader::new(File::open(path)?);
+        let component = Component::try_from(&Element::parse(file)?)?;
         Ok(component)
     }
 
@@ -230,10 +230,9 @@ mod tests {
     fn addon_component() {
         let c1 = Component::from_path("./tests/addon.xml".into()).unwrap();
 
-        let id = "org.gnome.gedit_code_assistance".into();
-        let name = TranslatableString::with_default("Code Assistance");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("org.gnome.gedit_code_assistance".into())
+            .name(TranslatableString::with_default("Code Assistance"))
             .kind(ComponentKind::Addon)
             .metadata_license("FSFAP".into())
             .project_license("GPL-3.0+".into())
@@ -253,11 +252,15 @@ mod tests {
     fn codec_component() {
         let c1 = Component::from_path("./tests/codec.xml".into()).unwrap();
 
-        let id = "org.freedesktop.gstreamer.codecs-good".into();
-        let name = TranslatableString::with_default("GStreamer Multimedia Codecs - Extra");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("org.freedesktop.gstreamer.codecs-good".into())
+            .name(TranslatableString::with_default(
+                "GStreamer Multimedia Codecs - Extra",
+            ))
             .kind(ComponentKind::Codec)
+            .description(TranslatableString::with_default(
+                "<p>\n      This addon includes several additional codecs that are missing\n      something - perhaps a good code review, some documentation, a set of\n      tests, a real live maintainer, or some actual wide use.\n      However, they might be good enough to play your media files.\n    </p><p>\n      These codecs can be used to encode and decode media files where the\n      format is not patent encumbered.\n    </p><p>\n      A codec decodes audio and video for for playback or editing and is also\n      used for transmission or storage.\n      Different codecs are used in video-conferencing, streaming media and\n      video editing applications.\n    </p>"
+            ))
             .metadata_license("CC0".into())
             .provide(Provide::Codec("encoder-audio/mpeg".into()))
             .provide(Provide::Codec("mpegversion=(int){ 4, 2 }".into()))
@@ -281,12 +284,14 @@ mod tests {
     fn desktop_application_component() {
         let c1: Component = Component::from_path("./tests/desktop.xml".into()).unwrap();
 
-        let id = "org.gnome.gnome-power-statistics".into();
-        let name = TranslatableString::with_default("Power Statistics");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("org.gnome.gnome-power-statistics".into())
+            .name(TranslatableString::with_default("Power Statistics"))
             .kind(ComponentKind::DesktopApplication)
             .summary(TranslatableString::with_default("Observe power management"))
+            .description(TranslatableString::with_default(
+                "<p>\n      Power Statistics is a program used to view historical and current battery\n      information and will show programs running on your computer using power.\n        </p><p>Example list:</p><ul><li>First item</li><li>Second item</li></ul><p>\n      You probably only need to install this application if you are having problems\n      with your laptop battery, or are trying to work out what programs are using\n      significant amounts of power.\n        </p>"
+            ))
             .metadata_license("FSFAP".into())
             .project_license("GPL-2.0+".into())
             .project_group("GNOME")
@@ -299,7 +304,7 @@ mod tests {
             .provide(Provide::Binary("gnome-power-statistics".into()))
             .provide(Provide::Id("gnome-power-statistics.desktop".into()))
             .screenshot(
-                ScreenshotBuilder::new()
+                ScreenshotBuilder::default()
                     .caption(TranslatableString::with_default("The options dialog"))
                     .image(
                         ImageBuilder::new(
@@ -310,7 +315,7 @@ mod tests {
                     .build(),
             )
             .screenshot(
-                ScreenshotBuilder::new()
+                ScreenshotBuilder::default()
                     .set_default(false)
                     .image(
                         ImageBuilder::new(
@@ -333,14 +338,18 @@ mod tests {
     fn driver_component() {
         let c1: Component = Component::from_path("./tests/driver.xml".into()).unwrap();
 
-        let id = "com.nvidia.GeForce".into();
-        let name = TranslatableString::with_default("NVIDIA GeForce");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("com.nvidia.GeForce".into())
+            .name(TranslatableString::with_default("NVIDIA GeForce"))
             .kind(ComponentKind::Driver)
             .metadata_license("CC0-1.0".into())
             .project_license("LicenseRef-proprietary:NVIDIA".into())
             .summary(TranslatableString::with_default("NVIDIA Graphics Driver"))
+            .description(
+                TranslatableString::with_default(
+                    "<p>\n      The NVIDIA Accelerated Linux Graphics Driver brings accelerated 2D\n      functionality and high-performance OpenGL support to Linux x86 with the\n      use of NVIDIA graphics processing units.\n    </p>"
+                )
+            )
             .developer_name(TranslatableString::with_default("NVIDIA Corporation"))
             .provide(Provide::Modalias(
                 "pci:v000010DEd*sv*sd*bc03sc00i00*".into(),
@@ -356,14 +365,18 @@ mod tests {
     fn firmware_component() {
         let c1 = Component::from_path("./tests/firmware.xml".into()).unwrap();
 
-        let id = "com.hughski.ColorHug2.firmware".into();
-        let name = TranslatableString::with_default("ColorHugALS Firmware");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("com.hughski.ColorHug2.firmware".into())
+            .name(TranslatableString::with_default("ColorHugALS Firmware"))
             .kind(ComponentKind::Firmware)
             .summary(TranslatableString::with_default(
                 "Firmware for the ColorHugALS Ambient Light Sensor",
             ))
+            .description(
+                TranslatableString::with_default(
+                    "<p>\n      Updating the firmware on your ColorHugALS device improves performance and\n      adds new features.\n    </p>"
+                )
+            )
             .url(ProjectUrl::Homepage(
                 Url::parse("http://www.hughski.com/").unwrap(),
             ))
@@ -378,10 +391,9 @@ mod tests {
                 ReleaseBuilder::new("3.0.2")
                     .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
                     .artifact(
-                        ArtifactBuilder::new(
-                            Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab").unwrap(), 
-                            ArtifactKind::Binary
-                        )
+                        ArtifactBuilder::default()
+                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab").unwrap()) 
+                        .kind(ArtifactKind::Binary)
                         .build()
                     )
                     .build(),
@@ -395,16 +407,20 @@ mod tests {
     fn font_component() {
         let c1 = Component::from_path("./tests/font.xml".into()).unwrap();
 
-        let id = "com.latofonts.Lato".into();
-        let name = TranslatableString::with_default("Lato");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("com.latofonts.Lato".into())
+            .name(TranslatableString::with_default("Lato"))
             .kind(ComponentKind::Font)
             .metadata_license("MIT".into())
             .project_license("OFL-1.1".into())
             .summary(TranslatableString::with_default(
                 "A sanserif type­face fam­ily",
             ))
+            .description(
+                TranslatableString::with_default(
+                    "<p>\n      Lato is a sanserif type\u{ad}face fam\u{ad}ily designed in the Sum\u{ad}mer 2010 by Warsaw-\u{200b}\u{200b}based designer\n      Łukasz Dziedzic (“Lato” means “Sum\u{ad}mer” in Pol\u{ad}ish). In Decem\u{ad}ber 2010 the Lato fam\u{ad}ily\n      was pub\u{ad}lished under the open-\u{200b}\u{200b}source Open Font License by his foundry tyPoland, with\n      sup\u{ad}port from Google.\n    </p>"
+                )
+            )
             .provide(Provide::Font("Lato Regular".into()))
             .provide(Provide::Font("Lato Italic".into()))
             .provide(Provide::Font("Lato Bold".into()))
@@ -419,10 +435,9 @@ mod tests {
     fn generic_component() {
         let c1 = Component::from_path("./tests/generic.xml".into()).unwrap();
 
-        let id = "com.example.foobar".into();
-        let name = TranslatableString::with_default("Foo Bar");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("com.example.foobar".into())
+            .name(TranslatableString::with_default("Foo Bar"))
             .metadata_license("CC0-1.0".into())
             .summary(TranslatableString::with_default("A foo-ish bar"))
             .url(ProjectUrl::Homepage(
@@ -444,16 +459,19 @@ mod tests {
     #[test]
     fn icon_theme_component() {
         let c1 = Component::from_path("./tests/icon-theme.xml".into()).unwrap();
-        let id = "io.git.PapirusIconTheme".into();
-        let name = TranslatableString::with_default("Papirus");
 
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("io.git.PapirusIconTheme".into())
+            .name(TranslatableString::with_default("Papirus"))
             .kind(ComponentKind::IconTheme)
             .metadata_license("FSFAP".into())
             .project_license("GPL-3.0".into())
+            .description(
+                TranslatableString::with_default("<p>\n      Papirus is a free and open source SVG icon theme for Linux, based on Paper Icon Set\n      with a lot of new icons and a few extras, like Hardcode-Tray support, KDE colorscheme\n      support, Folder Color support, and others.\n      It is available in four variants:\n    </p><ul><li>Papirus</li><li>Papirus Dark</li><li>Papirus Light</li><li>ePapirus (for elementary OS and Pantheon Desktop)</li></ul>")
+            )
             .summary(TranslatableString::with_default("A free and open source icon theme for Linux, based on the Paper Icon Set"))
             .screenshot(
-                ScreenshotBuilder::new()
+                ScreenshotBuilder::default()
                 .image(
                     ImageBuilder::new(
                         Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
@@ -471,14 +489,16 @@ mod tests {
     fn input_method_component() {
         let c1 = Component::from_path("./tests/input-method.xml".into()).unwrap();
 
-        let id = "com.github.ibus.mathwriter-ibus.db".into();
-        let name = TranslatableString::with_default("Mathwriter");
-
-        let c2 = ComponentBuilder::new(id, name)
+        let c2 = ComponentBuilder::default()
+            .id("com.github.ibus.mathwriter-ibus.db".into())
+            .name(TranslatableString::with_default("Mathwriter"))
             .kind(ComponentKind::InputMethod)
             .metadata_license("FSFAP".into())
             .summary(TranslatableString::with_default(
                 "Math symbols input method",
+            ))
+            .description(TranslatableString::with_default(
+                "<p>\n      The input method is designed for entering mathematical symbols.\n    </p><p>\n      Input methods are typing systems allowing users to input complex languages.\n      They are necessary because these contain too many characters to simply be laid\n      out on a traditional keyboard.\n    </p>"
             ))
             .url(ProjectUrl::Homepage(
                 Url::parse("https://github.com/mike-fabian/ibus-table-others").unwrap(),
@@ -492,9 +512,9 @@ mod tests {
     fn localization_component() {
         let c1 = Component::from_path("./tests/localization.xml".into()).unwrap();
 
-        let name = TranslatableString::with_default("KDE German Language");
-
-        let c2 = ComponentBuilder::new("org.kde.l10n.de".into(), name)
+        let c2 = ComponentBuilder::default()
+            .id("org.kde.l10n.de".into())
+            .name(TranslatableString::with_default("KDE German Language"))
             .kind(ComponentKind::Localization)
             .metadata_license("FSFAP".into())
             .summary(TranslatableString::with_default(
@@ -518,9 +538,11 @@ mod tests {
     fn os_component() {
         let c1: Component = Component::from_path("./tests/os.xml".into()).unwrap();
 
-        let name = TranslatableString::with_default("Debian GNU/Linux");
-
-        let c2 = ComponentBuilder::new("org.debian.debian".into(), name)
+        let description = "<p>\n      Debian is a free operating system (OS) for your computer.\n      An operating system is the set of basic programs and utilities that make your computer run.\n        </p>";
+        let c2 = ComponentBuilder::default()
+            .id("org.debian.debian".into())
+            .name(TranslatableString::with_default("Debian GNU/Linux"))
+            .description(TranslatableString::with_default(description))
             .kind(ComponentKind::OS)
             .summary(TranslatableString::with_default(
                 "The universal operating system",
@@ -549,15 +571,18 @@ mod tests {
     fn runtime_component() {
         let c1: Component = Component::from_path("./tests/runtime.xml".into()).unwrap();
 
-        let name = TranslatableString::with_default("Freedesktop Platform");
-
-        let c2 = ComponentBuilder::new("org.freedesktop.Platform".into(), name)
+        let c2 = ComponentBuilder::default()
+            .id("org.freedesktop.Platform".into())
+            .name(TranslatableString::with_default("Freedesktop Platform"))
             .kind(ComponentKind::Runtime)
             .metadata_license("FSFAP".into())
             .project_license("LicenseRef-free=https://freedesktop-sdk.gitlab.io/".into())
             .summary(TranslatableString::with_default(
                 "Basic libraries to run Linux desktop applications",
             ))
+            .description(
+                TranslatableString::with_default("<p>\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        </p>")
+            )
             .url(ProjectUrl::Homepage(
                 Url::parse("https://freedesktop-sdk.gitlab.io/").unwrap(),
             ))
@@ -621,10 +646,24 @@ mod tests {
             .and_locale("pt_BR", vec!["Contraste", "cor"])
             .and_locale("sv", vec!["Färg", "Kontrast"])
             .and_locale("tr", vec!["Karşıtlık", "Kontrast", "Renk"]);
+        let description = TranslatableString::with_default("<p>Contrast checks whether the contrast between two colors meet the WCAG requirements.</p>")
+            .and_locale("cs", "<p>Kontroluje kontrast mezi dvěma zadanými barvami, jestli vyhovuje požadavkům pravidel pro bezbariérové weby (WCAG).</p>")
+            .and_locale("es", "<p>Contraste comprueba la diferencia de contraste entre dos colores que cumplen los requisitos WCAG.</p>")
+            .and_locale("eu", "<p>Kontrastea aplikazioak bi koloreren arteko kontrasteak WCAG eskakizunak betetzen dituen ala ez egiaztatzen du.</p>")
+            .and_locale("fur", "<p>Contrast al controle se il contrast tra doi colôrs al sodisfe i recuisîts WCAG.</p>")
+            .and_locale("hu", "<p>A Kontraszt azt ellenőrzi, hogy a két szín közti kontraszt megfelel-e a WCAG követelményeinek.</p>")
+            .and_locale("id", "<p>Kontras memeriksa apakah kontras antara dua warna memenuhi persyaratan WCAG.</p>")
+            .and_locale("pl", "<p>Sprawdzanie, czy kontrast między dwoma kolorami spełnia wymagania WCAG.</p>")
+            .and_locale("pt_BR", "<p>Contraste verifica se o contraste entre duas cores atende os requisitos WCAG.</p>")
+            .and_locale("sv", "<p>Kontrast kontrollerar om kontrasten mellan två färger uppfyller WCAG-kraven.</p>")
+            .and_locale("tr", "<p>Contrast, iki renk arasındaki karşıtlığın WCAG gereksinimlerini karşılayıp karşılamadığını gözden geçirir.</p>");
 
-        let c2 = ComponentBuilder::new("org.gnome.design.Contrast".into(), name)
+        let c2 = ComponentBuilder::default()
+            .id("org.gnome.design.Contrast".into())
+            .name(name)
             .kind(ComponentKind::DesktopApplication)
             .summary(summary)
+            .description(description)
             .category(Category::Utility)
             .project_license("GPL-3.0+".into())
             .project_group("GNOME")
@@ -635,7 +674,7 @@ mod tests {
             .bundle(Bundle::Flatpak {
                 runtime: Some("org.gnome.Platform/x86_64/3.36".into()),
                 sdk: "org.gnome.Sdk/x86_64/3.36".into(),
-                id: "app/org.gnome.design.Contrast/x86_64/stable".into()
+                reference: "app/org.gnome.design.Contrast/x86_64/stable".into()
             })
             .url(ProjectUrl::BugTracker(Url::parse("https://gitlab.gnome.org/World/design/contrast/issues").unwrap()))
             .url(ProjectUrl::Donation(Url::parse("https://liberapay.com/bielmoussaoui").unwrap()))
@@ -674,7 +713,7 @@ mod tests {
             .language(LanguageBuilder::new("pt_BR").percentage(100).build())
             .language(LanguageBuilder::new("sv").percentage(100).build())
             .language(LanguageBuilder::new("tr").percentage(100).build())
-            .screenshot(ScreenshotBuilder::new()
+            .screenshot(ScreenshotBuilder::default()
                     .image(
                         ImageBuilder::new(
                             Url::parse("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png").unwrap()
