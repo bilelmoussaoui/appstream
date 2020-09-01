@@ -1,4 +1,3 @@
-use super::de::*;
 use super::enums::ImageKind;
 use super::types::TranslatableString;
 use serde::{Deserialize, Serialize};
@@ -6,18 +5,10 @@ use url::Url;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Screenshot {
-    #[serde(
-        default,
-        rename(deserialize = "type", serialize = "default"),
-        deserialize_with = "screenshot_type_deserialize"
-    )]
+    #[serde(default, alias = "default")]
     pub is_default: bool,
 
-    #[serde(
-        default,
-        deserialize_with = "some_translatable_deserialize",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub caption: Option<TranslatableString>,
 
     #[serde(
@@ -72,7 +63,6 @@ pub struct Image {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
 
-    #[serde(rename(deserialize = "$value", serialize = "url"))]
     pub url: Url,
 }
 

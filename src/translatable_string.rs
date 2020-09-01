@@ -1,10 +1,14 @@
 use serde::ser::SerializeMap;
-use serde::{Deserialize, Serialize, Serializer};
+use serde::{
+    de::{MapAccess, Visitor},
+    Deserialize, Deserializer, Serialize, Serializer,
+};
 use std::collections::BTreeMap;
+use std::fmt;
 
 pub const DEFAULT_LOCALE: &str = "C";
 
-#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct TranslatableString(pub BTreeMap<String, String>, bool);
 
 impl Default for TranslatableString {
@@ -85,7 +89,37 @@ impl Serialize for TranslatableString {
     }
 }
 
+impl<'de> Deserialize<'de> for TranslatableString {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct TranslatableVistior;
 
+        impl<'de> Visitor<'de> for TranslatableVistior {
+            type Value = TranslatableString;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a HashMap<Locale, Text>")
+            }
+
+            fn visit_map<M>(self, mut access: M) -> Result<Self::Value, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                let mut t = TranslatableString::default();
+
+                while let Some((key, value)) = access.next_entry::<String, String>()? {
+                    t.add_for_locale(Some(&key), &value);
+                }
+
+                Ok(t)
+            }
+        }
+
+        deserializer.deserialize_map(TranslatableVistior)
+    }
+}
 
 #[derive(Clone, Debug, Serialize, PartialEq, Default)]
 pub struct TranslatableVec(pub BTreeMap<String, Vec<String>>);
@@ -128,5 +162,37 @@ impl TranslatableVec {
 
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
+    }
+}
+
+impl<'de> Deserialize<'de> for TranslatableVec {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct TranslatableVistior;
+
+        impl<'de> Visitor<'de> for TranslatableVistior {
+            type Value = TranslatableVec;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a HashMap<Locale, Vec<Text>>")
+            }
+
+            fn visit_map<M>(self, mut access: M) -> Result<Self::Value, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                let mut t = TranslatableVec::default();
+
+                while let Some((key, value)) = access.next_entry::<String, Vec<String>>()? {
+                    value.iter().for_each(|w| t.add_for_locale(Some(&key), w));
+                }
+
+                Ok(t)
+            }
+        }
+
+        deserializer.deserialize_map(TranslatableVistior)
     }
 }

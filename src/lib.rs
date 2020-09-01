@@ -87,7 +87,6 @@ pub mod builders;
 mod collection;
 mod component;
 mod content_rating;
-mod de;
 pub mod enums;
 mod language;
 mod license;

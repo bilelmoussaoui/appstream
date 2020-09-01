@@ -1,4 +1,3 @@
-use super::de::*;
 use super::enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -6,19 +5,10 @@ use url::Url;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Release {
-    #[serde(
-        default,
-        alias = "timestamp",
-        deserialize_with = "timestamp_deserialize",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(default, alias = "timestamp", skip_serializing_if = "Option::is_none")]
     pub date: Option<DateTime<Utc>>,
 
-    #[serde(
-        default,
-        deserialize_with = "timestamp_deserialize",
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub date_eol: Option<DateTime<Utc>>,
 
     pub version: String,
@@ -32,11 +22,7 @@ pub struct Release {
     #[serde(default)]
     pub urgency: ReleaseUrgency,
 
-    #[serde(
-        default,
-        deserialize_with = "artifacts_deserialize",
-        skip_serializing_if = "Vec::is_empty"
-    )]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub artifacts: Vec<Artifact>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]

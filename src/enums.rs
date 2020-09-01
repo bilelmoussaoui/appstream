@@ -14,13 +14,13 @@ pub enum ArtifactKind {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum Bundle {
     Limba(String),
     Flatpak {
         #[serde(skip_serializing_if = "Option::is_none")]
         runtime: Option<String>,
         sdk: String,
-        #[serde(rename(deserialize = "$value", serialize = "ref"))]
         reference: String,
     },
     AppImage(String),
@@ -46,7 +46,7 @@ impl Serialize for Bundle {
                 reference,
             } => {
                 bundle_map.serialize_entry("type", "flatpak")?;
-                bundle_map.serialize_entry("ref", reference)?;
+                bundle_map.serialize_entry("reference", reference)?;
                 bundle_map.serialize_entry("sdk", sdk)?;
                 if runtime.is_some() {
                     bundle_map.serialize_entry("runtime", runtime.as_ref().unwrap())?;
@@ -419,6 +419,7 @@ impl Default for ContentState {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase", tag = "type")]
 pub enum Icon {
     Stock(String),
     Cached {
@@ -514,8 +515,10 @@ pub enum Kudo {
     Unknown(String),
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "lowercase", tag = "type", content = "name")]
 pub enum Launchable {
+    #[serde(alias = "desktop_id")]
     DesktopId(String),
     Service(String),
     Url(Url),
@@ -555,7 +558,8 @@ impl Serialize for Launchable {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "lowercase", tag = "type", content = "url")]
 pub enum ProjectUrl {
     Donation(Url),
     Translate(Url),
@@ -696,8 +700,8 @@ pub enum Provide {
     Codec(String),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "kebab-case", tag = "type", content = "name")]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase", tag = "type", content = "name")]
 pub enum Translation {
     Gettext(String),
     Qt(String),
