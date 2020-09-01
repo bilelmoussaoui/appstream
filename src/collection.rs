@@ -67,9 +67,17 @@ mod tests {
 
     #[cfg(feature = "gzip")]
     #[test]
-    fn gzip_collection() {
+    fn flathub_latest_collection() {
         let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into()).unwrap();
         assert_eq!(c1.components.len(), 1257);
+    }
+
+    #[cfg(feature = "gzip")]
+    #[test]
+    fn flathub_beta_collection() {
+        let c1 =
+            Collection::from_gzipped("./tests/collections/flathub-beta.xml.gz".into()).unwrap();
+        assert_eq!(c1.components.len(), 112);
     }
 
     #[test]
