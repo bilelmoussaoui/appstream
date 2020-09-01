@@ -91,7 +91,7 @@ mod tests {
     }
 
     #[test]
-    fn name() {
+    fn screenshot_caption() {
         let xml = r"
         <screenshot type='default'>
             <caption>FooBar showing kitchen-sink functionality.</caption>

@@ -85,7 +85,6 @@ pub enum Category {
     Education,
     Game,
     Graphics,
-    #[serde(alias = "network")]
     Network,
     Office,
     Science,
@@ -140,9 +139,7 @@ pub enum Category {
     Telephony,
     TelephonyTools,
     VideoConference,
-    #[serde(alias = "webbrowser")]
     WebBrowser,
-    #[serde(alias = "webdevelopment")]
     WebDevelopment,
     Midi,
     Mixer,
@@ -375,6 +372,7 @@ pub enum ContentRatingVersion {
     Oars1_1,
     Unknown,
 }
+
 impl Default for ContentRatingVersion {
     fn default() -> Self {
         ContentRatingVersion::Unknown
@@ -384,13 +382,12 @@ impl Default for ContentRatingVersion {
 impl Ord for ContentRatingVersion {
     fn cmp(&self, other: &Self) -> Ordering {
         match (self, other) {
-            (ContentRatingVersion::Oars1_0, ContentRatingVersion::Oars1_1) => Ordering::Less,
-            (ContentRatingVersion::Oars1_1, ContentRatingVersion::Oars1_0) => Ordering::Greater,
+            (ContentRatingVersion::Oars1_0, ContentRatingVersion::Oars1_1)
+            | (ContentRatingVersion::Unknown, _) => Ordering::Less,
+            (ContentRatingVersion::Oars1_1, ContentRatingVersion::Oars1_0)
+            | (_, ContentRatingVersion::Unknown) => Ordering::Greater,
             (ContentRatingVersion::Oars1_0, ContentRatingVersion::Oars1_0)
             | (ContentRatingVersion::Oars1_1, ContentRatingVersion::Oars1_1) => Ordering::Equal,
-            (ContentRatingVersion::Unknown, _) | (_, ContentRatingVersion::Unknown) => {
-                Ordering::Less
-            }
         }
     }
 }
@@ -717,19 +714,4 @@ pub enum Translation {
     Gettext(String),
     Qt(String),
     Unknown,
-}
-
-#[test]
-fn test_provide_firmware() {
-    use std::convert::TryFrom;
-    let x = r"<firmware type='runtime'>ipw2200-bss.fw</firmware>";
-    let element = xmltree::Element::parse(x.as_bytes()).unwrap();
-    let p: Provide = Provide::try_from(&element).unwrap();
-    assert_eq!(
-        p,
-        Provide::Firmware {
-            kind: FirmwareKind::Runtime,
-            item: "ipw2200-bss.fw".into()
-        }
-    );
 }
