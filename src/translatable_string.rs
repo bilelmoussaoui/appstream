@@ -1,9 +1,5 @@
-use serde::{
-    de::{MapAccess, Visitor},
-    Deserialize, Deserializer, Serialize,
-};
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use std::fmt;
 
 pub const DEFAULT_LOCALE: &str = "C";
 
@@ -115,7 +111,7 @@ impl TranslatableString {
     }
 }
 
-#[derive(Clone, Debug, Serialize, PartialEq, Default)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 pub struct TranslatableList(pub BTreeMap<String, Vec<String>>);
 
 impl TranslatableList {
@@ -156,37 +152,5 @@ impl TranslatableList {
 
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
-    }
-}
-
-impl<'de> Deserialize<'de> for TranslatableList {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        struct TranslatableVistior;
-
-        impl<'de> Visitor<'de> for TranslatableVistior {
-            type Value = TranslatableList;
-
-            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("a HashMap<Locale, Vec<Text>>")
-            }
-
-            fn visit_map<M>(self, mut access: M) -> Result<Self::Value, M::Error>
-            where
-                M: MapAccess<'de>,
-            {
-                let mut t = TranslatableList::default();
-
-                while let Some((key, value)) = access.next_entry::<String, Vec<String>>()? {
-                    value.iter().for_each(|w| t.add_for_locale(Some(&key), w));
-                }
-
-                Ok(t)
-            }
-        }
-
-        deserializer.deserialize_map(TranslatableVistior)
     }
 }
