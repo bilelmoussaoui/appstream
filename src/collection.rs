@@ -17,14 +17,13 @@ use xmltree::Element;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Collection {
     pub version: String,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub origin: Option<String>,
-    #[serde(
-        default,
-        rename(deserialize = "component", serialize = "components"),
-        skip_serializing_if = "Vec::is_empty"
-    )]
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub components: Vec<Component>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub architecture: Option<String>,
 }

@@ -21,7 +21,7 @@ use std::io::BufReader;
 use xmltree::Element;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 pub struct Component {
-    #[serde(rename = "type", default)]
+    #[serde(default, rename = "type")]
     pub kind: ComponentKind,
     pub id: AppId,
     pub name: TranslatableString,

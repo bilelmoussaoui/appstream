@@ -48,7 +48,6 @@ pub struct Video {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub container: Option<String>,
 
-    #[serde(rename(deserialize = "$value", serialize = "url"))]
     pub url: Url,
 }
 

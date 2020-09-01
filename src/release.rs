@@ -13,10 +13,10 @@ pub struct Release {
 
     pub version: String,
 
-    #[serde(rename = "type", default)]
+    #[serde(default, rename = "type")]
     pub kind: ReleaseKind,
 
-    #[serde(default, rename = "size", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
 
     #[serde(default)]
@@ -37,16 +37,15 @@ pub struct Artifact {
     #[serde(rename = "type")]
     pub kind: ArtifactKind,
 
-    #[serde(default, rename = "size", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
 
-    #[serde(rename = "location")]
     pub url: Url,
 
-    #[serde(default, rename = "checksum", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub checksums: Vec<Checksum>,
 
-    #[serde(default, rename = "bundle", skip_serializing_if = "Vec::is_empty")]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub bundles: Vec<Bundle>,
 }
 
