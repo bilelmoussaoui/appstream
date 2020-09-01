@@ -65,6 +65,14 @@ mod tests {
     use anyhow::Result;
     use url::Url;
 
+    #[cfg(feature = "gzip")]
+    #[test]
+    fn gzip_collection() {
+
+        let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into()).unwrap();
+        assert_eq!(c1.components.len(), 1257);
+    }
+
     #[test]
     fn spec_example_collection() {
         let c1 = Collection::from_path("./tests/collections/spec_example.xml".into()).unwrap();
@@ -244,7 +252,7 @@ mod tests {
     fn endless_os_collection() {
         let c1: Result<Collection> =
             Collection::from_path("./tests/collections/endless-apps.xml".into());
-        // assert_eq!(c1.is_ok(), true);
+        assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
         assert_eq!(631, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
@@ -255,7 +263,7 @@ mod tests {
     fn gnome_collection() {
         let c1: Result<Collection> =
             Collection::from_path("./tests/collections/gnome-apps.xml".into());
-        // assert_eq!(c1.is_ok(), true);
+        assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
         assert_eq!(24, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
@@ -277,7 +285,7 @@ mod tests {
     fn flathub_collection() {
         let c1: Result<Collection> =
             Collection::from_path("./tests/collections/flathub-apps.xml".into());
-        // assert_eq!(c1.is_ok(), true);
+        assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
         assert_eq!(376, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);

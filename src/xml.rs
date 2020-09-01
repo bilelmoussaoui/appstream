@@ -284,36 +284,38 @@ impl TryFrom<&Element> for Icon {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
-        Ok(match e.attributes.get("type").as_deref() {
-            Some(t) => match t.as_str() {
-                "stock" => Icon::Stock(val),
-                "cached" => Icon::Cached {
-                    path: val.into(),
-                    width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
-                    height: e
-                        .attributes
-                        .get("height")
-                        .map(|w| w.parse::<u32>().unwrap()),
-                },
-                "remote" => Icon::Remote {
-                    url: Url::parse(&val)?,
-                    width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
-                    height: e
-                        .attributes
-                        .get("height")
-                        .map(|w| w.parse::<u32>().unwrap()),
-                },
-                "local" => Icon::Local {
-                    path: val.into(),
-                    width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
-                    height: e
-                        .attributes
-                        .get("height")
-                        .map(|w| w.parse::<u32>().unwrap()),
-                },
-                _ => anyhow::bail!("Invalid launchable type {}", t),
+        let kind =  match  e.attributes.get("type") {
+            Some(t) => t.as_str(),
+            None => "local" 
+        };
+        
+        Ok(match kind{
+            "stock" => Icon::Stock(val),
+            "cached" => Icon::Cached {
+                path: val.into(),
+                width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
+                height: e
+                    .attributes
+                    .get("height")
+                    .map(|w| w.parse::<u32>().unwrap()),
             },
-            None => anyhow::bail!("launchable tag required a type"),
+            "remote" => Icon::Remote {
+                url: Url::parse(&val)?,
+                width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
+                height: e
+                    .attributes
+                    .get("height")
+                    .map(|w| w.parse::<u32>().unwrap()),
+            },
+            _ => Icon::Local {
+                path: val.into(),
+                width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
+                height: e
+                    .attributes
+                    .get("height")
+                    .map(|w| w.parse::<u32>().unwrap()),
+            }
+            
         })
     }
 }
@@ -370,16 +372,20 @@ impl TryFrom<&Element> for Launchable {
     type Error = anyhow::Error;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
-        Ok(match e.attributes.get("type").as_deref() {
-            Some(t) => match t.as_str() {
-                "cockpit-manifest" => Launchable::CockpitManifest(val),
-                "desktop-id" => Launchable::DesktopId(val),
-                "service" => Launchable::Service(val),
-                "url" => Launchable::Url(Url::parse(&val).expect("invalid url in launchable")),
-                _ => anyhow::bail!("Invalid launchable type {}", t),
-            },
-            None => anyhow::bail!("launchable tag required a type"),
+        let val = match e.get_text() {
+            Some(v) => v.into_owned(),
+            None => "".to_string()
+        };
+        let kind = match e.attributes.get("type") {
+            Some(k) => k.as_str(),
+            None => "unkown"
+        };
+        Ok(match kind {
+            "cockpit-manifest" => Launchable::CockpitManifest(val),
+            "desktop-id" => Launchable::DesktopId(val),
+            "service" => Launchable::Service(val),
+            "url" => Launchable::Url(Url::parse(&val).expect("invalid url in launchable")),
+            _ => Launchable::Unknown(val), 
         })
     }
 }
@@ -631,15 +637,16 @@ impl TryFrom<&Element> for ContentRating {
     type Error = anyhow::Error;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let version: Result<ContentRatingVersion, anyhow::Error> =
-            match e.attributes.get("type").as_deref() {
-                Some(t) => match t.as_str() {
-                    "oars-1.0" => Ok(ContentRatingVersion::Oars1_0),
-                    "oars-1.1" => Ok(ContentRatingVersion::Oars1_1),
-                    _ => Ok(ContentRatingVersion::Unknown),
-                },
-                None => anyhow::bail!("content-rating requires a type"),
-            };
+        let version: ContentRatingVersion = match e.attributes.get("type") {
+            Some(t) => 
+                match t.as_str() {
+                    "oars-1.0" =>ContentRatingVersion::Oars1_0,
+                    "oars-1.1" => ContentRatingVersion::Oars1_1,
+                    _ => ContentRatingVersion::Unknown,
+                }
+            None => ContentRatingVersion::Unknown,
+        }; 
+           
 
         let mut attributes: Vec<ContentAttribute> = Vec::new();
         for child in e.children.iter() {
@@ -648,7 +655,7 @@ impl TryFrom<&Element> for ContentRating {
             )?);
         }
         Ok(Self {
-            version: version.unwrap(),
+            version,
             attributes,
         })
     }
@@ -694,7 +701,7 @@ impl TryFrom<&Element> for ContentAttribute {
                 "money-gambling" => Ok(ContentAttribute::MoneyGambling(val)),
                 _ => anyhow::bail!("invalid content-attribute id"),
             },
-            None => anyhow::bail!("launchable tag required a type"),
+            None => anyhow::bail!("content-attribute tag requires a type"),
         }
     }
 }
