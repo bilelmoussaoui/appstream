@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use strum_macros::{AsRefStr, EnumString, ToString};
 use url::Url;
+use super::types::AppId;
 
 #[derive(Clone, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -422,7 +423,9 @@ impl Default for ContentState {
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase", tag = "type")]
 pub enum Icon {
+    /// Icon loaded from the stock.
     Stock(String),
+    /// Icon cached
     Cached {
         path: PathBuf,
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -430,6 +433,7 @@ pub enum Icon {
         #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
+    /// Icon loaded from a remote URL.
     Remote {
         url: Url,
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -437,6 +441,7 @@ pub enum Icon {
         #[serde(skip_serializing_if = "Option::is_none")]
         height: Option<u32>,
     },
+    /// Icon loaded from a file.
     Local {
         path: PathBuf,
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -567,14 +572,23 @@ impl Serialize for Launchable {
 
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "lowercase", tag = "type", content = "url")]
+#[non_exhaustive]
 pub enum ProjectUrl {
+    /// Web page with information on how to donate.
     Donation(Url),
+    /// To submit or modify translations.
     Translate(Url),
+    /// Upstream homepage.
     Homepage(Url),
+    /// Bug tracking system, to report new bugs.
     BugTracker(Url),
+    /// An online user's reference.
     Help(Url),
+    /// Web page with answers to frequently asked questions.
     Faq(Url),
+    /// Web page that allows the user to contact the developer.
     Contact(Url),
+    #[doc(hidden)]
     Unknown(Url),
 }
 
@@ -670,20 +684,30 @@ pub enum FirmwareKind {
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum Provide {
+    /// Shared library.
     Library(PathBuf),
+    /// Name of a binary installed in `$PATH`.
     Binary(String),
+    /// Full name of a font.
     Font(String),
+    /// A modalias glob representing the hardware types the component handles.
     Modalias(String),
+    /// Information needed to associate a firmware with a device.
     Firmware {
         #[serde(rename = "type")]
         kind: FirmwareKind,
         #[serde(rename(deserialize = "$value", serialize = "item"))]
         item: String,
     },
+    /// Name of a Python 2 module.
     Python2(String),
+    /// Name of a Python 2 module.
     Python3(String),
+    /// FIXME: support dbus session type
     DBus(String),
-    Id(String),
+    /// Useful when the component-id had to be renamed.
+    Id(AppId),
+    /// Required only for Codec components.
     Codec(String),
 }
 

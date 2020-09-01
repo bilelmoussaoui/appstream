@@ -7,14 +7,17 @@ use url::Url;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Release {
     #[serde(default, alias = "timestamp", skip_serializing_if = "Option::is_none")]
+    /// Release date.
     pub date: Option<DateTime<Utc>>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// Release end-of-life date.
     pub date_eol: Option<DateTime<Utc>>,
-
+    /// Release version
     pub version: String,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// A long description of the release. Some markup can be used.
     pub description: Option<MarkupTranslatableString>,
 
     #[serde(default, rename = "type")]
@@ -42,11 +45,14 @@ pub struct Artifact {
     pub kind: ArtifactKind,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Downloaded & installed sizes.
     pub sizes: Vec<Size>,
 
+    /// Download link.
     pub url: Url,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// At least one checksum of released artifact.
     pub checksums: Vec<Checksum>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]

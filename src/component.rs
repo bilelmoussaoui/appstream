@@ -21,25 +21,34 @@ use xmltree::Element;
 pub struct Component {
     #[serde(default, rename = "type")]
     pub kind: ComponentKind,
+    /// Unique identifier for this component.
     pub id: AppId,
+    /// A human-readable name.
     pub name: TranslatableString,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// A short summary of the component
     pub summary: Option<TranslatableString>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// A long description of this component. Some markup can be used.
     pub description: Option<MarkupTranslatableString>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The license of the compoonent.
     pub project_license: Option<License>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The license the metainfo XML file released under.
     pub metadata_license: Option<License>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// Identify the project with a specific upstream umbrealla.
+    /// Known values includes: GNOME, KDE, XFCE, MATE, LXDE.
     pub project_group: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// Indicate for which desktop environement the component is essential for its functionnality.
     pub compulsory_for_desktop: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -52,18 +61,24 @@ pub struct Component {
     pub screenshots: Vec<Screenshot>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Web URLs.
     pub urls: Vec<ProjectUrl>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The developers or the projects responsible for the development of the project.
     pub developer_name: Option<TranslatableString>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    /// Used by distributors to contact the project.
+    /// The information should not be exposed to the user.
     pub update_contact: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The categories this component is associated with.
     pub categories: Vec<Category>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Possible methods to launch the software.
     pub launchables: Vec<Launchable>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -76,12 +91,14 @@ pub struct Component {
     pub bundles: Vec<Bundle>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Metainformation that describes the various releases.
     pub releases: Vec<Release>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub languages: Vec<Language>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The MIME types the component supports.
     pub mimetypes: Vec<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -91,12 +108,15 @@ pub struct Component {
     pub keywords: Option<TranslatableList>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// Specifies the age rating of the component.
     pub content_rating: Option<ContentRating>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Public interfaces the component provides.
     pub provides: Vec<Provide>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Specifies the translation domains.
     pub translations: Vec<Translation>,
 }
 
