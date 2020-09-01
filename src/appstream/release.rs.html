@@ -193,6 +193,12 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{<span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Checksum</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseUrgency</span>, <span class="ident">Size</span>};
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">MarkupTranslatableString</span>;
@@ -203,14 +209,17 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Release</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;timestamp&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// Release date.</span>
     <span class="kw">pub</span> <span class="ident">date</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// Release end-of-life date.</span>
     <span class="kw">pub</span> <span class="ident">date_eol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-
+    <span class="doccomment">/// Release version</span>
     <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">String</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// A long description of the release. Some markup can be used.</span>
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MarkupTranslatableString</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
@@ -238,11 +247,14 @@
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ArtifactKind</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// Downloaded &amp; installed sizes.</span>
     <span class="kw">pub</span> <span class="ident">sizes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&gt;</span>,
 
+    <span class="doccomment">/// Download link.</span>
     <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">Url</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// At least one checksum of released artifact.</span>
     <span class="kw">pub</span> <span class="ident">checksums</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Checksum</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
