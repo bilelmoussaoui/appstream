@@ -1,3 +1,4 @@
+use super::types::AppId;
 use serde::ser::{SerializeMap, SerializeStruct};
 use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
@@ -5,7 +6,6 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use strum_macros::{AsRefStr, EnumString, ToString};
 use url::Url;
-use super::types::AppId;
 
 #[derive(Clone, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
