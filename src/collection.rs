@@ -5,8 +5,6 @@ use anyhow::Result;
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
-#[cfg(feature = "gzip")]
-use std::fs::File;
 use std::fs::File;
 #[cfg(feature = "gzip")]
 use std::io::prelude::*;
@@ -43,7 +41,8 @@ impl Collection {
         let mut xml = String::new();
         d.read_to_string(&mut xml)?;
 
-        let collection: Collection = from_str(&xml)?;
+        let collection: Collection = Collection::try_from(&Element::parse(xml.as_bytes())?)?;
+
         Ok(collection)
     }
 

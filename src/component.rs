@@ -10,8 +10,6 @@ use anyhow::Result;
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "gzip")]
-use std::fs::File;
-#[cfg(feature = "gzip")]
 use std::io::prelude::*;
 use std::path::PathBuf;
 
@@ -117,7 +115,7 @@ impl Component {
         let mut xml = String::new();
         d.read_to_string(&mut xml)?;
 
-        let component: Component = from_str(&xml)?;
+        let component: Component = Component::try_from(&Element::parse(xml.as_bytes())?)?;
         Ok(component)
     }
 }
