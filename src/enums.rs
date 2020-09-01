@@ -2,10 +2,11 @@ use serde::ser::{SerializeMap, SerializeStruct};
 use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
+use std::str::FromStr;
 use strum_macros::{AsRefStr, EnumString, ToString};
 use url::Url;
 
-#[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 pub enum ArtifactKind {
@@ -70,7 +71,7 @@ impl Serialize for Bundle {
     }
 }
 
-#[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "PascalCase")]
 #[strum(serialize_all = "PascalCase")]
 pub enum Category {
@@ -277,7 +278,7 @@ impl Default for ComponentKind {
     }
 }
 
-impl std::str::FromStr for ComponentKind {
+impl FromStr for ComponentKind {
     type Err = anyhow::Error;
 
     fn from_str(c: &str) -> Result<Self, Self::Err> {
@@ -399,7 +400,7 @@ impl PartialOrd for ContentRatingVersion {
     }
 }
 
-#[derive(Clone, Debug, EnumString, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, ToString, EnumString, Deserialize, Serialize, PartialEq)]
 #[strum(serialize_all = "lowercase")]
 pub enum ContentState {
     #[serde(rename = "none")]
@@ -507,7 +508,7 @@ impl Default for ImageKind {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, ToString, Serialize, PartialEq, EnumString)]
+#[derive(Clone, Debug, Deserialize, AsRefStr, ToString, Serialize, PartialEq, EnumString)]
 #[strum(serialize_all = "PascalCase")]
 pub enum Kudo {
     AppMenu,
@@ -621,22 +622,12 @@ impl Serialize for ProjectUrl {
     }
 }
 
-#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "kebab-case")]
+#[derive(Clone, Debug, ToString, EnumString, AsRefStr, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum ReleaseKind {
     Stable,
     Development,
-}
-
-impl std::str::FromStr for ReleaseKind {
-    type Err = anyhow::Error;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "stable" => Ok(ReleaseKind::Stable),
-            "development" => Ok(ReleaseKind::Development),
-            _ => anyhow::bail!("invalid release type"),
-        }
-    }
 }
 
 impl Default for ReleaseKind {
@@ -652,7 +643,7 @@ pub enum Size {
     Installed(u64),
 }
 
-#[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 pub enum ReleaseUrgency {
@@ -668,22 +659,12 @@ impl Default for ReleaseUrgency {
     }
 }
 
-#[derive(Clone, Debug, ToString, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, EnumString, ToString, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum FirmwareKind {
     Flashed,
     Runtime,
-}
-
-impl std::str::FromStr for FirmwareKind {
-    type Err = anyhow::Error;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "flashed" => Ok(FirmwareKind::Flashed),
-            "runtime" => Ok(FirmwareKind::Runtime),
-            _ => anyhow::bail!("invalid firmware type"),
-        }
-    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]

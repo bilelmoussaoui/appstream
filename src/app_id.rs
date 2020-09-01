@@ -3,13 +3,13 @@ use std::string::ToString;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct AppId(pub String);
 
-impl std::convert::From<&str> for AppId {
+impl From<&str> for AppId {
     fn from(id: &str) -> Self {
         Self(id.to_string())
     }
 }
 
-impl std::convert::From<String> for AppId {
+impl From<String> for AppId {
     fn from(id: String) -> Self {
         Self(id)
     }

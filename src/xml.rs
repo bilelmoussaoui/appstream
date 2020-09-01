@@ -84,10 +84,7 @@ impl TryFrom<&Element> for Bundle {
                         .get("sdk")
                         .expect("Flatpak bundle requires an sdk")
                         .to_string(),
-                    reference: e
-                        .get_text()
-                        .expect("Flatpak bundle requires a reference")
-                        .to_string(),
+                    reference: val,
                 }),
                 _ => anyhow::bail!("Invalid bundle type {}", t),
             },
