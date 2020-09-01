@@ -493,12 +493,18 @@ impl Serialize for Icon {
     }
 }
 
-#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq, EnumString)]
+#[derive(Clone, Debug, ToString, AsRefStr, Serialize, Deserialize, PartialEq, EnumString)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 pub enum ImageKind {
     Source,
     Thumbnail,
+}
+
+impl Default for ImageKind {
+    fn default() -> Self {
+        Self::Source
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, ToString, Serialize, PartialEq, EnumString)]

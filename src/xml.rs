@@ -581,11 +581,12 @@ impl TryFrom<&Element> for Image {
         let url = Url::parse(&e.get_text().unwrap().into_owned())?;
         let mut img = ImageBuilder::new(url);
 
-        img = img.kind(ImageKind::from_str(
-            &e.attributes
-                .get("type")
-                .expect("Image tag requires a type attribute"),
-        )?);
+        let kind = match e.attributes.get("type") {
+            Some(t) => ImageKind::from_str(t)?,
+            None => ImageKind::Source,
+        };
+
+        img = img.kind(kind);
 
         if let Some(w) = e.attributes.get("width") {
             img = img.width(w.parse::<u32>().expect("the width should be an integer"));
