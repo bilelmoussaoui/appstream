@@ -2,25 +2,26 @@ use serde::ser::{SerializeMap, SerializeStruct};
 use serde::{Deserialize, Serialize, Serializer};
 use std::cmp::{Ord, Ordering};
 use std::path::PathBuf;
-use strum_macros::{EnumString, ToString};
+use strum_macros::{AsRefStr, EnumString, ToString};
 use url::Url;
 
-#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum ArtifactKind {
     Source,
     Binary,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
+#[serde(tag = "type", rename_all = "lowercase")]
 pub enum Bundle {
     Limba(String),
     Flatpak {
         #[serde(skip_serializing_if = "Option::is_none")]
         runtime: Option<String>,
         sdk: String,
-        #[serde(rename(deserialize = "$value", serialize = "id"))]
-        id: String,
+        reference: String,
     },
     AppImage(String),
     Snap(String),
@@ -39,9 +40,13 @@ impl Serialize for Bundle {
                 bundle_map.serialize_entry("type", "limba")?;
                 bundle_map.serialize_entry("id", id)?;
             }
-            Bundle::Flatpak { runtime, sdk, id } => {
+            Bundle::Flatpak {
+                runtime,
+                sdk,
+                reference,
+            } => {
                 bundle_map.serialize_entry("type", "flatpak")?;
-                bundle_map.serialize_entry("id", id)?;
+                bundle_map.serialize_entry("reference", reference)?;
                 bundle_map.serialize_entry("sdk", sdk)?;
                 if runtime.is_some() {
                     bundle_map.serialize_entry("runtime", runtime.as_ref().unwrap())?;
@@ -67,6 +72,7 @@ impl Serialize for Bundle {
 
 #[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "PascalCase")]
+#[strum(serialize_all = "PascalCase")]
 pub enum Category {
     // Main categories
     // https://specifications.freedesktop.org/menu-spec/latest/apa.html#main-category-registry
@@ -220,6 +226,7 @@ pub enum Category {
     TrayIcon,
     Applet,
     Shell,
+    #[strum(default = "true")]
     Unknown(String),
 }
 
@@ -233,19 +240,25 @@ pub enum Checksum {
     Blake2s(String),
 }
 
-#[derive(Clone, Debug, Serialize, ToString, Deserialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, Serialize, ToString, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
+#[strum(rename_all = "kebab-case")]
 pub enum ComponentKind {
     Runtime,
     #[serde(alias = "console")]
+    #[strum(serialize = "console")]
     ConsoleApplication,
     #[serde(alias = "desktop")]
+    #[strum(serialize = "desktop")]
     DesktopApplication,
     #[serde(alias = "webapp")]
+    #[strum(serialize = "web-application")]
     WebApplication,
     #[serde(rename = "inputmethod")]
+    #[strum(serialize = "inputmethod")]
     InputMethod,
     #[serde(alias = "operating-system")]
+    #[strum(serialize = "operating-system")]
     OS,
     Theme,
     Firmware,
@@ -261,6 +274,31 @@ pub enum ComponentKind {
 impl Default for ComponentKind {
     fn default() -> Self {
         ComponentKind::Generic
+    }
+}
+
+impl std::str::FromStr for ComponentKind {
+    type Err = anyhow::Error;
+
+    fn from_str(c: &str) -> Result<Self, Self::Err> {
+        match c {
+            "runtime" => Ok(ComponentKind::Runtime),
+            "console" | "console-application" => Ok(ComponentKind::ConsoleApplication),
+            "desktop" | "desktop-application" => Ok(ComponentKind::DesktopApplication),
+            "webapp" => Ok(ComponentKind::WebApplication),
+            "inputmethod" => Ok(ComponentKind::InputMethod),
+            "operating-system" => Ok(ComponentKind::OS),
+            "theme" => Ok(ComponentKind::Theme),
+            "firmware" => Ok(ComponentKind::Firmware),
+            "addon" => Ok(ComponentKind::Addon),
+            "font" => Ok(ComponentKind::Font),
+            "icontheme" | "icon-theme" => Ok(ComponentKind::IconTheme),
+            "driver" => Ok(ComponentKind::Driver),
+            "codec" => Ok(ComponentKind::Codec),
+            "localization" => Ok(ComponentKind::Localization),
+            "" | "generic" => Ok(ComponentKind::default()),
+            _ => anyhow::bail!("invalid component type"),
+        }
     }
 }
 
@@ -361,7 +399,8 @@ impl PartialOrd for ContentRatingVersion {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, EnumString, Deserialize, Serialize, PartialEq)]
+#[strum(serialize_all = "lowercase")]
 pub enum ContentState {
     #[serde(rename = "none")]
     None,
@@ -373,7 +412,14 @@ pub enum ContentState {
     Intense,
 }
 
+impl Default for ContentState {
+    fn default() -> Self {
+        Self::None
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase", tag = "type")]
 pub enum Icon {
     Stock(String),
     Cached {
@@ -447,14 +493,22 @@ impl Serialize for Icon {
     }
 }
 
-#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, ToString, AsRefStr, Serialize, Deserialize, PartialEq, EnumString)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum ImageKind {
     Source,
     Thumbnail,
 }
 
+impl Default for ImageKind {
+    fn default() -> Self {
+        Self::Source
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, ToString, Serialize, PartialEq, EnumString)]
+#[strum(serialize_all = "PascalCase")]
 pub enum Kudo {
     AppMenu,
     HiDpiIcon,
@@ -463,10 +517,14 @@ pub enum Kudo {
     Notifications,
     SearchProvider,
     UserDocs,
+    #[strum(default = "true")]
+    Unknown(String),
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "lowercase", tag = "type", content = "name")]
 pub enum Launchable {
+    #[serde(alias = "desktop_id")]
     DesktopId(String),
     Service(String),
     Url(Url),
@@ -506,7 +564,8 @@ impl Serialize for Launchable {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Deserialize)]
+#[serde(rename_all = "lowercase", tag = "type", content = "url")]
 pub enum ProjectUrl {
     Donation(Url),
     Translate(Url),
@@ -569,6 +628,17 @@ pub enum ReleaseKind {
     Development,
 }
 
+impl std::str::FromStr for ReleaseKind {
+    type Err = anyhow::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "stable" => Ok(ReleaseKind::Stable),
+            "development" => Ok(ReleaseKind::Development),
+            _ => anyhow::bail!("invalid release type"),
+        }
+    }
+}
+
 impl Default for ReleaseKind {
     fn default() -> Self {
         ReleaseKind::Stable
@@ -582,8 +652,9 @@ pub enum Size {
     Installed(u64),
 }
 
-#[derive(Clone, Debug, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, EnumString, ToString, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
 pub enum ReleaseUrgency {
     Low,
     Medium,
@@ -602,6 +673,17 @@ impl Default for ReleaseUrgency {
 pub enum FirmwareKind {
     Flashed,
     Runtime,
+}
+
+impl std::str::FromStr for FirmwareKind {
+    type Err = anyhow::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "flashed" => Ok(FirmwareKind::Flashed),
+            "runtime" => Ok(FirmwareKind::Runtime),
+            _ => anyhow::bail!("invalid firmware type"),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -624,8 +706,8 @@ pub enum Provide {
     Codec(String),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "kebab-case", tag = "type", content = "name")]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase", tag = "type", content = "name")]
 pub enum Translation {
     Gettext(String),
     Qt(String),
@@ -634,8 +716,10 @@ pub enum Translation {
 
 #[test]
 fn test_provide_firmware() {
+    use std::convert::TryFrom;
     let x = r"<firmware type='runtime'>ipw2200-bss.fw</firmware>";
-    let p: Provide = quick_xml::de::from_str(&x).unwrap();
+    let element = xmltree::Element::parse(x.as_bytes()).unwrap();
+    let p: Provide = Provide::try_from(&element).unwrap();
     assert_eq!(
         p,
         Provide::Firmware {

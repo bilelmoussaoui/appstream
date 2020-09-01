@@ -2,32 +2,44 @@ use super::collection::Collection;
 use super::component::Component;
 use super::enums::*;
 use super::types::{
-    AppId, Artifact, ContentRating, Image, Language, License, Release, Screenshot,
-    TranslatableString, TranslatableVec, Video,
+    AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
+    Screenshot, TranslatableList, TranslatableString, Video,
 };
 use chrono::{DateTime, Utc};
 use url::Url;
 
 pub struct ArtifactBuilder {
     pub platform: Option<String>,
-    pub kind: ArtifactKind,
+    pub kind: Option<ArtifactKind>,
     pub sizes: Vec<Size>,
-    pub url: Url,
+    pub url: Option<Url>,
     pub checksums: Vec<Checksum>,
     pub bundles: Vec<Bundle>,
 }
 
-#[allow(dead_code)]
-impl ArtifactBuilder {
-    pub fn new(url: Url, kind: ArtifactKind) -> Self {
+impl Default for ArtifactBuilder {
+    fn default() -> Self {
         Self {
-            url,
-            kind,
+            url: None,
+            kind: None,
             sizes: vec![],
             checksums: vec![],
             platform: None,
             bundles: vec![],
         }
+    }
+}
+
+#[allow(dead_code)]
+impl ArtifactBuilder {
+    pub fn kind(mut self, kind: ArtifactKind) -> Self {
+        self.kind = Some(kind);
+        self
+    }
+
+    pub fn url(mut self, url: Url) -> Self {
+        self.url = Some(url);
+        self
     }
 
     pub fn bundle(mut self, bundle: Bundle) -> Self {
@@ -52,8 +64,8 @@ impl ArtifactBuilder {
 
     pub fn build(self) -> Artifact {
         Artifact {
-            url: self.url,
-            kind: self.kind,
+            url: self.url.expect("an artifact location is required"),
+            kind: self.kind.expect("artifact type is required"),
             sizes: self.sizes,
             checksums: self.checksums,
             platform: self.platform,
@@ -107,10 +119,10 @@ impl CollectionBuilder {
 
 pub struct ComponentBuilder {
     pub kind: ComponentKind,
-    pub id: AppId,
-    pub name: TranslatableString,
+    pub id: Option<AppId>,
+    pub name: Option<TranslatableString>,
     pub summary: Option<TranslatableString>,
-    pub description: Option<TranslatableString>,
+    pub description: Option<MarkupTranslatableString>,
     pub project_license: Option<License>,
     pub metadata_license: Option<License>,
     pub project_group: Option<String>,
@@ -129,20 +141,19 @@ pub struct ComponentBuilder {
     pub languages: Vec<Language>,
     pub mimetypes: Vec<String>,
     pub kudos: Vec<Kudo>,
-    pub keywords: Option<TranslatableVec>,
+    pub keywords: Option<TranslatableList>,
     pub content_rating: Option<ContentRating>,
     pub provides: Vec<Provide>,
     pub translations: Vec<Translation>,
     pub source_pkgname: Option<String>,
 }
 
-#[allow(dead_code)]
-impl ComponentBuilder {
-    pub fn new(id: AppId, name: TranslatableString) -> Self {
+impl Default for ComponentBuilder {
+    fn default() -> Self {
         Self {
             kind: ComponentKind::Generic,
-            id,
-            name,
+            id: None,
+            name: None,
             summary: None,
             description: None,
             project_license: None,
@@ -170,6 +181,19 @@ impl ComponentBuilder {
             source_pkgname: None,
         }
     }
+}
+
+#[allow(dead_code)]
+impl ComponentBuilder {
+    pub fn id(mut self, id: AppId) -> Self {
+        self.id = Some(id);
+        self
+    }
+
+    pub fn name(mut self, name: TranslatableString) -> Self {
+        self.name = Some(name);
+        self
+    }
 
     pub fn content_rating(mut self, content_rating: ContentRating) -> Self {
         self.content_rating = Some(content_rating);
@@ -182,17 +206,23 @@ impl ComponentBuilder {
     }
 
     pub fn developer_name(mut self, developer_name: TranslatableString) -> Self {
-        self.developer_name = Some(developer_name);
+        if !developer_name.is_empty() {
+            self.developer_name = Some(developer_name);
+        }
         self
     }
 
     pub fn summary(mut self, summary: TranslatableString) -> Self {
-        self.summary = Some(summary);
+        if !summary.is_empty() {
+            self.summary = Some(summary);
+        }
         self
     }
 
-    pub fn description(mut self, description: TranslatableString) -> Self {
-        self.description = Some(description);
+    pub fn description(mut self, description: MarkupTranslatableString) -> Self {
+        if !description.is_empty() {
+            self.description = Some(description);
+        }
         self
     }
 
@@ -206,8 +236,15 @@ impl ComponentBuilder {
         self
     }
 
-    pub fn keywords(mut self, keywords: TranslatableVec) -> Self {
-        self.keywords = Some(keywords);
+    pub fn keywords(mut self, keywords: TranslatableList) -> Self {
+        if !keywords.is_empty() {
+            self.keywords = Some(keywords);
+        }
+        self
+    }
+
+    pub fn compulsory_for_desktop(mut self, compulsory_for_desktop: &str) -> Self {
+        self.compulsory_for_desktop = Some(compulsory_for_desktop.to_string());
         self
     }
 
@@ -299,9 +336,10 @@ impl ComponentBuilder {
     pub fn build(self) -> Component {
         Component {
             kind: self.kind,
-            id: self.id,
-            name: self.name,
+            id: self.id.expect("An 'id' is required"),
+            name: self.name.expect("A 'name' is required"),
             summary: self.summary,
+            description: self.description,
             project_license: self.project_license,
             metadata_license: self.metadata_license,
             project_group: self.project_group,
@@ -402,6 +440,7 @@ impl LanguageBuilder {
 pub struct ReleaseBuilder {
     pub date: Option<DateTime<Utc>>,
     pub date_eol: Option<DateTime<Utc>>,
+    pub description: Option<MarkupTranslatableString>,
     pub version: String,
     pub kind: Option<ReleaseKind>,
     pub sizes: Vec<Size>,
@@ -416,6 +455,7 @@ impl ReleaseBuilder {
         Self {
             date: None,
             date_eol: None,
+            description: None,
             kind: Some(ReleaseKind::Stable),
             sizes: vec![],
             version: version.to_string(),
@@ -423,6 +463,13 @@ impl ReleaseBuilder {
             artifacts: vec![],
             url: None,
         }
+    }
+
+    pub fn description(mut self, description: MarkupTranslatableString) -> Self {
+        if !description.is_empty() {
+            self.description = Some(description);
+        }
+        self
     }
 
     pub fn url(mut self, url: Url) -> Self {
@@ -450,6 +497,11 @@ impl ReleaseBuilder {
         self
     }
 
+    pub fn size(mut self, size: Size) -> Self {
+        self.sizes.push(size);
+        self
+    }
+
     pub fn sizes(mut self, sizes: Vec<Size>) -> Self {
         self.sizes = sizes;
         self
@@ -467,6 +519,7 @@ impl ReleaseBuilder {
             date: self.date,
             date_eol: self.date_eol,
             kind,
+            description: self.description,
             sizes: self.sizes,
             urgency: self.urgency,
             artifacts: self.artifacts,
@@ -484,12 +537,10 @@ pub struct ScreenshotBuilder {
 
 #[allow(dead_code)]
 impl ScreenshotBuilder {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     pub fn caption(mut self, caption: TranslatableString) -> Self {
-        self.caption = Some(caption);
+        if !caption.is_empty() {
+            self.caption = Some(caption);
+        }
         self
     }
 

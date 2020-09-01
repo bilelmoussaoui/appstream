@@ -1,37 +1,34 @@
-use super::de::*;
 use super::enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size};
+use super::types::MarkupTranslatableString;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Release {
-    #[serde(
-        deserialize_with = "timestamp_deserialize",
-        alias = "timestamp",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+    #[serde(default, alias = "timestamp", skip_serializing_if = "Option::is_none")]
     pub date: Option<DateTime<Utc>>,
-    #[serde(
-        deserialize_with = "timestamp_deserialize",
-        default,
-        skip_serializing_if = "Option::is_none"
-    )]
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub date_eol: Option<DateTime<Utc>>,
+
     pub version: String,
-    #[serde(rename = "type", default)]
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<MarkupTranslatableString>,
+
+    #[serde(default, rename = "type")]
     pub kind: ReleaseKind,
-    #[serde(default, rename = "size", skip_serializing_if = "Vec::is_empty")]
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
+
     #[serde(default)]
     pub urgency: ReleaseUrgency,
-    #[serde(
-        default,
-        deserialize_with = "artifacts_deserialize",
-        skip_serializing_if = "Vec::is_empty"
-    )]
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub artifacts: Vec<Artifact>,
+
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<Url>,
 }
@@ -40,29 +37,36 @@ pub struct Release {
 pub struct Artifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
+
     #[serde(rename = "type")]
     pub kind: ArtifactKind,
-    #[serde(default, rename = "size")]
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub sizes: Vec<Size>,
-    #[serde(rename = "location")]
+
     pub url: Url,
-    #[serde(default, rename = "checksum")]
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub checksums: Vec<Checksum>,
-    #[serde(default, rename = "bundle")]
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub bundles: Vec<Bundle>,
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{ArtifactKind, Checksum, Release, ReleaseKind, ReleaseUrgency, Size, Url};
+    use super::{
+        ArtifactKind, Checksum, MarkupTranslatableString, Release, ReleaseKind, ReleaseUrgency,
+        Size, Url,
+    };
     use crate::builders::{ArtifactBuilder, ReleaseBuilder};
-    use quick_xml::de::from_str;
-
     use chrono::{TimeZone, Utc};
+    use std::convert::TryFrom;
 
     #[test]
     fn release_artifacts() {
         let x = r"
+        <releases>
         <release version='1.2' date='2014-04-12' urgency='high'>
           <description>
             <p>This stable release fixes bugs.</p>
@@ -93,41 +97,47 @@ mod tests {
           </artifacts>
         </release>
         <release version='1.1' type='development' date='2013-10-20' />
-        <release version='1.0' date='2012-08-26' />";
+        <release version='1.0' date='2012-08-26' />
+        </releases>";
 
-        let releases1: Vec<Release> = from_str(&x).unwrap();
+        let element = xmltree::Element::parse(x.as_bytes()).unwrap();
+        let mut releases1: Vec<Release> = vec![];
+        for e in element.children.iter() {
+            releases1.push(Release::try_from(e.as_element().unwrap()).unwrap());
+        }
+
         let releases2 = vec![
             ReleaseBuilder::new("1.2")
                 .urgency(ReleaseUrgency::High)
+                .description(MarkupTranslatableString::with_default(
+                    "<p>This stable release fixes bugs.</p>",
+                ))
                 .date(Utc.ymd(2014, 4, 12).and_hms_milli(0, 0, 0, 0))
                 .url(Url::parse("https://example.org/releases/version-1.2.html").unwrap())
                 .artifact(
-                    ArtifactBuilder::new(
-                        Url::parse("https://example.com/mytarball.bin.tar.xz").unwrap(),
-                        ArtifactKind::Binary,
-                    )
-                    .platform("x86_64-linux-gnu")
-                    .size(Size::Download(12345678))
-                    .size(Size::Installed(42424242))
-                    .checksum(Checksum::Sha256("....".into()))
-                    .checksum(Checksum::Blake2b("....".into()))
-                    .build(),
+                    ArtifactBuilder::default()
+                        .url(Url::parse("https://example.com/mytarball.bin.tar.xz").unwrap())
+                        .kind(ArtifactKind::Binary)
+                        .platform("x86_64-linux-gnu")
+                        .size(Size::Download(12345678))
+                        .size(Size::Installed(42424242))
+                        .checksum(Checksum::Sha256("....".into()))
+                        .checksum(Checksum::Blake2b("....".into()))
+                        .build(),
                 )
                 .artifact(
-                    ArtifactBuilder::new(
-                        Url::parse("https://example.com/mytarball.bin.exe").unwrap(),
-                        ArtifactKind::Binary,
-                    )
-                    .platform("win32")
-                    .build(),
+                    ArtifactBuilder::default()
+                        .url(Url::parse("https://example.com/mytarball.bin.exe").unwrap())
+                        .kind(ArtifactKind::Binary)
+                        .platform("win32")
+                        .build(),
                 )
                 .artifact(
-                    ArtifactBuilder::new(
-                        Url::parse("https://example.com/mytarball.tar.xz").unwrap(),
-                        ArtifactKind::Source,
-                    )
-                    .checksum(Checksum::Sha256("....".into()))
-                    .build(),
+                    ArtifactBuilder::default()
+                        .url(Url::parse("https://example.com/mytarball.tar.xz").unwrap())
+                        .kind(ArtifactKind::Source)
+                        .checksum(Checksum::Sha256("....".into()))
+                        .build(),
                 )
                 .build(),
             ReleaseBuilder::new("1.1")
@@ -144,6 +154,7 @@ mod tests {
     #[test]
     fn release_size() {
         let x = r"
+        <releases>
             <release version='1.8' timestamp='1424116753'>
                 <description>
                 <p>This stable release fixes the following bug:</p>
@@ -156,13 +167,19 @@ mod tests {
             </release>
             <release version='1.2' timestamp='1397253600' />
             <release version='1.0' timestamp='1345932000' />
+        </releases>
         ";
-        let releases: Vec<Release> = from_str(&x).unwrap();
+        let element = xmltree::Element::parse(x.as_bytes()).unwrap();
+        let mut releases: Vec<Release> = vec![];
+        for e in element.children.iter() {
+            releases.push(Release::try_from(e.as_element().unwrap()).unwrap());
+        }
 
         assert_eq!(
             releases,
             vec![
                 ReleaseBuilder::new("1.8")
+                    .description(MarkupTranslatableString::with_default("<p>This stable release fixes the following bug:</p><ul><li>CPU no longer overheats when you hold down spacebar</li></ul>"))
                     .date(chrono::Utc.datetime_from_str("1424116753", "%s").unwrap())
                     .sizes(vec![Size::Download(12345678), Size::Installed(42424242)])
                     .build(),

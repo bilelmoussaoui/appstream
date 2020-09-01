@@ -20,6 +20,7 @@
 //! use appstream::enums::{Provide, ProjectUrl};
 //! use url::Url;
 //! use chrono::{Utc, TimeZone};
+//! use std::convert::TryFrom;
 //!
 //! let xml = r"<?xml version='1.0' encoding='UTF-8'?>
 //!                 <component>
@@ -39,13 +40,12 @@
 //!                     </releases>
 //!                     <developer_name>FooBar Team</developer_name>
 //!                 </component>";
+//! let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
+//! let c1 = Component::try_from(&element).unwrap();
 //!
-//! let c1: Component = quick_xml::de::from_str(&xml).unwrap();
-//!
-//! let c2 = ComponentBuilder::new(
-//!         "com.example.foobar".into(),
-//!         TranslatableString::with_default("Foo Bar")
-//!     )
+//! let c2 = ComponentBuilder::default()
+//!     .id("com.example.foobar".into())
+//!     .name(TranslatableString::with_default("Foo Bar"))
 //!     .metadata_license("CC0-1.0".into())
 //!     .summary(TranslatableString::with_default("A foo-ish bar"))
 //!     .url(ProjectUrl::Homepage(
@@ -87,13 +87,13 @@ pub mod builders;
 mod collection;
 mod component;
 mod content_rating;
-mod de;
 pub mod enums;
 mod language;
 mod license;
 mod release;
 mod screenshot;
 mod translatable_string;
+mod xml;
 
 pub mod types {
     pub use crate::app_id::AppId;
@@ -102,9 +102,10 @@ pub mod types {
     pub use crate::license::License;
     pub use crate::release::{Artifact, Release};
     pub use crate::screenshot::{Image, Screenshot, Video};
-    pub use crate::translatable_string::{TranslatableString, TranslatableVec};
+    pub use crate::translatable_string::{
+        MarkupTranslatableString, TranslatableList, TranslatableString,
+    };
 }
 pub use collection::Collection;
 pub use component::Component;
-pub use quick_xml;
 pub use url;
