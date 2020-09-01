@@ -275,36 +275,63 @@
 <span id="275">275</span>
 <span id="276">276</span>
 <span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">AppId</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
 <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">read</span>::<span class="ident">GzDecoder</span>;
-<span class="kw">use</span> <span class="ident">quick_xml</span>::<span class="ident">de</span>::<span class="ident">from_str</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">Deserialize</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">use</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Collection</span> {
     <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">String</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">origin</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;component&quot;</span>, <span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">components</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Component</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">architecture</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">xml</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">read_to_string</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="ident">collection</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">xml</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>);
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">file</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">collection</span>)
     }
 
@@ -316,7 +343,8 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">xml</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
         <span class="ident">d</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">xml</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">collection</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">xml</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">collection</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+
         <span class="prelude-val">Ok</span>(<span class="ident">collection</span>)
     }
 
@@ -335,9 +363,24 @@
         <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ImageBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">ImageKind</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{<span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>};
     <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">flathub_latest_collection</span>() {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/appstream.xml.gz&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">components</span>.<span class="ident">len</span>(), <span class="number">1257</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">flathub_beta_collection</span>() {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span>
+            <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/flathub-beta.xml.gz&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">components</span>.<span class="ident">len</span>(), <span class="number">112</span>);
+    }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">spec_example_collection</span>() {
@@ -345,18 +388,19 @@
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.10&quot;</span>)
         .<span class="ident">component</span>(
-            <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                <span class="string">&quot;org.mozilla.Firefox&quot;</span>.<span class="ident">into</span>(),
+            <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+            .<span class="ident">id</span>(<span class="string">&quot;org.mozilla.Firefox&quot;</span>.<span class="ident">into</span>())
+            .<span class="ident">name</span>(
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Firefox&quot;</span>).<span class="ident">and_locale</span>(<span class="string">&quot;en_GB&quot;</span>, <span class="string">&quot;Firefoux&quot;</span>)
             )
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">DesktopApplication</span>)
             .<span class="ident">pkgname</span>(<span class="string">&quot;firefox-bin&quot;</span>)
             .<span class="ident">project_license</span>(<span class="string">&quot;MPL-2.0&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">keywords</span>(<span class="ident">TranslatableVec</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;internet&quot;</span>,<span class="string">&quot;web&quot;</span>, <span class="string">&quot;browser&quot;</span>]).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;navigateur&quot;</span>]))
+            .<span class="ident">keywords</span>(<span class="ident">TranslatableList</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;internet&quot;</span>,<span class="string">&quot;web&quot;</span>, <span class="string">&quot;browser&quot;</span>]).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;navigateur&quot;</span>]))
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Web browser&quot;</span>).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="string">&quot;Navigateur web&quot;</span>))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.mozilla.com&quot;</span>).<span class="ident">unwrap</span>()))
             .<span class="ident">screenshot</span>(
-                <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
+                <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
                 .<span class="ident">image</span>(
                     <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png&quot;</span>).<span class="ident">unwrap</span>())
                         .<span class="ident">width</span>(<span class="number">800</span>)
@@ -392,8 +436,9 @@
             .<span class="ident">build</span>()
         )
         .<span class="ident">component</span>(
-            <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                <span class="string">&quot;org.freedesktop.PulseAudio&quot;</span>.<span class="ident">into</span>(),
+            <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+            .<span class="ident">id</span>(<span class="string">&quot;org.freedesktop.PulseAudio&quot;</span>.<span class="ident">into</span>())
+            .<span class="ident">name</span>(
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;PulseAudio&quot;</span>)
             )
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The PulseAudio sound server&quot;</span>))
@@ -407,8 +452,11 @@
             .<span class="ident">build</span>()
         )
         .<span class="ident">component</span>(
-            <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                <span class="string">&quot;org.linuxlibertine.LinuxLibertine&quot;</span>.<span class="ident">into</span>(),
+            <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+            .<span class="ident">id</span>(
+                <span class="string">&quot;org.linuxlibertine.LinuxLibertine&quot;</span>.<span class="ident">into</span>()
+            )
+            .<span class="ident">name</span>(
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Linux Libertine&quot;</span>)
             )
             .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Font</span>)
@@ -427,52 +475,48 @@
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.8&quot;</span>)
             .<span class="ident">component</span>(
-                <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="string">&quot;adobe-release-x86_64&quot;</span>.<span class="ident">into</span>(),
-                    <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Adobe&quot;</span>),
-                )
-                .<span class="ident">pkgname</span>(<span class="string">&quot;adobe-release-x86_64&quot;</span>)
-                .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
-                .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
-                    <span class="string">&quot;Adobe Repository Configuration&quot;</span>,
-                ))
-                .<span class="ident">build</span>(),
+                <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+                    .<span class="ident">id</span>(<span class="string">&quot;adobe-release-x86_64&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Adobe&quot;</span>))
+                    .<span class="ident">pkgname</span>(<span class="string">&quot;adobe-release-x86_64&quot;</span>)
+                    .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+                        <span class="string">&quot;Adobe Repository Configuration&quot;</span>,
+                    ))
+                    .<span class="ident">build</span>(),
             )
             .<span class="ident">component</span>(
-                <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="string">&quot;livna-release&quot;</span>.<span class="ident">into</span>(),
-                    <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Livna&quot;</span>),
-                )
-                .<span class="ident">pkgname</span>(<span class="string">&quot;livna-release&quot;</span>)
-                .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
-                .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
-                    <span class="string">&quot;Livna Repository Configuration&quot;</span>,
-                ))
-                .<span class="ident">build</span>(),
+                <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+                    .<span class="ident">id</span>(<span class="string">&quot;livna-release&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Livna&quot;</span>))
+                    .<span class="ident">pkgname</span>(<span class="string">&quot;livna-release&quot;</span>)
+                    .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+                        <span class="string">&quot;Livna Repository Configuration&quot;</span>,
+                    ))
+                    .<span class="ident">build</span>(),
             )
             .<span class="ident">component</span>(
-                <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="string">&quot;rpmfusion-free-release&quot;</span>.<span class="ident">into</span>(),
-                    <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;RPM Fusion Free&quot;</span>),
-                )
-                .<span class="ident">pkgname</span>(<span class="string">&quot;rpmfusion-free-release&quot;</span>)
-                .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
-                .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
-                    <span class="string">&quot;RPM Fusion Repository Configuration&quot;</span>,
-                ))
-                .<span class="ident">build</span>(),
+                <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+                    .<span class="ident">id</span>(<span class="string">&quot;rpmfusion-free-release&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;RPM Fusion Free&quot;</span>))
+                    .<span class="ident">pkgname</span>(<span class="string">&quot;rpmfusion-free-release&quot;</span>)
+                    .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+                        <span class="string">&quot;RPM Fusion Repository Configuration&quot;</span>,
+                    ))
+                    .<span class="ident">build</span>(),
             )
             .<span class="ident">component</span>(
-                <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="string">&quot;rpmfusion-nonfree-release&quot;</span>.<span class="ident">into</span>(),
-                    <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;RPM Fusion Non-Free&quot;</span>),
-                )
-                .<span class="ident">pkgname</span>(<span class="string">&quot;rpmfusion-nonfree-release&quot;</span>)
-                .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
-                .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
-                    <span class="string">&quot;RPM Fusion Repository Configuration&quot;</span>,
-                ))
-                .<span class="ident">build</span>(),
+                <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+                    .<span class="ident">id</span>(<span class="string">&quot;rpmfusion-nonfree-release&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;RPM Fusion Non-Free&quot;</span>))
+                    .<span class="ident">pkgname</span>(<span class="string">&quot;rpmfusion-nonfree-release&quot;</span>)
+                    .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
+                    .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+                        <span class="string">&quot;RPM Fusion Repository Configuration&quot;</span>,
+                    ))
+                    .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
 
@@ -485,14 +529,18 @@
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.8&quot;</span>)
             .<span class="ident">component</span>(
-                <span class="ident">ComponentBuilder</span>::<span class="ident">new</span>(
-                    <span class="string">&quot;epiphany-kindlecloud.desktop&quot;</span>.<span class="ident">into</span>(),
-                    <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Kindle Cloud Reader&quot;</span>)
-                )
+                <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+                .<span class="ident">id</span>(<span class="string">&quot;epiphany-kindlecloud.desktop&quot;</span>.<span class="ident">into</span>())
+                .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Kindle Cloud Reader&quot;</span>))
                 .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">WebApplication</span>)
                 .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
                 .<span class="ident">project_license</span>(<span class="string">&quot;proprietary&quot;</span>.<span class="ident">into</span>())
                 .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Read instantly in your browser&quot;</span>))
+                .<span class="ident">description</span>(
+                    <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+                        <span class="string">&quot;&lt;p&gt;\n        Buy Once, Read Everywhere: You don\&#39;t need to own a Kindle device to\n        enjoy Kindle books.\n        Automatically save and synchronize your furthest page read, bookmarks,\n        notes, and highlights across all your devices.\n        That means you can start reading a book on one device, and pick up where\n        you left off on another device.\n            &lt;/p&gt;&lt;p&gt;\n        Read the first chapter of a book before you decide whether to buy it.\n        Read thousands of free books with a Kindle app, including popular\n        classics like The Adventures of Sherlock Holmes, Pride and Prejudice,\n        and Treasure Island.\n            &lt;/p&gt;&lt;p&gt;\n        To use the Kindle Cloud reader you must have Amazon.com account.\n            &lt;/p&gt;&quot;</span>
+                    )
+                )
                 .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Remote</span>{
                     <span class="ident">width</span>: <span class="prelude-val">None</span>,
                     <span class="ident">height</span>: <span class="prelude-val">None</span>,
@@ -500,7 +548,7 @@
                 })
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Education</span>)
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Literature</span>)
-                .<span class="ident">keywords</span>(<span class="ident">TranslatableVec</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;book&quot;</span>, <span class="string">&quot;ebook&quot;</span>, <span class="string">&quot;reader&quot;</span>]))
+                .<span class="ident">keywords</span>(<span class="ident">TranslatableList</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;book&quot;</span>, <span class="string">&quot;ebook&quot;</span>, <span class="string">&quot;reader&quot;</span>]))
                 .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://read.amazon.com&quot;</span>).<span class="ident">unwrap</span>()))
                 .<span class="ident">build</span>()
             )

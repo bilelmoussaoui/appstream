@@ -155,8 +155,11 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">de</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::<span class="ident">ImageKind</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">TranslatableString</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -164,25 +167,20 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Screenshot</span> {
-    <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;default&quot;</span>),
-        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;screenshot_type_deserialize&quot;</span>,
-        <span class="ident">default</span>
-    )]</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;default&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">is_default</span>: <span class="ident">bool</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(
-        <span class="ident">deserialize_with</span> <span class="op">=</span> <span class="string">&quot;some_translatable_deserialize&quot;</span>,
-        <span class="ident">default</span>,
-        <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>
-    )]</span>
+
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">caption</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(
+        <span class="ident">default</span>,
         <span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;image&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;images&quot;</span>),
         <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;images&quot;</span>,
-        <span class="ident">default</span>,
         <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
     )]</span>
     <span class="kw">pub</span> <span class="ident">images</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;video&quot;</span>, <span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">videos</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Video</span><span class="op">&gt;</span>,
 }
@@ -202,13 +200,16 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Video</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">width</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">height</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">codec</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">container</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;$value&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;url&quot;</span>))]</span>
+
     <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">Url</span>,
 }
 
@@ -216,11 +217,13 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Image</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ImageKind</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">width</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">height</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span>(<span class="ident">deserialize</span> <span class="op">=</span> <span class="string">&quot;$value&quot;</span>, <span class="ident">serialize</span> <span class="op">=</span> <span class="string">&quot;url&quot;</span>))]</span>
+
     <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">Url</span>,
 }
 
@@ -228,7 +231,7 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">builders</span>::{<span class="ident">ImageBuilder</span>, <span class="ident">ScreenshotBuilder</span>, <span class="ident">VideoBuilder</span>};
-    <span class="kw">use</span> <span class="ident">quick_xml</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">default_screenshot</span>() {
@@ -236,9 +239,11 @@
             &lt;screenshot type=&#39;default&#39;&gt;
                 &lt;image type=&#39;source&#39;&gt;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&lt;/image&gt;
             &lt;/screenshot&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="ident">s1</span>: <span class="ident">Screenshot</span> <span class="op">=</span> <span class="ident">quick_xml</span>::<span class="ident">de</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">xml</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>().<span class="ident">image</span>(
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>().<span class="ident">image</span>(
                 <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>())
                 .<span class="ident">build</span>()
             )
@@ -257,9 +262,11 @@
             &lt;image type=&#39;thumbnail&#39; width=&#39;752&#39; height=&#39;423&#39;&gt;https://www.example.org/en_US/main-large.png&lt;/image&gt;
             &lt;image type=&#39;thumbnail&#39; width=&#39;112&#39; height=&#39;63&#39;&gt;https://www.example.org/en_US/main-small.png&lt;/image&gt;
         &lt;/screenshot&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="ident">s1</span>: <span class="ident">Screenshot</span> <span class="op">=</span> <span class="ident">quick_xml</span>::<span class="ident">de</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">xml</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">caption</span>(
                 <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;FooBar showing kitchen-sink functionality.&quot;</span>)
                     .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="string">&quot;FooBar beim Ausführen der Spühlbecken-Funktion.&quot;</span>),
@@ -298,9 +305,10 @@
             &lt;screenshot&gt;
                 &lt;video codec=&#39;av1&#39; width=&#39;1600&#39; height=&#39;900&#39;&gt;https://example.com/foobar/screencast.mkv&lt;/video&gt;
             &lt;/screenshot&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="ident">s1</span>: <span class="ident">Screenshot</span> <span class="op">=</span> <span class="ident">quick_xml</span>::<span class="ident">de</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">xml</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
 
-        <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">new</span>()
+        <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">set_default</span>(<span class="bool-val">false</span>)
             .<span class="ident">video</span>(
                 <span class="ident">VideoBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.com/foobar/screencast.mkv&quot;</span>).<span class="ident">unwrap</span>())

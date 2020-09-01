@@ -591,37 +591,100 @@
 <span id="591">591</span>
 <span id="592">592</span>
 <span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">component</span>::<span class="ident">Component</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::{
-    <span class="ident">AppId</span>, <span class="ident">Artifact</span>, <span class="ident">ContentRating</span>, <span class="ident">Image</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">Release</span>, <span class="ident">Screenshot</span>,
-    <span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>, <span class="ident">Video</span>,
+    <span class="ident">AppId</span>, <span class="ident">Artifact</span>, <span class="ident">ContentRating</span>, <span class="ident">Image</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">Release</span>,
+    <span class="ident">Screenshot</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>, <span class="ident">Video</span>,
 };
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">Utc</span>};
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ArtifactBuilder</span> {
     <span class="kw">pub</span> <span class="ident">platform</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ArtifactKind</span>,
+    <span class="kw">pub</span> <span class="ident">kind</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ArtifactKind</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">sizes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">Url</span>,
+    <span class="kw">pub</span> <span class="ident">url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">checksums</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Checksum</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">bundles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
 }
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-<span class="kw">impl</span> <span class="ident">ArtifactBuilder</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">kind</span>: <span class="ident">ArtifactKind</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ArtifactBuilder</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
-            <span class="ident">url</span>,
-            <span class="ident">kind</span>,
+            <span class="ident">url</span>: <span class="prelude-val">None</span>,
+            <span class="ident">kind</span>: <span class="prelude-val">None</span>,
             <span class="ident">sizes</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">checksums</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">platform</span>: <span class="prelude-val">None</span>,
             <span class="ident">bundles</span>: <span class="macro">vec</span><span class="macro">!</span>[],
         }
+    }
+}
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">impl</span> <span class="ident">ArtifactBuilder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="ident">ArtifactKind</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">kind</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">kind</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">url</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">url</span>);
+        <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bundle</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bundle</span>: <span class="ident">Bundle</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
@@ -646,8 +709,8 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Artifact</span> {
         <span class="ident">Artifact</span> {
-            <span class="ident">url</span>: <span class="self">self</span>.<span class="ident">url</span>,
-            <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>,
+            <span class="ident">url</span>: <span class="self">self</span>.<span class="ident">url</span>.<span class="ident">expect</span>(<span class="string">&quot;an artifact location is required&quot;</span>),
+            <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>.<span class="ident">expect</span>(<span class="string">&quot;artifact type is required&quot;</span>),
             <span class="ident">sizes</span>: <span class="self">self</span>.<span class="ident">sizes</span>,
             <span class="ident">checksums</span>: <span class="self">self</span>.<span class="ident">checksums</span>,
             <span class="ident">platform</span>: <span class="self">self</span>.<span class="ident">platform</span>,
@@ -701,10 +764,10 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ComponentBuilder</span> {
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ComponentKind</span>,
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">AppId</span>,
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">AppId</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">summary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MarkupTranslatableString</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">project_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">metadata_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">project_group</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -723,20 +786,19 @@
     <span class="kw">pub</span> <span class="ident">languages</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Language</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">mimetypes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">kudos</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Kudo</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">keywords</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableVec</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">keywords</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableList</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">content_rating</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ContentRating</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">provides</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Provide</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">translations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Translation</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-<span class="kw">impl</span> <span class="ident">ComponentBuilder</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">id</span>: <span class="ident">AppId</span>, <span class="ident">name</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ComponentBuilder</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">kind</span>: <span class="ident">ComponentKind</span>::<span class="ident">Generic</span>,
-            <span class="ident">id</span>,
-            <span class="ident">name</span>,
+            <span class="ident">id</span>: <span class="prelude-val">None</span>,
+            <span class="ident">name</span>: <span class="prelude-val">None</span>,
             <span class="ident">summary</span>: <span class="prelude-val">None</span>,
             <span class="ident">description</span>: <span class="prelude-val">None</span>,
             <span class="ident">project_license</span>: <span class="prelude-val">None</span>,
@@ -764,6 +826,19 @@
             <span class="ident">source_pkgname</span>: <span class="prelude-val">None</span>,
         }
     }
+}
+
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
+<span class="kw">impl</span> <span class="ident">ComponentBuilder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">AppId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>);
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>);
+        <span class="self">self</span>
+    }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">content_rating</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content_rating</span>: <span class="ident">ContentRating</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">content_rating</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">content_rating</span>);
@@ -776,17 +851,23 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">developer_name</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">developer_name</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">developer_name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">developer_name</span>);
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">developer_name</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">developer_name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">developer_name</span>);
+        }
         <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">summary</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">summary</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">summary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">summary</span>);
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">summary</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">summary</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">summary</span>);
+        }
         <span class="self">self</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">description</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="ident">MarkupTranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">description</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">description</span>);
+        }
         <span class="self">self</span>
     }
 
@@ -800,8 +881,15 @@
         <span class="self">self</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keywords</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keywords</span>: <span class="ident">TranslatableVec</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">keywords</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">keywords</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keywords</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keywords</span>: <span class="ident">TranslatableList</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">keywords</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">keywords</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">keywords</span>);
+        }
+        <span class="self">self</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compulsory_for_desktop</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">compulsory_for_desktop</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">compulsory_for_desktop</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">compulsory_for_desktop</span>.<span class="ident">to_string</span>());
         <span class="self">self</span>
     }
 
@@ -893,9 +981,10 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Component</span> {
         <span class="ident">Component</span> {
             <span class="ident">kind</span>: <span class="self">self</span>.<span class="ident">kind</span>,
-            <span class="ident">id</span>: <span class="self">self</span>.<span class="ident">id</span>,
-            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>,
+            <span class="ident">id</span>: <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">expect</span>(<span class="string">&quot;An &#39;id&#39; is required&quot;</span>),
+            <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">expect</span>(<span class="string">&quot;A &#39;name&#39; is required&quot;</span>),
             <span class="ident">summary</span>: <span class="self">self</span>.<span class="ident">summary</span>,
+            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>,
             <span class="ident">project_license</span>: <span class="self">self</span>.<span class="ident">project_license</span>,
             <span class="ident">metadata_license</span>: <span class="self">self</span>.<span class="ident">metadata_license</span>,
             <span class="ident">project_group</span>: <span class="self">self</span>.<span class="ident">project_group</span>,
@@ -996,6 +1085,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ReleaseBuilder</span> {
     <span class="kw">pub</span> <span class="ident">date</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">date_eol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MarkupTranslatableString</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ReleaseKind</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">sizes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&gt;</span>,
@@ -1010,6 +1100,7 @@
         <span class="self">Self</span> {
             <span class="ident">date</span>: <span class="prelude-val">None</span>,
             <span class="ident">date_eol</span>: <span class="prelude-val">None</span>,
+            <span class="ident">description</span>: <span class="prelude-val">None</span>,
             <span class="ident">kind</span>: <span class="prelude-val">Some</span>(<span class="ident">ReleaseKind</span>::<span class="ident">Stable</span>),
             <span class="ident">sizes</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">version</span>: <span class="ident">version</span>.<span class="ident">to_string</span>(),
@@ -1017,6 +1108,13 @@
             <span class="ident">artifacts</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">url</span>: <span class="prelude-val">None</span>,
         }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">description</span>: <span class="ident">MarkupTranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">description</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">description</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">description</span>);
+        }
+        <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
@@ -1044,6 +1142,11 @@
         <span class="self">self</span>
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">size</span>: <span class="ident">Size</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">sizes</span>.<span class="ident">push</span>(<span class="ident">size</span>);
+        <span class="self">self</span>
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sizes</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sizes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">sizes</span> <span class="op">=</span> <span class="ident">sizes</span>;
         <span class="self">self</span>
@@ -1061,6 +1164,7 @@
             <span class="ident">date</span>: <span class="self">self</span>.<span class="ident">date</span>,
             <span class="ident">date_eol</span>: <span class="self">self</span>.<span class="ident">date_eol</span>,
             <span class="ident">kind</span>,
+            <span class="ident">description</span>: <span class="self">self</span>.<span class="ident">description</span>,
             <span class="ident">sizes</span>: <span class="self">self</span>.<span class="ident">sizes</span>,
             <span class="ident">urgency</span>: <span class="self">self</span>.<span class="ident">urgency</span>,
             <span class="ident">artifacts</span>: <span class="self">self</span>.<span class="ident">artifacts</span>,
@@ -1078,12 +1182,10 @@
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
 <span class="kw">impl</span> <span class="ident">ScreenshotBuilder</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>::<span class="ident">default</span>()
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">caption</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">caption</span>: <span class="ident">TranslatableString</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">caption</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">caption</span>);
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">caption</span>.<span class="ident">is_empty</span>() {
+            <span class="self">self</span>.<span class="ident">caption</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">caption</span>);
+        }
         <span class="self">self</span>
     }
 

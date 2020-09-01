@@ -108,6 +108,7 @@
 <span id="108">108</span>
 <span id="109">109</span>
 <span id="110">110</span>
+<span id="111">111</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Appstream</span>
 <span class="doccomment">//!</span>
@@ -131,6 +132,7 @@
 <span class="doccomment">//! use appstream::enums::{Provide, ProjectUrl};</span>
 <span class="doccomment">//! use url::Url;</span>
 <span class="doccomment">//! use chrono::{Utc, TimeZone};</span>
+<span class="doccomment">//! use std::convert::TryFrom;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! let xml = r&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;</span>
 <span class="doccomment">//!                 &lt;component&gt;</span>
@@ -150,13 +152,12 @@
 <span class="doccomment">//!                     &lt;/releases&gt;</span>
 <span class="doccomment">//!                     &lt;developer_name&gt;FooBar Team&lt;/developer_name&gt;</span>
 <span class="doccomment">//!                 &lt;/component&gt;&quot;;</span>
+<span class="doccomment">//! let element = xmltree::Element::parse(xml.as_bytes()).unwrap();</span>
+<span class="doccomment">//! let c1 = Component::try_from(&amp;element).unwrap();</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let c1: Component = quick_xml::de::from_str(&amp;xml).unwrap();</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! let c2 = ComponentBuilder::new(</span>
-<span class="doccomment">//!         &quot;com.example.foobar&quot;.into(),</span>
-<span class="doccomment">//!         TranslatableString::with_default(&quot;Foo Bar&quot;)</span>
-<span class="doccomment">//!     )</span>
+<span class="doccomment">//! let c2 = ComponentBuilder::default()</span>
+<span class="doccomment">//!     .id(&quot;com.example.foobar&quot;.into())</span>
+<span class="doccomment">//!     .name(TranslatableString::with_default(&quot;Foo Bar&quot;))</span>
 <span class="doccomment">//!     .metadata_license(&quot;CC0-1.0&quot;.into())</span>
 <span class="doccomment">//!     .summary(TranslatableString::with_default(&quot;A foo-ish bar&quot;))</span>
 <span class="doccomment">//!     .url(ProjectUrl::Homepage(</span>
@@ -198,13 +199,13 @@
 <span class="kw">mod</span> <span class="ident">collection</span>;
 <span class="kw">mod</span> <span class="ident">component</span>;
 <span class="kw">mod</span> <span class="ident">content_rating</span>;
-<span class="kw">mod</span> <span class="ident">de</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">enums</span>;
 <span class="kw">mod</span> <span class="ident">language</span>;
 <span class="kw">mod</span> <span class="ident">license</span>;
 <span class="kw">mod</span> <span class="ident">release</span>;
 <span class="kw">mod</span> <span class="ident">screenshot</span>;
 <span class="kw">mod</span> <span class="ident">translatable_string</span>;
+<span class="kw">mod</span> <span class="ident">xml</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">types</span> {
     <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">app_id</span>::<span class="ident">AppId</span>;
@@ -213,11 +214,12 @@
     <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">license</span>::<span class="ident">License</span>;
     <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">release</span>::{<span class="ident">Artifact</span>, <span class="ident">Release</span>};
     <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">screenshot</span>::{<span class="ident">Image</span>, <span class="ident">Screenshot</span>, <span class="ident">Video</span>};
-    <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::{<span class="ident">TranslatableString</span>, <span class="ident">TranslatableVec</span>};
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">translatable_string</span>::{
+        <span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>,
+    };
 }
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">component</span>::<span class="ident">Component</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">quick_xml</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">url</span>;
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "appstream";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

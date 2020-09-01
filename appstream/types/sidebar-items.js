@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AppId",""],["Artifact",""],["ContentRating",""],["Image",""],["Language",""],["License",""],["Release",""],["Screenshot",""],["TranslatableString",""],["TranslatableVec",""],["Video",""]]});
+initSidebarItems({"struct":[["AppId",""],["Artifact",""],["ContentRating",""],["Image",""],["Language",""],["License",""],["MarkupTranslatableString",""],["Release",""],["Screenshot",""],["TranslatableList",""],["TranslatableString",""],["Video",""]]});
