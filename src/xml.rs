@@ -354,7 +354,6 @@ impl TryFrom<&Element> for Translation {
     type Error = anyhow::Error;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        println!("{:#?}", e);
         let val = e.get_text().unwrap_or_default().into_owned();
         Ok(match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
