@@ -429,7 +429,7 @@ impl TryFrom<&Element> for Provide {
             "python2" => Ok(Provide::Python2(val)),
             "python3" => Ok(Provide::Python3(val)),
             "dbus" => Ok(Provide::DBus(val)),
-            "id" => Ok(Provide::Id(val)),
+            "id" => Ok(Provide::Id(val.into())),
             "codec" => Ok(Provide::Codec(val)),
             "firmware" => {
                 let kind = e
