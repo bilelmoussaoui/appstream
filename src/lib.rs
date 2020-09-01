@@ -10,7 +10,7 @@
 //!
 //! Specifications: [https://www.freedesktop.org/software/appstream/docs/](https://www.freedesktop.org/software/appstream/docs/)
 //!
-//! This crate aimes to provide an easy and sane Rust parser of Appstream using quick-xml
+//! This crate aimes to provide an easy and sane Rust parser of Appstream using [xmltree](https://docs.rs/xmltree/)
 //!
 //! # Examples
 //! ```
@@ -109,3 +109,4 @@ pub mod types {
 pub use collection::Collection;
 pub use component::Component;
 pub use url;
+pub use xmltree;

@@ -1,5 +1,5 @@
 # appstream
-Appstream files parser using Rust & quick-xml
+Appstream files parser using Rust & [xmltree](https://docs.rs/xmltree/)
 
 [![](https://docs.rs/appstream/badge.svg)](https://docs.rs/appstream/) [![](https://img.shields.io/crates/v/appstream)](https://crates.io/crates/appstream) ![](https://github.com/bilelmoussaoui/appstream/workflows/CI/badge.svg)
 
