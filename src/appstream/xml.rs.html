@@ -701,9 +701,6 @@
 <span id="701">701</span>
 <span id="702">702</span>
 <span id="703">703</span>
-<span id="704">704</span>
-<span id="705">705</span>
-<span id="706">706</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Collection</span>, <span class="ident">Component</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
@@ -791,10 +788,7 @@
                         .<span class="ident">get</span>(<span class="string">&quot;sdk&quot;</span>)
                         .<span class="ident">expect</span>(<span class="string">&quot;Flatpak bundle requires an sdk&quot;</span>)
                         .<span class="ident">to_string</span>(),
-                    <span class="ident">reference</span>: <span class="ident">e</span>
-                        .<span class="ident">get_text</span>()
-                        .<span class="ident">expect</span>(<span class="string">&quot;Flatpak bundle requires a reference&quot;</span>)
-                        .<span class="ident">to_string</span>(),
+                    <span class="ident">reference</span>: <span class="ident">val</span>,
                 }),
                 <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="macro">bail</span><span class="macro">!</span>(<span class="string">&quot;Invalid bundle type {}&quot;</span>, <span class="ident">t</span>),
             },
