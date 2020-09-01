@@ -284,12 +284,12 @@ impl TryFrom<&Element> for Icon {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
-        let kind =  match  e.attributes.get("type") {
+        let kind = match e.attributes.get("type") {
             Some(t) => t.as_str(),
-            None => "local" 
+            None => "local",
         };
-        
-        Ok(match kind{
+
+        Ok(match kind {
             "stock" => Icon::Stock(val),
             "cached" => Icon::Cached {
                 path: val.into(),
@@ -314,8 +314,7 @@ impl TryFrom<&Element> for Icon {
                     .attributes
                     .get("height")
                     .map(|w| w.parse::<u32>().unwrap()),
-            }
-            
+            },
         })
     }
 }
@@ -374,18 +373,18 @@ impl TryFrom<&Element> for Launchable {
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = match e.get_text() {
             Some(v) => v.into_owned(),
-            None => "".to_string()
+            None => "".to_string(),
         };
         let kind = match e.attributes.get("type") {
             Some(k) => k.as_str(),
-            None => "unkown"
+            None => "unkown",
         };
         Ok(match kind {
             "cockpit-manifest" => Launchable::CockpitManifest(val),
             "desktop-id" => Launchable::DesktopId(val),
             "service" => Launchable::Service(val),
             "url" => Launchable::Url(Url::parse(&val).expect("invalid url in launchable")),
-            _ => Launchable::Unknown(val), 
+            _ => Launchable::Unknown(val),
         })
     }
 }
@@ -509,6 +508,7 @@ impl TryFrom<&Element> for Release {
             .unwrap_or_default();
         release = release.kind(kind);
 
+        let mut description = MarkupTranslatableString::default();
         for node in &e.children {
             if let xmltree::XMLNode::Element(ref c) = node {
                 match &*c.name {
@@ -522,6 +522,7 @@ impl TryFrom<&Element> for Release {
                     "size" => {
                         release = release.size(Size::try_from(c)?);
                     }
+                    "description" => description.add_for_element(c),
                     "url" => {
                         release = release.url(Url::parse(&c.get_text().unwrap().to_string())?);
                     }
@@ -530,7 +531,7 @@ impl TryFrom<&Element> for Release {
             }
         }
 
-        Ok(release.build())
+        Ok(release.description(description).build())
     }
 }
 
@@ -638,15 +639,13 @@ impl TryFrom<&Element> for ContentRating {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let version: ContentRatingVersion = match e.attributes.get("type") {
-            Some(t) => 
-                match t.as_str() {
-                    "oars-1.0" =>ContentRatingVersion::Oars1_0,
-                    "oars-1.1" => ContentRatingVersion::Oars1_1,
-                    _ => ContentRatingVersion::Unknown,
-                }
+            Some(t) => match t.as_str() {
+                "oars-1.0" => ContentRatingVersion::Oars1_0,
+                "oars-1.1" => ContentRatingVersion::Oars1_1,
+                _ => ContentRatingVersion::Unknown,
+            },
             None => ContentRatingVersion::Unknown,
-        }; 
-           
+        };
 
         let mut attributes: Vec<ContentAttribute> = Vec::new();
         for child in e.children.iter() {

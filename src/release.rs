@@ -1,4 +1,5 @@
 use super::enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size};
+use super::types::MarkupTranslatableString;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use url::Url;
@@ -12,6 +13,9 @@ pub struct Release {
     pub date_eol: Option<DateTime<Utc>>,
 
     pub version: String,
+
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub description: Option<MarkupTranslatableString>,
 
     #[serde(default, rename = "type")]
     pub kind: ReleaseKind,
@@ -51,7 +55,10 @@ pub struct Artifact {
 
 #[cfg(test)]
 mod tests {
-    use super::{ArtifactKind, Checksum, Release, ReleaseKind, ReleaseUrgency, Size, Url};
+    use super::{
+        ArtifactKind, Checksum, MarkupTranslatableString, Release, ReleaseKind, ReleaseUrgency,
+        Size, Url,
+    };
     use crate::builders::{ArtifactBuilder, ReleaseBuilder};
     use chrono::{TimeZone, Utc};
     use std::convert::TryFrom;
@@ -102,6 +109,9 @@ mod tests {
         let releases2 = vec![
             ReleaseBuilder::new("1.2")
                 .urgency(ReleaseUrgency::High)
+                .description(MarkupTranslatableString::with_default(
+                    "<p>This stable release fixes bugs.</p>",
+                ))
                 .date(Utc.ymd(2014, 4, 12).and_hms_milli(0, 0, 0, 0))
                 .url(Url::parse("https://example.org/releases/version-1.2.html").unwrap())
                 .artifact(
@@ -169,6 +179,7 @@ mod tests {
             releases,
             vec![
                 ReleaseBuilder::new("1.8")
+                    .description(MarkupTranslatableString::with_default("<p>This stable release fixes the following bug:</p><ul><li>CPU no longer overheats when you hold down spacebar</li></ul>"))
                     .date(chrono::Utc.datetime_from_str("1424116753", "%s").unwrap())
                     .sizes(vec![Size::Download(12345678), Size::Installed(42424242)])
                     .build(),

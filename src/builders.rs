@@ -440,6 +440,7 @@ impl LanguageBuilder {
 pub struct ReleaseBuilder {
     pub date: Option<DateTime<Utc>>,
     pub date_eol: Option<DateTime<Utc>>,
+    pub description: Option<MarkupTranslatableString>,
     pub version: String,
     pub kind: Option<ReleaseKind>,
     pub sizes: Vec<Size>,
@@ -454,6 +455,7 @@ impl ReleaseBuilder {
         Self {
             date: None,
             date_eol: None,
+            description: None,
             kind: Some(ReleaseKind::Stable),
             sizes: vec![],
             version: version.to_string(),
@@ -461,6 +463,13 @@ impl ReleaseBuilder {
             artifacts: vec![],
             url: None,
         }
+    }
+
+    pub fn description(mut self, description: MarkupTranslatableString) -> Self {
+        if !description.is_empty() {
+            self.description = Some(description);
+        }
+        self
     }
 
     pub fn url(mut self, url: Url) -> Self {
@@ -510,6 +519,7 @@ impl ReleaseBuilder {
             date: self.date,
             date_eol: self.date_eol,
             kind,
+            description: self.description,
             sizes: self.sizes,
             urgency: self.urgency,
             artifacts: self.artifacts,

@@ -239,6 +239,7 @@ mod tests {
             )
             .release(
                 ReleaseBuilder::new("3.12.2")
+                    .description(MarkupTranslatableString::with_default("<p>Fixes issues X, Y and Z</p>"))
                     .date(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0))
                     .build(),
             )
@@ -308,6 +309,7 @@ mod tests {
                         .kind(ArtifactKind::Binary)
                         .build()
                     )
+                    .description(MarkupTranslatableString::with_default("<p>This stable release fixes the following bugs:</p><ul><li>Fix the return code from GetHardwareVersion</li><li>Scale the output of TakeReadingRaw by the datasheet values</li></ul>"))
                     .build(),
             )
             .build();
@@ -467,10 +469,12 @@ mod tests {
             .release(
                 ReleaseBuilder::new("10.0")
                     .kind(ReleaseKind::Development)
+                    .description(MarkupTranslatableString::with_default("<p>The next release of Debian.</p>"))
                     .build(),
             )
             .release(
                 ReleaseBuilder::new("9.0")
+                    .description(MarkupTranslatableString::with_default("<p>Now contains the Linux kernel 4.9, GNOME 3.22, KDE Plasma 5, LibreOffice 5.2 and Qt 5.7. LXQt has been added.</p>"))
                     .date(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0))
                     .date_eol(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0))
                     .build(),
@@ -608,9 +612,24 @@ mod tests {
                 attributes: vec![],
                 version: ContentRatingVersion::Oars1_0
             })
-            .release(ReleaseBuilder::new("0.0.3").date(chrono::Utc.datetime_from_str("1582329600", "%s").unwrap()).build())
-            .release(ReleaseBuilder::new("0.0.2").date(chrono::Utc.datetime_from_str("1566691200", "%s").unwrap()).build())
-            .release(ReleaseBuilder::new("0.0.1").date(chrono::Utc.datetime_from_str("1565136000", "%s").unwrap()).build())
+            .release(
+                ReleaseBuilder::new("0.0.3")
+                    .date(chrono::Utc.datetime_from_str("1582329600", "%s").unwrap())
+                    .description(MarkupTranslatableString::with_default("<p>Stylesheet fixes</p><p>Translations updates</p>"))
+                    .build()
+            )
+            .release(
+                ReleaseBuilder::new("0.0.2")
+                    .date(chrono::Utc.datetime_from_str("1566691200", "%s").unwrap())
+                    .description(MarkupTranslatableString::with_default("<p>Translations updates</p>"))
+                    .build()
+            )
+            .release(
+                ReleaseBuilder::new("0.0.1")
+                    .date(chrono::Utc.datetime_from_str("1565136000", "%s").unwrap())
+                    .description(MarkupTranslatableString::with_default("<p>First release of Contrast</p>"))
+                    .build()
+            )
             .language(LanguageBuilder::new("cs").percentage(100).build())
             .language(LanguageBuilder::new("da").percentage(93).build())
             .language(LanguageBuilder::new("de").percentage(93).build())

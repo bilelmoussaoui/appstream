@@ -68,7 +68,6 @@ mod tests {
     #[cfg(feature = "gzip")]
     #[test]
     fn gzip_collection() {
-
         let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into()).unwrap();
         assert_eq!(c1.components.len(), 1257);
     }
