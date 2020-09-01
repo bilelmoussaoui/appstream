@@ -715,24 +715,6 @@
 <span id="715">715</span>
 <span id="716">716</span>
 <span id="717">717</span>
-<span id="718">718</span>
-<span id="719">719</span>
-<span id="720">720</span>
-<span id="721">721</span>
-<span id="722">722</span>
-<span id="723">723</span>
-<span id="724">724</span>
-<span id="725">725</span>
-<span id="726">726</span>
-<span id="727">727</span>
-<span id="728">728</span>
-<span id="729">729</span>
-<span id="730">730</span>
-<span id="731">731</span>
-<span id="732">732</span>
-<span id="733">733</span>
-<span id="734">734</span>
-<span id="735">735</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">AppId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">ser</span>::{<span class="ident">SerializeMap</span>, <span class="ident">SerializeStruct</span>};
@@ -821,7 +803,6 @@
     <span class="ident">Education</span>,
     <span class="ident">Game</span>,
     <span class="ident">Graphics</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;network&quot;</span>)]</span>
     <span class="ident">Network</span>,
     <span class="ident">Office</span>,
     <span class="ident">Science</span>,
@@ -876,9 +857,7 @@
     <span class="ident">Telephony</span>,
     <span class="ident">TelephonyTools</span>,
     <span class="ident">VideoConference</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;webbrowser&quot;</span>)]</span>
     <span class="ident">WebBrowser</span>,
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;webdevelopment&quot;</span>)]</span>
     <span class="ident">WebDevelopment</span>,
     <span class="ident">Midi</span>,
     <span class="ident">Mixer</span>,
@@ -1111,6 +1090,7 @@
     <span class="ident">Oars1_1</span>,
     <span class="ident">Unknown</span>,
 }
+
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ContentRatingVersion</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">ContentRatingVersion</span>::<span class="ident">Unknown</span>
@@ -1120,13 +1100,12 @@
 <span class="kw">impl</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">ContentRatingVersion</span> {
     <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Ordering</span> {
         <span class="kw">match</span> (<span class="self">self</span>, <span class="ident">other</span>) {
-            (<span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_1</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Less</span>,
-            (<span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_1</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Greater</span>,
+            (<span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_1</span>)
+            <span class="op">|</span> (<span class="ident">ContentRatingVersion</span>::<span class="ident">Unknown</span>, <span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Less</span>,
+            (<span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_1</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>)
+            <span class="op">|</span> (<span class="kw">_</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Unknown</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Greater</span>,
             (<span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>)
             <span class="op">|</span> (<span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_1</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_1</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Ordering</span>::<span class="ident">Equal</span>,
-            (<span class="ident">ContentRatingVersion</span>::<span class="ident">Unknown</span>, <span class="kw">_</span>) <span class="op">|</span> (<span class="kw">_</span>, <span class="ident">ContentRatingVersion</span>::<span class="ident">Unknown</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="ident">Ordering</span>::<span class="ident">Less</span>
-            }
         }
     }
 }
@@ -1453,21 +1432,6 @@
     <span class="ident">Gettext</span>(<span class="ident">String</span>),
     <span class="ident">Qt</span>(<span class="ident">String</span>),
     <span class="ident">Unknown</span>,
-}
-
-<span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="kw">fn</span> <span class="ident">test_provide_firmware</span>() {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
-    <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="string">r&quot;&lt;firmware type=&#39;runtime&#39;&gt;ipw2200-bss.fw&lt;/firmware&gt;&quot;</span>;
-    <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">x</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
-    <span class="kw">let</span> <span class="ident">p</span>: <span class="ident">Provide</span> <span class="op">=</span> <span class="ident">Provide</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
-    <span class="macro">assert_eq</span><span class="macro">!</span>(
-        <span class="ident">p</span>,
-        <span class="ident">Provide</span>::<span class="ident">Firmware</span> {
-            <span class="ident">kind</span>: <span class="ident">FirmwareKind</span>::<span class="ident">Runtime</span>,
-            <span class="ident">item</span>: <span class="string">&quot;ipw2200-bss.fw&quot;</span>.<span class="ident">into</span>()
-        }
-    );
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "appstream";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
