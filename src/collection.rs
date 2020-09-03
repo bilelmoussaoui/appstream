@@ -1,6 +1,6 @@
+use super::error::ParseError;
 use super::AppId;
 use super::Component;
-use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
@@ -39,7 +39,7 @@ impl Collection {
     /// # Arguments
     ///
     /// * `path` - The path to the collection.
-    pub fn from_path(path: PathBuf) -> Result<Self> {
+    pub fn from_path(path: PathBuf) -> Result<Self, ParseError> {
         let file = BufReader::new(File::open(path)?);
         let collection = Collection::try_from(&Element::parse(file)?)?;
         Ok(collection)
@@ -51,7 +51,7 @@ impl Collection {
     /// # Arguments
     ///
     /// * `path` - The path to the gzipped collection.
-    pub fn from_gzipped(path: PathBuf) -> Result<Self> {
+    pub fn from_gzipped(path: PathBuf) -> Result<Self, ParseError> {
         let f = File::open(path)?;
 
         let mut d = GzDecoder::new(f);
@@ -75,12 +75,12 @@ impl Collection {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     use crate::builders::{
         CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
     };
     use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
     use crate::{MarkupTranslatableString, TranslatableList, TranslatableString};
-    use anyhow::Result;
     use url::Url;
 
     #[cfg(feature = "gzip")]
@@ -275,7 +275,7 @@ mod tests {
 
     #[test]
     fn endless_os_collection() {
-        let c1: Result<Collection> =
+        let c1: Result<Collection, ParseError> =
             Collection::from_path("./tests/collections/endless-apps.xml".into());
         assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
@@ -286,7 +286,7 @@ mod tests {
 
     #[test]
     fn gnome_collection() {
-        let c1: Result<Collection> =
+        let c1: Result<Collection, ParseError> =
             Collection::from_path("./tests/collections/gnome-apps.xml".into());
         assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
@@ -297,7 +297,7 @@ mod tests {
 
     #[test]
     fn kde_collection() {
-        let c1: Result<Collection> =
+        let c1: Result<Collection, ParseError> =
             Collection::from_path("./tests/collections/kde-apps.xml".into());
         assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();
@@ -308,7 +308,7 @@ mod tests {
 
     #[test]
     fn flathub_collection() {
-        let c1: Result<Collection> =
+        let c1: Result<Collection, ParseError> =
             Collection::from_path("./tests/collections/flathub-apps.xml".into());
         assert_eq!(c1.is_ok(), true);
         let collection = c1.unwrap();

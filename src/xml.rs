@@ -1,3 +1,4 @@
+use super::error::ParseError;
 use super::{Collection, Component};
 use std::convert::TryFrom;
 use std::str::FromStr;
@@ -20,7 +21,7 @@ use super::{
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 
 impl TryFrom<&Element> for AppId {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         Ok(e.get_text().unwrap().into_owned().into())
@@ -28,7 +29,7 @@ impl TryFrom<&Element> for AppId {
 }
 
 impl TryFrom<&Element> for Artifact {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let mut artifact = ArtifactBuilder::default();
@@ -67,7 +68,7 @@ impl TryFrom<&Element> for Artifact {
 }
 
 impl TryFrom<&Element> for Bundle {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
@@ -86,15 +87,22 @@ impl TryFrom<&Element> for Bundle {
                         .to_string(),
                     reference: val,
                 }),
-                _ => anyhow::bail!("Invalid bundle type {}", t),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "bundle".to_string(),
+                )),
             },
-            None => anyhow::bail!("bundle tag required a type"),
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "bundle".to_string(),
+            )),
         }
     }
 }
 
 impl TryFrom<&Element> for Collection {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let version = e
@@ -125,7 +133,7 @@ impl TryFrom<&Element> for Collection {
 }
 
 impl TryFrom<&Element> for Component {
-    type Error = anyhow::Error;
+    type Error = ParseError;
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let mut component = ComponentBuilder::default();
 
@@ -174,7 +182,7 @@ impl TryFrom<&Element> for Component {
                             component = component.category(Category::from_str(
                                 &child
                                     .as_element()
-                                    .expect("invalid category tag")
+                                    .expect("Invalid category tag")
                                     .get_text()
                                     .unwrap()
                                     .to_string(),
@@ -187,7 +195,7 @@ impl TryFrom<&Element> for Component {
                     "keywords" => {
                         e.children.iter().for_each(|c| {
                             keywords
-                                .add_for_element(c.as_element().expect("invalid 'keywords' format"))
+                                .add_for_element(c.as_element().expect("Invalid 'keywords' format"))
                         });
                     }
                     "kudos" => {
@@ -195,7 +203,7 @@ impl TryFrom<&Element> for Component {
                             component = component.kudo(Kudo::from_str(
                                 &child
                                     .as_element()
-                                    .expect("invalid kudo tag")
+                                    .expect("Invalid kudo tag")
                                     .get_text()
                                     .unwrap()
                                     .to_string(),
@@ -217,7 +225,7 @@ impl TryFrom<&Element> for Component {
                     "screenshots" => {
                         for child in e.children.iter() {
                             component = component.screenshot(Screenshot::try_from(
-                                child.as_element().expect("invalid screenshot tag"),
+                                child.as_element().expect("Invalid screenshot tag"),
                             )?);
                         }
                     }
@@ -225,7 +233,7 @@ impl TryFrom<&Element> for Component {
                     "releases" => {
                         for child in e.children.iter() {
                             component = component.release(Release::try_from(
-                                child.as_element().expect("invalid release tag"),
+                                child.as_element().expect("Invalid release tag"),
                             )?);
                         }
                     }
@@ -244,14 +252,14 @@ impl TryFrom<&Element> for Component {
                     "languages" => {
                         for child in e.children.iter() {
                             component = component.language(Language::try_from(
-                                child.as_element().expect("invalid languages tag"),
+                                child.as_element().expect("Invalid languages tag"),
                             )?);
                         }
                     }
                     "provides" => {
                         for child in e.children.iter() {
                             component = component.provide(Provide::try_from(
-                                child.as_element().expect("invalid provides tag"),
+                                child.as_element().expect("Invalid provides tag"),
                             )?);
                         }
                     }
@@ -277,7 +285,7 @@ impl TryFrom<&Element> for Component {
 }
 
 impl TryFrom<&Element> for Icon {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
@@ -317,7 +325,7 @@ impl TryFrom<&Element> for Icon {
 }
 
 impl TryFrom<&Element> for Language {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let locale = e.get_text().unwrap().into_owned();
@@ -331,41 +339,55 @@ impl TryFrom<&Element> for Language {
 }
 
 impl TryFrom<&Element> for Checksum {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
-        Ok(match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
-                "sha1" => Checksum::Sha1(val),
-                "sha256" => Checksum::Sha256(val),
-                "blake2b" => Checksum::Blake2b(val),
-                "blake2s" => Checksum::Blake2s(val),
-                _ => anyhow::bail!("Invalid checksum type {}", t),
+                "sha1" => Ok(Checksum::Sha1(val)),
+                "sha256" => Ok(Checksum::Sha256(val)),
+                "blake2b" => Ok(Checksum::Blake2b(val)),
+                "blake2s" => Ok(Checksum::Blake2s(val)),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "checksum".to_string(),
+                )),
             },
-            None => anyhow::bail!("checksum tag requires a type"),
-        })
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "provide".to_string(),
+            )),
+        }
     }
 }
 
 impl TryFrom<&Element> for Translation {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap_or_default().into_owned();
-        Ok(match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
-                "gettext" => Translation::Gettext(val),
-                "qt" => Translation::Qt(val),
-                _ => anyhow::bail!("Invalid translation type {}", t),
+                "gettext" => Ok(Translation::Gettext(val)),
+                "qt" => Ok(Translation::Qt(val)),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "translation".to_string(),
+                )),
             },
-            None => anyhow::bail!("translation tag required a type"),
-        })
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "translation".to_string(),
+            )),
+        }
     }
 }
 
 impl TryFrom<&Element> for Launchable {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = match e.get_text() {
@@ -387,7 +409,7 @@ impl TryFrom<&Element> for Launchable {
 }
 
 impl TryFrom<&Element> for License {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         Ok(e.get_text().unwrap().into_owned().into())
@@ -395,28 +417,31 @@ impl TryFrom<&Element> for License {
 }
 
 impl TryFrom<&Element> for ProjectUrl {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().expect("url tag requires a value").into_owned();
-        Ok(match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
-                "help" => ProjectUrl::Help(Url::parse(&val)?),
-                "homepage" => ProjectUrl::Homepage(Url::parse(&val)?),
-                "donation" => ProjectUrl::Donation(Url::parse(&val)?),
-                "contact" => ProjectUrl::Contact(Url::parse(&val)?),
-                "translate" => ProjectUrl::Translate(Url::parse(&val)?),
-                "faq" => ProjectUrl::Faq(Url::parse(&val)?),
-                "bugtracker" => ProjectUrl::BugTracker(Url::parse(&val)?),
-                _ => ProjectUrl::Unknown(Url::parse(&val)?),
+                "help" => Ok(ProjectUrl::Help(Url::parse(&val)?)),
+                "homepage" => Ok(ProjectUrl::Homepage(Url::parse(&val)?)),
+                "donation" => Ok(ProjectUrl::Donation(Url::parse(&val)?)),
+                "contact" => Ok(ProjectUrl::Contact(Url::parse(&val)?)),
+                "translate" => Ok(ProjectUrl::Translate(Url::parse(&val)?)),
+                "faq" => Ok(ProjectUrl::Faq(Url::parse(&val)?)),
+                "bugtracker" => Ok(ProjectUrl::BugTracker(Url::parse(&val)?)),
+                _ => Ok(ProjectUrl::Unknown(Url::parse(&val)?)),
             },
-            None => anyhow::bail!("url requires a type attribute"),
-        })
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "url".to_string(),
+            )),
+        }
     }
 }
 
 impl TryFrom<&Element> for Provide {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
@@ -440,7 +465,11 @@ impl TryFrom<&Element> for Provide {
 
                 Ok(Provide::Firmware { kind, item: val })
             }
-            _ => anyhow::bail!("Invalid provides tag"),
+            t => Err(ParseError::InvalidValue(
+                t.to_string(),
+                "type".to_string(),
+                "provide".to_string(),
+            )),
         }
     }
 }
@@ -456,7 +485,7 @@ fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
 }
 
 impl TryFrom<&Element> for Release {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let version = e
@@ -533,22 +562,33 @@ impl TryFrom<&Element> for Release {
 }
 
 impl TryFrom<&Element> for Size {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().expect("url tag requires a value").into_owned();
-        Ok(match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
-                "download" => Size::Download(val.parse::<u64>().expect("invalid download size")),
-                "installed" => Size::Installed(val.parse::<u64>().expect("invalid installed size")),
-                _ => anyhow::bail!("invalid release size type"),
+                "download" => Ok(Size::Download(
+                    val.parse::<u64>().expect("invalid download size"),
+                )),
+                "installed" => Ok(Size::Installed(
+                    val.parse::<u64>().expect("invalid installed size"),
+                )),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "size".to_string(),
+                )),
             },
-            None => anyhow::bail!("url requires a type attribute"),
-        })
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "size".to_string(),
+            )),
+        }
     }
 }
 impl TryFrom<&Element> for Screenshot {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let mut s = ScreenshotBuilder::default().set_default(
@@ -579,7 +619,7 @@ impl TryFrom<&Element> for Screenshot {
 }
 
 impl TryFrom<&Element> for Image {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let url = Url::parse(&e.get_text().unwrap().into_owned())?;
@@ -605,7 +645,7 @@ impl TryFrom<&Element> for Image {
 }
 
 impl TryFrom<&Element> for Video {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let url = Url::parse(&e.get_text().unwrap().into_owned())?;
@@ -632,7 +672,7 @@ impl TryFrom<&Element> for Video {
 }
 
 impl TryFrom<&Element> for ContentRating {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let version: ContentRatingVersion = match e.attributes.get("type") {
@@ -658,7 +698,7 @@ impl TryFrom<&Element> for ContentRating {
 }
 
 impl TryFrom<&Element> for ContentAttribute {
-    type Error = anyhow::Error;
+    type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = ContentState::from_str(&e.get_text().unwrap().into_owned())
@@ -694,9 +734,16 @@ impl TryFrom<&Element> for ContentAttribute {
                 "money-advertising" => Ok(ContentAttribute::MoneyAdvertising(val)),
                 "money-purchasing" => Ok(ContentAttribute::MoneyPurchasing(val)),
                 "money-gambling" => Ok(ContentAttribute::MoneyGambling(val)),
-                _ => anyhow::bail!("invalid content-attribute id"),
+                id => Err(ParseError::InvalidValue(
+                    id.to_string(),
+                    "id".to_string(),
+                    "content-attribute".to_string(),
+                )),
             },
-            None => anyhow::bail!("content-attribute tag requires a type"),
+            None => Err(ParseError::MissingAttribute(
+                "id".to_string(),
+                "content-attribute".to_string(),
+            )),
         }
     }
 }

@@ -1,3 +1,4 @@
+use super::error::ParseError;
 use super::AppId;
 use serde::ser::{SerializeMap, SerializeStruct};
 use serde::{Deserialize, Serialize, Serializer};
@@ -462,7 +463,7 @@ impl Default for ComponentKind {
 }
 
 impl FromStr for ComponentKind {
-    type Err = anyhow::Error;
+    type Err = ParseError;
 
     fn from_str(c: &str) -> Result<Self, Self::Err> {
         match c {
@@ -481,7 +482,11 @@ impl FromStr for ComponentKind {
             "codec" => Ok(ComponentKind::Codec),
             "localization" => Ok(ComponentKind::Localization),
             "" | "generic" => Ok(ComponentKind::default()),
-            _ => anyhow::bail!("invalid component type"),
+            _ => Err(ParseError::InvalidValue(
+                c.to_string(),
+                "type".to_string(),
+                "component".to_string(),
+            )),
         }
     }
 }

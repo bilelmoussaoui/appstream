@@ -1,11 +1,11 @@
 use super::enums::{
     Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
 };
+use super::error::ParseError;
 use super::{
     AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Screenshot,
     TranslatableList, TranslatableString,
 };
-use anyhow::Result;
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
@@ -138,7 +138,7 @@ impl Component {
     /// # Arguments
     ///
     /// * `path` - The path to the component.
-    pub fn from_path(path: PathBuf) -> Result<Self> {
+    pub fn from_path(path: PathBuf) -> Result<Self, ParseError> {
         let file = BufReader::new(File::open(path)?);
         let component = Component::try_from(&Element::parse(file)?)?;
         Ok(component)
@@ -150,7 +150,7 @@ impl Component {
     /// # Arguments
     ///
     /// * `path` - The path to the gzipped component.
-    pub fn from_gzipped(path: PathBuf) -> Result<Self> {
+    pub fn from_gzipped(path: PathBuf) -> Result<Self, ParseError> {
         let f = File::open(path)?;
 
         let mut d = GzDecoder::new(f);
