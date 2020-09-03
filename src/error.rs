@@ -15,13 +15,29 @@ pub enum ParseError {
     /// url failed to parse a URL.
     UrlParseError(#[from] url::ParseError),
 
+    #[error("chrono parser error: {0}")]
+    /// url failed to parse a URL.
+    ChronoParseError(#[from] chrono::ParseError),
+
     #[error("Input/output error: {0} ")]
     /// IO.
     IOError(#[from] std::io::Error),
 
+    #[error("Invalid tag: {0}")]
+    /// The expected tag is misused.
+    InvalidTag(String),
+
+    #[error("A required tag is missing: {0}")]
+    /// Required tag is missing.
+    MissingTag(String),
+
     #[error("Missing attribute: {0} for tag: {1}")]
     /// A required attribute is missing.
     MissingAttribute(String, String),
+
+    #[error("The tag {0} doesn't have a value")]
+    /// A missing value that's required.
+    MissingValue(String),
 
     #[error("Invalid value: {0} for attribute {1} for tag {2}")]
     /// A value passed to an attribute for a specific tag is invalid.

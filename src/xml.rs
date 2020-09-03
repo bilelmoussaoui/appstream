@@ -34,12 +34,16 @@ impl TryFrom<&Element> for Artifact {
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let mut artifact = ArtifactBuilder::default();
 
-        let kind = e
-            .attributes
-            .get("type")
-            .map(|t| ArtifactKind::from_str(t).expect("invalid artifact type"))
-            .expect("release artifact requires a type attribute");
-        artifact = artifact.kind(kind);
+        if let Some(kind) = e.attributes.get("type") {
+            let kind = ArtifactKind::from_str(kind).map_err(|_| {
+                ParseError::InvalidValue(
+                    kind.to_string(),
+                    "type".to_string(),
+                    "artifact".to_string(),
+                )
+            })?;
+            artifact = artifact.kind(kind);
+        }
 
         if let Some(platform) = e.attributes.get("platform") {
             artifact = artifact.platform(platform);
@@ -72,6 +76,7 @@ impl TryFrom<&Element> for Bundle {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap().into_owned();
+
         match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
                 "tarball" => Ok(Bundle::Tarball(val)),
@@ -83,7 +88,9 @@ impl TryFrom<&Element> for Bundle {
                     sdk: e
                         .attributes
                         .get("sdk")
-                        .expect("Flatpak bundle requires an sdk")
+                        .ok_or_else(|| {
+                            ParseError::MissingAttribute("sdk".to_string(), "bundle".to_string())
+                        })?
                         .to_string(),
                     reference: val,
                 }),
@@ -105,10 +112,10 @@ impl TryFrom<&Element> for Collection {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let version = e
-            .attributes
-            .get("version")
-            .expect("A collection requires a version attribute");
+        let version = e.attributes.get("version").ok_or_else(|| {
+            ParseError::MissingAttribute("version".to_string(), "collection".to_string())
+        })?;
+
         let mut collection = CollectionBuilder::new(version);
 
         if let Some(arch) = e.attributes.get("architecture") {
@@ -138,10 +145,19 @@ impl TryFrom<&Element> for Component {
         let mut component = ComponentBuilder::default();
 
         if let Some(kind) = e.attributes.get("type") {
-            component = component.kind(ComponentKind::from_str(kind.as_str()).unwrap());
+            component = component.kind(ComponentKind::from_str(kind.as_str()).map_err(|_| {
+                ParseError::InvalidValue(
+                    kind.to_string(),
+                    "type".to_string(),
+                    "component".to_string(),
+                )
+            })?);
         }
 
-        let app_id = AppId::try_from(e.get_child("id").expect("The 'id' tag is required"))?;
+        let app_id = AppId::try_from(
+            e.get_child("id")
+                .ok_or_else(|| ParseError::MissingTag("id".to_string()))?,
+        )?;
 
         let mut name = TranslatableString::default();
         let mut summary = TranslatableString::default();
@@ -182,7 +198,7 @@ impl TryFrom<&Element> for Component {
                             component = component.category(Category::from_str(
                                 &child
                                     .as_element()
-                                    .expect("Invalid category tag")
+                                    .ok_or_else(|| ParseError::InvalidTag("category".to_string()))?
                                     .get_text()
                                     .unwrap()
                                     .to_string(),
@@ -193,17 +209,20 @@ impl TryFrom<&Element> for Component {
                         component = component.source_pkgname(&e.get_text().unwrap().into_owned());
                     }
                     "keywords" => {
-                        e.children.iter().for_each(|c| {
-                            keywords
-                                .add_for_element(c.as_element().expect("Invalid 'keywords' format"))
-                        });
+                        for c in e.children.iter() {
+                            keywords.add_for_element(
+                                c.as_element().ok_or_else(|| {
+                                    ParseError::InvalidTag("keywords".to_string())
+                                })?,
+                            );
+                        }
                     }
                     "kudos" => {
                         for child in e.children.iter() {
                             component = component.kudo(Kudo::from_str(
                                 &child
                                     .as_element()
-                                    .expect("Invalid kudo tag")
+                                    .ok_or_else(|| ParseError::InvalidTag("kudo".to_string()))?
                                     .get_text()
                                     .unwrap()
                                     .to_string(),
@@ -215,7 +234,7 @@ impl TryFrom<&Element> for Component {
                             component = component.mimetype(
                                 &child
                                     .as_element()
-                                    .expect("Invalid mimetype tag")
+                                    .ok_or_else(|| ParseError::InvalidTag("mimetype".to_string()))?
                                     .get_text()
                                     .unwrap()
                                     .to_string(),
@@ -225,7 +244,9 @@ impl TryFrom<&Element> for Component {
                     "screenshots" => {
                         for child in e.children.iter() {
                             component = component.screenshot(Screenshot::try_from(
-                                child.as_element().expect("Invalid screenshot tag"),
+                                child.as_element().ok_or_else(|| {
+                                    ParseError::InvalidTag("screenshots".to_string())
+                                })?,
                             )?);
                         }
                     }
@@ -233,7 +254,9 @@ impl TryFrom<&Element> for Component {
                     "releases" => {
                         for child in e.children.iter() {
                             component = component.release(Release::try_from(
-                                child.as_element().expect("Invalid release tag"),
+                                child.as_element().ok_or_else(|| {
+                                    ParseError::InvalidTag("releases".to_string())
+                                })?,
                             )?);
                         }
                     }
@@ -252,14 +275,18 @@ impl TryFrom<&Element> for Component {
                     "languages" => {
                         for child in e.children.iter() {
                             component = component.language(Language::try_from(
-                                child.as_element().expect("Invalid languages tag"),
+                                child.as_element().ok_or_else(|| {
+                                    ParseError::InvalidTag("languages".to_string())
+                                })?,
                             )?);
                         }
                     }
                     "provides" => {
                         for child in e.children.iter() {
                             component = component.provide(Provide::try_from(
-                                child.as_element().expect("Invalid provides tag"),
+                                child.as_element().ok_or_else(|| {
+                                    ParseError::InvalidTag("prorivdes".to_string())
+                                })?,
                             )?);
                         }
                     }
@@ -402,7 +429,7 @@ impl TryFrom<&Element> for Launchable {
             "cockpit-manifest" => Launchable::CockpitManifest(val),
             "desktop-id" => Launchable::DesktopId(val),
             "service" => Launchable::Service(val),
-            "url" => Launchable::Url(Url::parse(&val).expect("invalid url in launchable")),
+            "url" => Launchable::Url(Url::parse(&val)?),
             _ => Launchable::Unknown(val),
         })
     }
@@ -420,7 +447,11 @@ impl TryFrom<&Element> for ProjectUrl {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().expect("url tag requires a value").into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("url".to_string()))?
+            .into_owned();
+
         match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
                 "help" => Ok(ProjectUrl::Help(Url::parse(&val)?)),
@@ -456,15 +487,22 @@ impl TryFrom<&Element> for Provide {
             "dbus" => Ok(Provide::DBus(val)),
             "id" => Ok(Provide::Id(val.into())),
             "codec" => Ok(Provide::Codec(val)),
-            "firmware" => {
-                let kind = e
-                    .attributes
-                    .get("type")
-                    .map(|k| FirmwareKind::from_str(k).expect("invalid release kind"))
-                    .expect("firmware provides tag requires a type attribute");
-
-                Ok(Provide::Firmware { kind, item: val })
-            }
+            "firmware" => match e.attributes.get("type") {
+                Some(kind) => {
+                    let kind = FirmwareKind::from_str(kind).map_err(|_| {
+                        ParseError::InvalidValue(
+                            kind.to_string(),
+                            "type".to_string(),
+                            "firmware".to_string(),
+                        )
+                    })?;
+                    Ok(Provide::Firmware { kind, item: val })
+                }
+                None => Err(ParseError::MissingAttribute(
+                    "type".to_string(),
+                    "firmware".to_string(),
+                )),
+            },
             t => Err(ParseError::InvalidValue(
                 t.to_string(),
                 "type".to_string(),
@@ -491,57 +529,82 @@ impl TryFrom<&Element> for Release {
         let version = e
             .attributes
             .get("version")
-            .expect("release tag requires a version attribute")
+            .ok_or_else(|| {
+                ParseError::MissingAttribute("version".to_string(), "release".to_string())
+            })?
             .to_string();
 
         let mut release = ReleaseBuilder::new(&version);
 
-        let date = e
-            .attributes
-            .get("date")
-            .map(|d| deserialize_date(d).expect("invalid date format for release date"));
+        let date = e.attributes.get("date").map(|d| {
+            deserialize_date(d).map_err(|_| {
+                ParseError::InvalidValue(d.to_string(), "date".to_string(), "release".to_string())
+            })
+        });
         if let Some(d) = date {
-            release = release.date(d);
+            release = release.date(d?);
         }
 
         // In case we have a timestamp attribute instead of a date one
-        let timestamp = e
-            .attributes
-            .get("timestamp")
-            .map(|d| deserialize_date(d).expect("invalid date format for release date"));
+        let timestamp = e.attributes.get("timestamp").map(|d| {
+            deserialize_date(d).map_err(|_| {
+                ParseError::InvalidValue(
+                    d.to_string(),
+                    "timestamp".to_string(),
+                    "release".to_string(),
+                )
+            })
+        });
         if let Some(d) = timestamp {
-            release = release.date(d);
+            release = release.date(d?);
         }
 
-        let date_eol = e
-            .attributes
-            .get("date_eol")
-            .map(|d| deserialize_date(d).expect("invalid date format for release date_eol"));
+        let date_eol = e.attributes.get("date_eol").map(|d| {
+            deserialize_date(d).map_err(|_| {
+                ParseError::InvalidValue(
+                    d.to_string(),
+                    "date_eol".to_string(),
+                    "release".to_string(),
+                )
+            })
+        });
         if let Some(d) = date_eol {
-            release = release.date_eol(d);
+            release = release.date_eol(d?);
         }
-        let urgency = e
-            .attributes
-            .get("urgency")
-            .map(|k| ReleaseUrgency::from_str(k).expect("invalid release urgency"))
-            .unwrap_or_default();
-        release = release.urgency(urgency);
 
-        let kind = e
-            .attributes
-            .get("type")
-            .map(|k| ReleaseKind::from_str(k).expect("invalid release kind"))
-            .unwrap_or_default();
-        release = release.kind(kind);
+        if let Some(urgency) = e.attributes.get("urgency") {
+            let urgency = ReleaseUrgency::from_str(urgency).map_err(|_| {
+                ParseError::InvalidValue(
+                    urgency.to_string(),
+                    "urgency".to_string(),
+                    "release".to_string(),
+                )
+            })?;
+            release = release.urgency(urgency);
+        }
+
+        if let Some(kind) = e.attributes.get("type") {
+            let kind = ReleaseKind::from_str(kind).map_err(|_| {
+                ParseError::InvalidValue(
+                    kind.to_string(),
+                    "type".to_string(),
+                    "release".to_string(),
+                )
+            })?;
+            release = release.kind(kind);
+        }
 
         let mut description = MarkupTranslatableString::default();
+
         for node in &e.children {
             if let xmltree::XMLNode::Element(ref c) = node {
                 match &*c.name {
                     "artifacts" => {
                         for child in c.children.iter() {
                             release = release.artifact(Artifact::try_from(
-                                child.as_element().expect("invalid artifact tag"),
+                                child.as_element().ok_or_else(|| {
+                                    ParseError::InvalidTag("artifact".to_string())
+                                })?,
                             )?);
                         }
                     }
@@ -565,15 +628,19 @@ impl TryFrom<&Element> for Size {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().expect("url tag requires a value").into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("size".to_string()))?
+            .into_owned();
+
         match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
-                "download" => Ok(Size::Download(
-                    val.parse::<u64>().expect("invalid download size"),
-                )),
-                "installed" => Ok(Size::Installed(
-                    val.parse::<u64>().expect("invalid installed size"),
-                )),
+                "download" => Ok(Size::Download(val.parse::<u64>().map_err(|_| {
+                    ParseError::InvalidValue(val, "download".to_string(), "size".to_string())
+                })?)),
+                "installed" => Ok(Size::Installed(val.parse::<u64>().map_err(|_| {
+                    ParseError::InvalidValue(val, "installed".to_string(), "size".to_string())
+                })?)),
                 _ => Err(ParseError::InvalidValue(
                     t.to_string(),
                     "type".to_string(),
@@ -633,11 +700,15 @@ impl TryFrom<&Element> for Image {
         img = img.kind(kind);
 
         if let Some(w) = e.attributes.get("width") {
-            img = img.width(w.parse::<u32>().expect("the width should be an integer"));
+            img = img.width(w.parse::<u32>().map_err(|_| {
+                ParseError::InvalidValue(w.to_string(), "width".to_string(), "image".to_string())
+            })?);
         }
 
         if let Some(h) = e.attributes.get("height") {
-            img = img.height(h.parse::<u32>().expect("the height should be an integer"));
+            img = img.height(h.parse::<u32>().map_err(|_| {
+                ParseError::InvalidValue(h.to_string(), "height".to_string(), "image".to_string())
+            })?);
         }
 
         Ok(img.build())
@@ -660,11 +731,15 @@ impl TryFrom<&Element> for Video {
         }
 
         if let Some(w) = e.attributes.get("width") {
-            video = video.width(w.parse::<u32>().expect("the width should be an integer"));
+            video = video.width(w.parse::<u32>().map_err(|_| {
+                ParseError::InvalidValue(w.to_string(), "width".to_string(), "video".to_string())
+            })?);
         }
 
         if let Some(h) = e.attributes.get("height") {
-            video = video.height(h.parse::<u32>().expect("the height should be an integer"));
+            video = video.height(h.parse::<u32>().map_err(|_| {
+                ParseError::InvalidValue(h.to_string(), "height".to_string(), "video".to_string())
+            })?);
         }
 
         Ok(video.build())
@@ -686,9 +761,9 @@ impl TryFrom<&Element> for ContentRating {
 
         let mut attributes: Vec<ContentAttribute> = Vec::new();
         for child in e.children.iter() {
-            attributes.push(ContentAttribute::try_from(
-                child.as_element().expect("invalid content-attribute tag"),
-            )?);
+            attributes.push(ContentAttribute::try_from(child.as_element().ok_or_else(
+                || ParseError::InvalidTag("content-attribute".to_string()),
+            )?)?);
         }
         Ok(Self {
             version,
@@ -701,8 +776,11 @@ impl TryFrom<&Element> for ContentAttribute {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = ContentState::from_str(&e.get_text().unwrap().into_owned())
-            .expect("invalid content-attribute state");
+        let val = e.get_text().unwrap().into_owned();
+
+        let val = ContentState::from_str(&val).map_err(|_| {
+            ParseError::InvalidValue(val, "$value".to_string(), "content-attribute".to_string())
+        })?;
 
         match e.attributes.get("id").as_deref() {
             Some(t) => match t.as_str() {
