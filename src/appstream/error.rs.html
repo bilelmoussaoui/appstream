@@ -27,6 +27,22 @@
 <span id="27">27</span>
 <span id="28">28</span>
 <span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">thiserror</span>::<span class="ident">Error</span>;
 
@@ -45,13 +61,29 @@
     <span class="doccomment">/// url failed to parse a URL.</span>
     <span class="ident">UrlParseError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">url</span>::<span class="ident">ParseError</span>),
 
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;chrono parser error: {0}&quot;</span>)]</span>
+    <span class="doccomment">/// url failed to parse a URL.</span>
+    <span class="ident">ChronoParseError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">chrono</span>::<span class="ident">ParseError</span>),
+
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Input/output error: {0} &quot;</span>)]</span>
     <span class="doccomment">/// IO.</span>
     <span class="ident">IOError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span>),
 
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Invalid tag: {0}&quot;</span>)]</span>
+    <span class="doccomment">/// The expected tag is misused.</span>
+    <span class="ident">InvalidTag</span>(<span class="ident">String</span>),
+
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;A required tag is missing: {0}&quot;</span>)]</span>
+    <span class="doccomment">/// Required tag is missing.</span>
+    <span class="ident">MissingTag</span>(<span class="ident">String</span>),
+
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Missing attribute: {0} for tag: {1}&quot;</span>)]</span>
     <span class="doccomment">/// A required attribute is missing.</span>
     <span class="ident">MissingAttribute</span>(<span class="ident">String</span>, <span class="ident">String</span>),
+
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;The tag {0} doesn&#39;t have a value&quot;</span>)]</span>
+    <span class="doccomment">/// A missing value that&#39;s required.</span>
+    <span class="ident">MissingValue</span>(<span class="ident">String</span>),
 
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;Invalid value: {0} for attribute {1} for tag {2}&quot;</span>)]</span>
     <span class="doccomment">/// A value passed to an attribute for a specific tag is invalid.</span>
