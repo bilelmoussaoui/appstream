@@ -1389,7 +1389,7 @@
     <span class="ident">Applet</span>,
     <span class="doccomment">/// A shell (an actual specific shell such as bash or tcsh, not a TerminalEmulator).</span>
     <span class="ident">Shell</span>,
-    <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;true&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">default</span>)]</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="ident">Unknown</span>(<span class="ident">String</span>),
 }
@@ -1412,7 +1412,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">ToString</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="doccomment">/// Defines the various types of a `Component`.</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ComponentKind</span> {
@@ -1769,7 +1769,7 @@
     <span class="ident">SearchProvider</span>,
     <span class="doccomment">/// Provides user documentation/help.</span>
     <span class="ident">UserDocs</span>,
-    <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">default</span> <span class="op">=</span> <span class="string">&quot;true&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">default</span>)]</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="ident">Unknown</span>(<span class="ident">String</span>),
 }
