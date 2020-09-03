@@ -712,11 +712,31 @@
 <span id="712">712</span>
 <span id="713">713</span>
 <span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
     <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
 };
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::{
+<span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">AppId</span>, <span class="ident">ContentRating</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">Release</span>, <span class="ident">Screenshot</span>,
     <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>,
 };
@@ -733,8 +753,11 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>;
 <span class="kw">use</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>;
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="doccomment">/// A component is wrapper around a `metainfo.xml` file or previously an `appdata.xml` file.</span>
+<span class="doccomment">/// It describes an application to the various stores out there on Linux.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Component</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="doccomment">/// The component type.</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ComponentKind</span>,
     <span class="doccomment">/// Unique identifier for this component.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">AppId</span>,
@@ -742,11 +765,11 @@
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">TranslatableString</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// A short summary of the component</span>
+    <span class="doccomment">/// A short summary of the component.</span>
     <span class="kw">pub</span> <span class="ident">summary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// A long description of this component. Some markup can be used.</span>
+    <span class="doccomment">/// A long description of this component.</span>
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MarkupTranslatableString</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -758,21 +781,24 @@
     <span class="kw">pub</span> <span class="ident">metadata_license</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">License</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// Identify the project with a specific upstream umbrealla.</span>
+    <span class="doccomment">/// Identify the project with a specific upstream umbrella.</span>
     <span class="doccomment">/// Known values includes: GNOME, KDE, XFCE, MATE, LXDE.</span>
     <span class="kw">pub</span> <span class="ident">project_group</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// Indicate for which desktop environement the component is essential for its functionnality.</span>
+    <span class="doccomment">/// Indicate for which desktop environment the component is essential for its functionality.</span>
     <span class="kw">pub</span> <span class="ident">compulsory_for_desktop</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// The various AppId that the current component extends.</span>
     <span class="kw">pub</span> <span class="ident">extends</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AppId</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// The icons of the component.</span>
     <span class="kw">pub</span> <span class="ident">icons</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Icon</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// The component screenshots, composed of either images, videos or both.</span>
     <span class="kw">pub</span> <span class="ident">screenshots</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Screenshot</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
@@ -797,12 +823,15 @@
     <span class="kw">pub</span> <span class="ident">launchables</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Launchable</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The pkgname, a distributor thing.</span>
     <span class="kw">pub</span> <span class="ident">pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The source pkgname, a distributor thing.</span>
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// 3rd-party sources to grab the component from.</span>
     <span class="kw">pub</span> <span class="ident">bundles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
@@ -810,6 +839,7 @@
     <span class="kw">pub</span> <span class="ident">releases</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Release</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// The languages supported by the component.</span>
     <span class="kw">pub</span> <span class="ident">languages</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Language</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
@@ -817,9 +847,11 @@
     <span class="kw">pub</span> <span class="ident">mimetypes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// Defines the &quot;awesomeness&quot; of a component.</span>
     <span class="kw">pub</span> <span class="ident">kudos</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Kudo</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// A list of keywords, to help the user find the component easily.</span>
     <span class="kw">pub</span> <span class="ident">keywords</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableList</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
@@ -836,6 +868,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Component</span> {
+    <span class="doccomment">/// Create a new `Component` from an XML file.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `path` - The path to the component.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>);
         <span class="kw">let</span> <span class="ident">component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">file</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
@@ -843,6 +880,11 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
+    <span class="doccomment">/// Create a new `Component` from a gzipped XML file.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Arguments</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * `path` - The path to the gzipped component.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_gzipped</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
@@ -867,9 +909,7 @@
         <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>,
         <span class="ident">ImageKind</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">ReleaseKind</span>, <span class="ident">Translation</span>,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">types</span>::{
-        <span class="ident">ContentRating</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>,
-    };
+    <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ContentRating</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>};
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
@@ -1349,19 +1389,19 @@
             })
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.3&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1582329600&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1582329600&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Stylesheet fixes&lt;/p&gt;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.2&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1566691200&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1566691200&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.1&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1565136000&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1565136000&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;First release of Contrast&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )

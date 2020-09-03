@@ -159,18 +159,31 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::<span class="ident">ImageKind</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">TranslatableString</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">TranslatableString</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>, <span class="ident">Default</span>)]</span>
+<span class="doccomment">/// Defines a visual representation of the `Component`.</span>
+<span class="doccomment">/// See [\&lt;screenshots\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Screenshot</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;default&quot;</span>)]</span>
+    <span class="doccomment">/// Whether the current screenshot is the default one.</span>
     <span class="kw">pub</span> <span class="ident">is_default</span>: <span class="ident">bool</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// A translatable small description of the current screenshot.</span>
     <span class="kw">pub</span> <span class="ident">caption</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">TranslatableString</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(
@@ -179,51 +192,56 @@
         <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;images&quot;</span>,
         <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>
     )]</span>
+    <span class="doccomment">/// The list of images the current screenshot has.</span>
+    <span class="doccomment">/// It contains one image of kind `ImageKind::Source`, the rest are `ImageKind::Thumbnail`</span>
     <span class="kw">pub</span> <span class="ident">images</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Image</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;video&quot;</span>, <span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// The list of videos the current screenshot has.</span>
     <span class="kw">pub</span> <span class="ident">videos</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Video</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Screenshot</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span> {
-            <span class="ident">is_default</span>: <span class="bool-val">true</span>,
-            <span class="ident">caption</span>: <span class="prelude-val">None</span>,
-            <span class="ident">images</span>: <span class="macro">vec</span><span class="macro">!</span>[],
-            <span class="ident">videos</span>: <span class="macro">vec</span><span class="macro">!</span>[],
-        }
-    }
-}
-
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="doccomment">/// A screenshot video.</span>
+<span class="doccomment">/// See [\&lt;screenshots\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Video</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The video width.</span>
     <span class="kw">pub</span> <span class="ident">width</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The video height.</span>
     <span class="kw">pub</span> <span class="ident">height</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The video codec. Possible values are `vp9` or `av1`.</span>
     <span class="kw">pub</span> <span class="ident">codec</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The video container. Possible values are Matroska(.mkv) or WebM.</span>
     <span class="kw">pub</span> <span class="ident">container</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
+    <span class="doccomment">/// The video url.</span>
     <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">Url</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="doccomment">/// A screenshot image.</span>
+<span class="doccomment">/// See [\&lt;screenshots\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Image</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="doccomment">/// The image type, either a source or a thumbnail.</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ImageKind</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The image width.</span>
     <span class="kw">pub</span> <span class="ident">width</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The image height.</span>
     <span class="kw">pub</span> <span class="ident">height</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
 
+    <span class="doccomment">/// The image url.</span>
     <span class="kw">pub</span> <span class="ident">url</span>: <span class="ident">Url</span>,
 }
 

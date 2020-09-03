@@ -199,51 +199,74 @@
 <span id="199">199</span>
 <span id="200">200</span>
 <span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{<span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Checksum</span>, <span class="ident">ReleaseKind</span>, <span class="ident">ReleaseUrgency</span>, <span class="ident">Size</span>};
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">types</span>::<span class="ident">MarkupTranslatableString</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">MarkupTranslatableString</span>;
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">Utc</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="doccomment">/// Represents the metainformation that defines a Release.</span>
+<span class="doccomment">/// See [\&lt;releases\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Release</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">alias</span> <span class="op">=</span> <span class="string">&quot;timestamp&quot;</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// Release date.</span>
+    <span class="doccomment">/// The release date.</span>
     <span class="kw">pub</span> <span class="ident">date</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// Release end-of-life date.</span>
+    <span class="doccomment">/// The end-of-life date of the release.</span>
     <span class="kw">pub</span> <span class="ident">date_eol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// Release version</span>
+    <span class="doccomment">/// The release version</span>
     <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">String</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
-    <span class="doccomment">/// A long description of the release. Some markup can be used.</span>
+    <span class="doccomment">/// A long description of the release.</span>
     <span class="kw">pub</span> <span class="ident">description</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">MarkupTranslatableString</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="doccomment">/// The release type.</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ReleaseKind</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// Defines the downloaded &amp; installed sizes of the release.</span>
     <span class="kw">pub</span> <span class="ident">sizes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Size</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>)]</span>
+    <span class="doccomment">/// The urgency to install this release.</span>
     <span class="kw">pub</span> <span class="ident">urgency</span>: <span class="ident">ReleaseUrgency</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// Defines the different artifacts shipped with the release.</span>
     <span class="kw">pub</span> <span class="ident">artifacts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Artifact</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// A web page with the release changelog.</span>
     <span class="kw">pub</span> <span class="ident">url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="doccomment">/// Defines the release artifacts, whether it&#39;s the source-code or the binary distribution.</span>
+<span class="doccomment">/// See [\&lt;releases\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Artifact</span> {
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Option::is_none&quot;</span>)]</span>
+    <span class="doccomment">/// The targeted platform of the artifact.</span>
     <span class="kw">pub</span> <span class="ident">platform</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
+    <span class="doccomment">/// The artifact type.</span>
     <span class="kw">pub</span> <span class="ident">kind</span>: <span class="ident">ArtifactKind</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
@@ -258,6 +281,7 @@
     <span class="kw">pub</span> <span class="ident">checksums</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Checksum</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">default</span>, <span class="ident">skip_serializing_if</span> <span class="op">=</span> <span class="string">&quot;Vec::is_empty&quot;</span>)]</span>
+    <span class="doccomment">/// 3rd-party bundles from where you can grab this release.</span>
     <span class="kw">pub</span> <span class="ident">bundles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Bundle</span><span class="op">&gt;</span>,
 }
 
@@ -388,14 +412,14 @@
             <span class="macro">vec</span><span class="macro">!</span>[
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;1.8&quot;</span>)
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;This stable release fixes the following bug:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;CPU no longer overheats when you hold down spacebar&lt;/li&gt;&lt;/ul&gt;&quot;</span>))
-                    .<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1424116753&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1424116753&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
                     .<span class="ident">sizes</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Size</span>::<span class="ident">Download</span>(<span class="number">12345678</span>), <span class="ident">Size</span>::<span class="ident">Installed</span>(<span class="number">42424242</span>)])
                     .<span class="ident">build</span>(),
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;1.2&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1397253600&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1397253600&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
                     .<span class="ident">build</span>(),
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;1.0&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">chrono</span>::<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1345932000&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1345932000&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
                     .<span class="ident">build</span>()
             ]
         )
