@@ -109,6 +109,8 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Appstream</span>
 <span class="doccomment">//!</span>
@@ -203,6 +205,7 @@
 <span class="kw">mod</span> <span class="ident">content_rating</span>;
 <span class="doccomment">/// Various enumerations used in the appstream types.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">enums</span>;
+<span class="kw">mod</span> <span class="ident">error</span>;
 <span class="kw">mod</span> <span class="ident">language</span>;
 <span class="kw">mod</span> <span class="ident">license</span>;
 <span class="kw">mod</span> <span class="ident">release</span>;
@@ -214,6 +217,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">component</span>::<span class="ident">Component</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">content_rating</span>::<span class="ident">ContentRating</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">language</span>::<span class="ident">Language</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">license</span>::<span class="ident">License</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">release</span>::{<span class="ident">Artifact</span>, <span class="ident">Release</span>};

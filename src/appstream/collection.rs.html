@@ -318,9 +318,9 @@
 <span id="318">318</span>
 <span id="319">319</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
-<span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">read</span>::<span class="ident">GzDecoder</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -359,7 +359,7 @@
     <span class="doccomment">/// # Arguments</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `path` - The path to the collection.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>);
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">file</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">collection</span>)
@@ -371,7 +371,7 @@
     <span class="doccomment">/// # Arguments</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `path` - The path to the gzipped collection.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_gzipped</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_gzipped</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">GzDecoder</span>::<span class="ident">new</span>(<span class="ident">f</span>);
@@ -395,12 +395,12 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">builders</span>::{
         <span class="ident">CollectionBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ImageBuilder</span>, <span class="ident">ReleaseBuilder</span>, <span class="ident">ScreenshotBuilder</span>,
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">ImageKind</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>};
-    <span class="kw">use</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
@@ -595,7 +595,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">endless_os_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&gt;</span> <span class="op">=</span>
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
             <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/endless-apps.xml&quot;</span>.<span class="ident">into</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
@@ -606,7 +606,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">gnome_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&gt;</span> <span class="op">=</span>
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
             <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/gnome-apps.xml&quot;</span>.<span class="ident">into</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
@@ -617,7 +617,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">kde_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&gt;</span> <span class="op">=</span>
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
             <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/kde-apps.xml&quot;</span>.<span class="ident">into</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
@@ -628,7 +628,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">flathub_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&gt;</span> <span class="op">=</span>
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
             <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/flathub-apps.xml&quot;</span>.<span class="ident">into</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
