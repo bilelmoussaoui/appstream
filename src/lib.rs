@@ -16,7 +16,7 @@
 //! ```
 //! use appstream::Component;
 //! use appstream::builders::{ComponentBuilder, ReleaseBuilder};
-//! use appstream::types::TranslatableString;
+//! use appstream::TranslatableString;
 //! use appstream::enums::{Provide, ProjectUrl};
 //! use url::Url;
 //! use chrono::{Utc, TimeZone};
@@ -81,12 +81,15 @@
 //!     .collect::<Vec<&Component>>();
 //! ```
 //!
+#![deny(missing_docs)]
 
 mod app_id;
+/// Various helpers to build any appstream type.
 pub mod builders;
 mod collection;
 mod component;
 mod content_rating;
+/// Various enumerations used in the appstream types.
 pub mod enums;
 mod language;
 mod license;
@@ -95,18 +98,14 @@ mod screenshot;
 mod translatable_string;
 mod xml;
 
-pub mod types {
-    pub use crate::app_id::AppId;
-    pub use crate::content_rating::ContentRating;
-    pub use crate::language::Language;
-    pub use crate::license::License;
-    pub use crate::release::{Artifact, Release};
-    pub use crate::screenshot::{Image, Screenshot, Video};
-    pub use crate::translatable_string::{
-        MarkupTranslatableString, TranslatableList, TranslatableString,
-    };
-}
+pub use app_id::AppId;
 pub use collection::Collection;
 pub use component::Component;
+pub use content_rating::ContentRating;
+pub use language::Language;
+pub use license::License;
+pub use release::{Artifact, Release};
+pub use screenshot::{Image, Screenshot, Video};
+pub use translatable_string::{MarkupTranslatableString, TranslatableList, TranslatableString};
 pub use url;
 pub use xmltree;

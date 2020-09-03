@@ -1,4 +1,4 @@
-use super::types::AppId;
+use super::AppId;
 use super::Component;
 use anyhow::Result;
 #[cfg(feature = "gzip")]
@@ -13,20 +13,32 @@ use std::path::PathBuf;
 use xmltree::Element;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// A collection is a wrapper around multiple components at once.
+/// Provided by the source of the components (a repository).
+/// See [Collection Metadata](https://www.freedesktop.org/software/appstream/docs/chap-CollectionData.html).
 pub struct Collection {
+    /// The specification version used on the components.
     pub version: String,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The origin of the collection, could be something like `flathub`.
     pub origin: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The components that are part of this collection.
     pub components: Vec<Component>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The targeted CPU architecture of the collection.
     pub architecture: Option<String>,
 }
 
 impl Collection {
+    /// Create a new `Collection` from an XML file.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the collection.
     pub fn from_path(path: PathBuf) -> Result<Self> {
         let file = BufReader::new(File::open(path)?);
         let collection = Collection::try_from(&Element::parse(file)?)?;
@@ -34,6 +46,11 @@ impl Collection {
     }
 
     #[cfg(feature = "gzip")]
+    /// Create a new `Collection` from a gzipped XML file.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the gzipped collection.
     pub fn from_gzipped(path: PathBuf) -> Result<Self> {
         let f = File::open(path)?;
 
@@ -46,6 +63,7 @@ impl Collection {
         Ok(collection)
     }
 
+    /// Find the components that corresponds to a specific `AppId`
     pub fn find_by_id(&self, id: AppId) -> Vec<&Component> {
         self.components
             .iter()
@@ -61,7 +79,7 @@ mod tests {
         CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
     };
     use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
-    use crate::types::{MarkupTranslatableString, TranslatableList, TranslatableString};
+    use crate::{MarkupTranslatableString, TranslatableList, TranslatableString};
     use anyhow::Result;
     use url::Url;
 

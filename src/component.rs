@@ -1,7 +1,7 @@
 use super::enums::{
     Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
 };
-use super::types::{
+use super::{
     AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Screenshot,
     TranslatableList, TranslatableString,
 };
@@ -18,8 +18,11 @@ use std::fs::File;
 use std::io::BufReader;
 use xmltree::Element;
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+/// A component is wrapper around a `metainfo.xml` file or previously an `appdata.xml` file.
+/// It describes an application to the various stores out there on Linux.
 pub struct Component {
     #[serde(default, rename = "type")]
+    /// The component type.
     pub kind: ComponentKind,
     /// Unique identifier for this component.
     pub id: AppId,
@@ -27,11 +30,11 @@ pub struct Component {
     pub name: TranslatableString,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// A short summary of the component
+    /// A short summary of the component.
     pub summary: Option<TranslatableString>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// A long description of this component. Some markup can be used.
+    /// A long description of this component.
     pub description: Option<MarkupTranslatableString>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -43,21 +46,24 @@ pub struct Component {
     pub metadata_license: Option<License>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// Identify the project with a specific upstream umbrealla.
+    /// Identify the project with a specific upstream umbrella.
     /// Known values includes: GNOME, KDE, XFCE, MATE, LXDE.
     pub project_group: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// Indicate for which desktop environement the component is essential for its functionnality.
+    /// Indicate for which desktop environment the component is essential for its functionality.
     pub compulsory_for_desktop: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The various AppId that the current component extends.
     pub extends: Vec<AppId>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The icons of the component.
     pub icons: Vec<Icon>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The component screenshots, composed of either images, videos or both.
     pub screenshots: Vec<Screenshot>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -82,12 +88,15 @@ pub struct Component {
     pub launchables: Vec<Launchable>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The pkgname, a distributor thing.
     pub pkgname: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The source pkgname, a distributor thing.
     pub source_pkgname: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// 3rd-party sources to grab the component from.
     pub bundles: Vec<Bundle>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -95,6 +104,7 @@ pub struct Component {
     pub releases: Vec<Release>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// The languages supported by the component.
     pub languages: Vec<Language>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -102,9 +112,11 @@ pub struct Component {
     pub mimetypes: Vec<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Defines the "awesomeness" of a component.
     pub kudos: Vec<Kudo>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// A list of keywords, to help the user find the component easily.
     pub keywords: Option<TranslatableList>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -121,6 +133,11 @@ pub struct Component {
 }
 
 impl Component {
+    /// Create a new `Component` from an XML file.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the component.
     pub fn from_path(path: PathBuf) -> Result<Self> {
         let file = BufReader::new(File::open(path)?);
         let component = Component::try_from(&Element::parse(file)?)?;
@@ -128,6 +145,11 @@ impl Component {
     }
 
     #[cfg(feature = "gzip")]
+    /// Create a new `Component` from a gzipped XML file.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the gzipped component.
     pub fn from_gzipped(path: PathBuf) -> Result<Self> {
         let f = File::open(path)?;
 
@@ -152,9 +174,7 @@ mod tests {
         ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind, Icon,
         ImageKind, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, Translation,
     };
-    use crate::types::{
-        ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString,
-    };
+    use crate::{ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString};
     use chrono::{TimeZone, Utc};
     use url::Url;
 
@@ -634,19 +654,19 @@ mod tests {
             })
             .release(
                 ReleaseBuilder::new("0.0.3")
-                    .date(chrono::Utc.datetime_from_str("1582329600", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1582329600", "%s").unwrap())
                     .description(MarkupTranslatableString::with_default("<p>Stylesheet fixes</p><p>Translations updates</p>"))
                     .build()
             )
             .release(
                 ReleaseBuilder::new("0.0.2")
-                    .date(chrono::Utc.datetime_from_str("1566691200", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1566691200", "%s").unwrap())
                     .description(MarkupTranslatableString::with_default("<p>Translations updates</p>"))
                     .build()
             )
             .release(
                 ReleaseBuilder::new("0.0.1")
-                    .date(chrono::Utc.datetime_from_str("1565136000", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1565136000", "%s").unwrap())
                     .description(MarkupTranslatableString::with_default("<p>First release of Contrast</p>"))
                     .build()
             )

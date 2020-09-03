@@ -1,14 +1,18 @@
 use super::enums::ImageKind;
-use super::types::TranslatableString;
+use super::TranslatableString;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
+/// Defines a visual representation of the `Component`.
+/// See [\<screenshots\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots).
 pub struct Screenshot {
     #[serde(default, alias = "default")]
+    /// Whether the current screenshot is the default one.
     pub is_default: bool,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// A translatable small description of the current screenshot.
     pub caption: Option<TranslatableString>,
 
     #[serde(
@@ -17,51 +21,56 @@ pub struct Screenshot {
         alias = "images",
         skip_serializing_if = "Vec::is_empty"
     )]
+    /// The list of images the current screenshot has.
+    /// It contains one image of kind `ImageKind::Source`, the rest are `ImageKind::Thumbnail`
     pub images: Vec<Image>,
 
     #[serde(rename = "video", default, skip_serializing_if = "Vec::is_empty")]
+    /// The list of videos the current screenshot has.
     pub videos: Vec<Video>,
 }
 
-impl Default for Screenshot {
-    fn default() -> Self {
-        Self {
-            is_default: true,
-            caption: None,
-            images: vec![],
-            videos: vec![],
-        }
-    }
-}
-
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// A screenshot video.
+/// See [\<screenshots\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots).
 pub struct Video {
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The video width.
     pub width: Option<u32>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The video height.
     pub height: Option<u32>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The video codec. Possible values are `vp9` or `av1`.
     pub codec: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The video container. Possible values are Matroska(.mkv) or WebM.
     pub container: Option<String>,
 
+    /// The video url.
     pub url: Url,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// A screenshot image.
+/// See [\<screenshots\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-screenshots).
 pub struct Image {
     #[serde(rename = "type")]
+    /// The image type, either a source or a thumbnail.
     pub kind: ImageKind,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The image width.
     pub width: Option<u32>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The image height.
     pub height: Option<u32>,
 
+    /// The image url.
     pub url: Url,
 }
 

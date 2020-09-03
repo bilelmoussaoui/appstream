@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::string::ToString;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// Unique identifier of a component. It should be reverse-DNS name.
 pub struct AppId(pub String);
 
 impl From<&str> for AppId {

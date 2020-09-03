@@ -1,47 +1,58 @@
 use super::enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size};
-use super::types::MarkupTranslatableString;
+use super::MarkupTranslatableString;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// Represents the metainformation that defines a Release.
+/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
 pub struct Release {
     #[serde(default, alias = "timestamp", skip_serializing_if = "Option::is_none")]
-    /// Release date.
+    /// The release date.
     pub date: Option<DateTime<Utc>>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// Release end-of-life date.
+    /// The end-of-life date of the release.
     pub date_eol: Option<DateTime<Utc>>,
-    /// Release version
+    /// The release version
     pub version: String,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// A long description of the release. Some markup can be used.
+    /// A long description of the release.
     pub description: Option<MarkupTranslatableString>,
 
     #[serde(default, rename = "type")]
+    /// The release type.
     pub kind: ReleaseKind,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Defines the downloaded & installed sizes of the release.
     pub sizes: Vec<Size>,
 
     #[serde(default)]
+    /// The urgency to install this release.
     pub urgency: ReleaseUrgency,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Defines the different artifacts shipped with the release.
     pub artifacts: Vec<Artifact>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// A web page with the release changelog.
     pub url: Option<Url>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// Defines the release artifacts, whether it's the source-code or the binary distribution.
+/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
 pub struct Artifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    /// The targeted platform of the artifact.
     pub platform: Option<String>,
 
     #[serde(rename = "type")]
+    /// The artifact type.
     pub kind: ArtifactKind,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -56,6 +67,7 @@ pub struct Artifact {
     pub checksums: Vec<Checksum>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// 3rd-party bundles from where you can grab this release.
     pub bundles: Vec<Bundle>,
 }
 
@@ -186,14 +198,14 @@ mod tests {
             vec![
                 ReleaseBuilder::new("1.8")
                     .description(MarkupTranslatableString::with_default("<p>This stable release fixes the following bug:</p><ul><li>CPU no longer overheats when you hold down spacebar</li></ul>"))
-                    .date(chrono::Utc.datetime_from_str("1424116753", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1424116753", "%s").unwrap())
                     .sizes(vec![Size::Download(12345678), Size::Installed(42424242)])
                     .build(),
                 ReleaseBuilder::new("1.2")
-                    .date(chrono::Utc.datetime_from_str("1397253600", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1397253600", "%s").unwrap())
                     .build(),
                 ReleaseBuilder::new("1.0")
-                    .date(chrono::Utc.datetime_from_str("1345932000", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1345932000", "%s").unwrap())
                     .build()
             ]
         )

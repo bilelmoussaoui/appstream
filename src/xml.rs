@@ -13,7 +13,7 @@ use super::enums::{
     ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, Kudo, Launchable,
     ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
 };
-use super::types::{
+use super::{
     AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
     Screenshot, TranslatableList, TranslatableString, Video,
 };
@@ -374,7 +374,7 @@ impl TryFrom<&Element> for Launchable {
         };
         let kind = match e.attributes.get("type") {
             Some(k) => k.as_str(),
-            None => "unkown",
+            None => "unknown",
         };
         Ok(match kind {
             "cockpit-manifest" => Launchable::CockpitManifest(val),
@@ -446,11 +446,11 @@ impl TryFrom<&Element> for Provide {
 }
 
 fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
-    chrono::Utc.datetime_from_str(&date, "%s").or_else(
+    Utc.datetime_from_str(&date, "%s").or_else(
         |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
             let date: NaiveDateTime =
                 NaiveDate::parse_from_str(&date, "%Y-%m-%d")?.and_hms(0, 0, 0);
-            Ok(DateTime::<Utc>::from_utc(date, chrono::Utc))
+            Ok(DateTime::<Utc>::from_utc(date, Utc))
         },
     )
 }
@@ -668,7 +668,6 @@ impl TryFrom<&Element> for ContentAttribute {
             Some(t) => match t.as_str() {
                 "violence-cartoon" => Ok(ContentAttribute::ViolenceCartoon(val)),
                 "violence-fantasy" => Ok(ContentAttribute::ViolenceFantasy(val)),
-                "violence-fealistic" => Ok(ContentAttribute::ViolenceFealistic(val)),
                 "violence-bloodshed" => Ok(ContentAttribute::ViolenceBloodshed(val)),
                 "violence-sexual" => Ok(ContentAttribute::ViolenceSexual(val)),
                 "violence-desecration" => Ok(ContentAttribute::ViolenceDesecration(val)),
