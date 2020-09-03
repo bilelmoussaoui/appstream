@@ -386,7 +386,7 @@ pub enum Category {
     Applet,
     /// A shell (an actual specific shell such as bash or tcsh, not a TerminalEmulator).
     Shell,
-    #[strum(default = "true")]
+    #[strum(default)]
     #[doc(hidden)]
     Unknown(String),
 }
@@ -409,7 +409,7 @@ pub enum Checksum {
 
 #[derive(Clone, Copy, Debug, AsRefStr, Serialize, ToString, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
-#[strum(rename_all = "kebab-case")]
+#[strum(serialize_all = "kebab-case")]
 #[non_exhaustive]
 /// Defines the various types of a `Component`.
 pub enum ComponentKind {
@@ -766,7 +766,7 @@ pub enum Kudo {
     SearchProvider,
     /// Provides user documentation/help.
     UserDocs,
-    #[strum(default = "true")]
+    #[strum(default)]
     #[doc(hidden)]
     Unknown(String),
 }
