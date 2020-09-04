@@ -9,6 +9,7 @@ use super::{
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 #[cfg(feature = "gzip")]
 use std::io::prelude::*;
 use std::path::PathBuf;
@@ -134,6 +135,10 @@ pub struct Component {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     /// Suggested components to install.
     pub suggestions: Vec<AppId>,
+
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    /// Custom metadata.
+    pub metadata: HashMap<String, Option<String>>,
 }
 
 impl Component {
@@ -644,6 +649,7 @@ mod tests {
             .translation(Translation::Gettext("contrast".into()))
             .launchable(Launchable::DesktopId("org.gnome.design.Contrast.desktop".into()))
             .developer_name(TranslatableString::with_default("Bilal Elmoussaoui"))
+            .metadata("x-appcenter-suggested-price".to_string(), Some("5".to_string()))
             .icon(Icon::Cached {
                 path: "org.gnome.design.Contrast.png".into(),
                 width: Some(64),

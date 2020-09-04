@@ -6,6 +6,7 @@ use super::{
     Screenshot, TranslatableList, TranslatableString, Video,
 };
 use chrono::{DateTime, Utc};
+use std::collections::HashMap;
 use url::Url;
 
 #[derive(Default, Debug)]
@@ -194,6 +195,8 @@ pub struct ComponentBuilder {
     pub source_pkgname: Option<String>,
     /// Suggested components.
     pub suggestions: Vec<AppId>,
+    /// Custom metadata
+    pub metadata: HashMap<String, Option<String>>,
 }
 
 #[allow(dead_code)]
@@ -380,6 +383,12 @@ impl ComponentBuilder {
         self
     }
 
+    /// Adds a new metadata (key, value) to the component.
+    pub fn metadata(mut self, key: String, val: Option<String>) -> Self {
+        self.metadata.insert(key, val);
+        self
+    }
+
     /// Constructs a `Component`.
     pub fn build(self) -> Component {
         Component {
@@ -412,6 +421,7 @@ impl ComponentBuilder {
             translations: self.translations,
             source_pkgname: self.source_pkgname,
             suggestions: self.suggestions,
+            metadata: self.metadata,
         }
     }
 }

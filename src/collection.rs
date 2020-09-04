@@ -262,6 +262,8 @@ mod tests {
                     height: None,
                     url: Url::parse("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap()
                 })
+                .metadata("X-Needs-Dark-Theme".to_string(), None)
+                .metadata("X-Kudo-Popular".to_string(), None)
                 .category(Category::Education)
                 .category(Category::Literature)
                 .keywords(TranslatableList::with_default(vec!["book", "ebook", "reader"]))

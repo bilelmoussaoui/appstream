@@ -49,6 +49,9 @@
     <suggests>
       <id>org.gnome.design.Palette</id>
     </suggests>
+    <metadata>
+      <value key="x-appcenter-suggested-price">5</value>
+    </metadata>
     <keywords>
       <keyword>Color</keyword>
       <keyword>Contrast</keyword>

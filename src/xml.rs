@@ -352,6 +352,20 @@ impl TryFrom<&Element> for Component {
                             )?);
                         }
                     }
+                    "metadata" => {
+                        for child in e.children.iter() {
+                            let child = child
+                                .as_element()
+                                .ok_or_else(|| ParseError::InvalidTag("value".to_string()))?;
+
+                            let key = child.attributes.get("key").ok_or_else(|| {
+                                ParseError::MissingAttribute("key".to_string(), "value".to_string())
+                            })?;
+
+                            let value = child.get_text().map(|v| v.to_string());
+                            component = component.metadata(key.to_string(), value);
+                        }
+                    }
                     _ => (),
                 }
             };
