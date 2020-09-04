@@ -819,6 +819,15 @@
 <span id="819">819</span>
 <span id="820">820</span>
 <span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">component</span>::<span class="ident">Component</span>;
@@ -1017,6 +1026,8 @@
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Suggested components.</span>
     <span class="kw">pub</span> <span class="ident">suggestions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AppId</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Required components.</span>
+    <span class="kw">pub</span> <span class="ident">requirements</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AppId</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Custom metadata</span>
     <span class="kw">pub</span> <span class="ident">metadata</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
@@ -1205,6 +1216,12 @@
         <span class="self">self</span>
     }
 
+    <span class="doccomment">/// Adds a new requirement to the component.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">require</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">AppId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">requirements</span>.<span class="ident">push</span>(<span class="ident">id</span>);
+        <span class="self">self</span>
+    }
+
     <span class="doccomment">/// Adds a new metadata (key, value) to the component.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">String</span>, <span class="ident">val</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">val</span>);
@@ -1243,6 +1260,7 @@
             <span class="ident">translations</span>: <span class="self">self</span>.<span class="ident">translations</span>,
             <span class="ident">source_pkgname</span>: <span class="self">self</span>.<span class="ident">source_pkgname</span>,
             <span class="ident">suggestions</span>: <span class="self">self</span>.<span class="ident">suggestions</span>,
+            <span class="ident">requirements</span>: <span class="self">self</span>.<span class="ident">requirements</span>,
             <span class="ident">metadata</span>: <span class="self">self</span>.<span class="ident">metadata</span>,
         }
     }
