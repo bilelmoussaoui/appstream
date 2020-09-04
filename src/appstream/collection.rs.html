@@ -317,6 +317,8 @@
 <span id="317">317</span>
 <span id="318">318</span>
 <span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
@@ -582,6 +584,8 @@
                     <span class="ident">height</span>: <span class="prelude-val">None</span>,
                     <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png&quot;</span>).<span class="ident">unwrap</span>()
                 })
+                .<span class="ident">metadata</span>(<span class="string">&quot;X-Needs-Dark-Theme&quot;</span>.<span class="ident">to_string</span>(), <span class="prelude-val">None</span>)
+                .<span class="ident">metadata</span>(<span class="string">&quot;X-Kudo-Popular&quot;</span>.<span class="ident">to_string</span>(), <span class="prelude-val">None</span>)
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Education</span>)
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Literature</span>)
                 .<span class="ident">keywords</span>(<span class="ident">TranslatableList</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;book&quot;</span>, <span class="string">&quot;ebook&quot;</span>, <span class="string">&quot;reader&quot;</span>]))

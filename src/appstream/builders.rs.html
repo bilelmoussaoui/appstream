@@ -809,6 +809,16 @@
 <span id="809">809</span>
 <span id="810">810</span>
 <span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">component</span>::<span class="ident">Component</span>;
@@ -818,6 +828,7 @@
     <span class="ident">Screenshot</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>, <span class="ident">Video</span>,
 };
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">Utc</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
@@ -1006,6 +1017,8 @@
     <span class="kw">pub</span> <span class="ident">source_pkgname</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Suggested components.</span>
     <span class="kw">pub</span> <span class="ident">suggestions</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">AppId</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Custom metadata</span>
+    <span class="kw">pub</span> <span class="ident">metadata</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
@@ -1192,6 +1205,12 @@
         <span class="self">self</span>
     }
 
+    <span class="doccomment">/// Adds a new metadata (key, value) to the component.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="ident">String</span>, <span class="ident">val</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">metadata</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">val</span>);
+        <span class="self">self</span>
+    }
+
     <span class="doccomment">/// Constructs a `Component`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Component</span> {
         <span class="ident">Component</span> {
@@ -1224,6 +1243,7 @@
             <span class="ident">translations</span>: <span class="self">self</span>.<span class="ident">translations</span>,
             <span class="ident">source_pkgname</span>: <span class="self">self</span>.<span class="ident">source_pkgname</span>,
             <span class="ident">suggestions</span>: <span class="self">self</span>.<span class="ident">suggestions</span>,
+            <span class="ident">metadata</span>: <span class="self">self</span>.<span class="ident">metadata</span>,
         }
     }
 }
