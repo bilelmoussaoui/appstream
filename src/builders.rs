@@ -192,6 +192,8 @@ pub struct ComponentBuilder {
     pub translations: Vec<Translation>,
     /// The source pkgname, a distributor thing.
     pub source_pkgname: Option<String>,
+    /// Suggested components.
+    pub suggestions: Vec<AppId>,
 }
 
 #[allow(dead_code)]
@@ -273,6 +275,12 @@ impl ComponentBuilder {
     /// Known values includes: GNOME, KDE, XFCE, MATE, LXDE.
     pub fn project_group(mut self, group: &str) -> Self {
         self.project_group = Some(group.to_string());
+        self
+    }
+
+    /// Suggest a component to be installed.
+    pub fn suggest(mut self, id: AppId) -> Self {
+        self.suggestions.push(id);
         self
     }
 
@@ -403,6 +411,7 @@ impl ComponentBuilder {
             provides: self.provides,
             translations: self.translations,
             source_pkgname: self.source_pkgname,
+            suggestions: self.suggestions,
         }
     }
 }

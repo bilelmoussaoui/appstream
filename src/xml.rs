@@ -343,6 +343,15 @@ impl TryFrom<&Element> for Component {
                     "bundle" => {
                         component = component.bundle(Bundle::try_from(e)?);
                     }
+                    "suggests" => {
+                        for child in e.children.iter() {
+                            component = component.suggest(AppId::try_from(
+                                child
+                                    .as_element()
+                                    .ok_or_else(|| ParseError::InvalidTag("id".to_string()))?,
+                            )?);
+                        }
+                    }
                     _ => (),
                 }
             };
@@ -516,11 +525,25 @@ impl TryFrom<&Element> for Language {
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let locale = e.get_text().unwrap().into_owned();
 
-        let percentage = e
-            .attributes
-            .get("percentage")
-            .map(|p| p.parse::<u32>().unwrap());
-        Ok(Self { locale, percentage })
+        match e.attributes.get("percentage") {
+            Some(p) => {
+                let percentage = p.parse::<u32>().map_err(|_| {
+                    ParseError::InvalidValue(
+                        p.to_string(),
+                        "percentage".to_string(),
+                        "language".to_string(),
+                    )
+                })?;
+                Ok(Self {
+                    locale,
+                    percentage: Some(percentage),
+                })
+            }
+            None => Ok(Self {
+                locale,
+                percentage: None,
+            }),
+        }
     }
 }
 

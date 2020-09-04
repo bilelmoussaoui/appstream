@@ -130,6 +130,10 @@ pub struct Component {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     /// Specifies the translation domains.
     pub translations: Vec<Translation>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Suggested components to install.
+    pub suggestions: Vec<AppId>,
 }
 
 impl Component {
@@ -627,6 +631,7 @@ mod tests {
             .kudo(Kudo::HiDpiIcon)
             .kudo(Kudo::HighContrast)
             .kudo(Kudo::ModernToolkit)
+            .suggest("org.gnome.design.Palette".into())
             .bundle(Bundle::Flatpak {
                 runtime: Some("org.gnome.Platform/x86_64/3.36".into()),
                 sdk: "org.gnome.Sdk/x86_64/3.36".into(),

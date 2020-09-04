@@ -46,6 +46,9 @@
     <categories>
       <category>Utility</category>
     </categories>
+    <suggests>
+      <id>org.gnome.design.Palette</id>
+    </suggests>
     <keywords>
       <keyword>Color</keyword>
       <keyword>Contrast</keyword>

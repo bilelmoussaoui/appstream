@@ -27,7 +27,7 @@ pub enum ParseError {
     /// Required tag is missing.
     MissingTag(String),
 
-    #[error("Missing attribute: {0} for tag: {1}")]
+    #[error("Missing attribute {0} required by tag {1}")]
     /// A required attribute is missing.
     MissingAttribute(String, String),
 
@@ -35,7 +35,7 @@ pub enum ParseError {
     /// A missing value that's required.
     MissingValue(String),
 
-    #[error("Invalid value: {0} for attribute {1} for tag {2}")]
+    #[error("Invalid value {0} passed to attribute {1} for tag {2}")]
     /// A value passed to an attribute for a specific tag is invalid.
     InvalidValue(String, String, String),
 }
