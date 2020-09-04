@@ -195,6 +195,8 @@ pub struct ComponentBuilder {
     pub source_pkgname: Option<String>,
     /// Suggested components.
     pub suggestions: Vec<AppId>,
+    /// Required components.
+    pub requirements: Vec<AppId>,
     /// Custom metadata
     pub metadata: HashMap<String, Option<String>>,
 }
@@ -383,6 +385,12 @@ impl ComponentBuilder {
         self
     }
 
+    /// Adds a new requirement to the component.
+    pub fn require(mut self, id: AppId) -> Self {
+        self.requirements.push(id);
+        self
+    }
+
     /// Adds a new metadata (key, value) to the component.
     pub fn metadata(mut self, key: String, val: Option<String>) -> Self {
         self.metadata.insert(key, val);
@@ -421,6 +429,7 @@ impl ComponentBuilder {
             translations: self.translations,
             source_pkgname: self.source_pkgname,
             suggestions: self.suggestions,
+            requirements: self.requirements,
             metadata: self.metadata,
         }
     }

@@ -52,6 +52,9 @@
     <metadata>
       <value key="x-appcenter-suggested-price">5</value>
     </metadata>
+    <requires>
+      <id>org.gnome.design.AppIconPreview</id>
+    </requires>
     <keywords>
       <keyword>Color</keyword>
       <keyword>Contrast</keyword>

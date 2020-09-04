@@ -366,6 +366,15 @@ impl TryFrom<&Element> for Component {
                             component = component.metadata(key.to_string(), value);
                         }
                     }
+                    "requires" => {
+                        for child in e.children.iter() {
+                            component = component.require(AppId::try_from(
+                                child
+                                    .as_element()
+                                    .ok_or_else(|| ParseError::InvalidTag("id".to_string()))?,
+                            )?);
+                        }
+                    }
                     _ => (),
                 }
             };

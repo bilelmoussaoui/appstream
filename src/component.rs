@@ -136,6 +136,10 @@ pub struct Component {
     /// Suggested components to install.
     pub suggestions: Vec<AppId>,
 
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Required components.
+    pub requirements: Vec<AppId>,
+
     #[serde(default, skip_serializing_if = "HashMap::is_empty")]
     /// Custom metadata.
     pub metadata: HashMap<String, Option<String>>,
@@ -637,6 +641,7 @@ mod tests {
             .kudo(Kudo::HighContrast)
             .kudo(Kudo::ModernToolkit)
             .suggest("org.gnome.design.Palette".into())
+            .require("org.gnome.design.AppIconPreview".into())
             .bundle(Bundle::Flatpak {
                 runtime: Some("org.gnome.Platform/x86_64/3.36".into()),
                 sdk: "org.gnome.Sdk/x86_64/3.36".into(),
