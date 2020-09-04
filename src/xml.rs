@@ -20,6 +20,16 @@ use super::{
 };
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 
+fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
+    Utc.datetime_from_str(&date, "%s").or_else(
+        |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
+            let date: NaiveDateTime =
+                NaiveDate::parse_from_str(&date, "%Y-%m-%d")?.and_hms(0, 0, 0);
+            Ok(DateTime::<Utc>::from_utc(date, Utc))
+        },
+    )
+}
+
 impl TryFrom<&Element> for AppId {
     type Error = ParseError;
 
@@ -103,6 +113,31 @@ impl TryFrom<&Element> for Bundle {
             None => Err(ParseError::MissingAttribute(
                 "type".to_string(),
                 "bundle".to_string(),
+            )),
+        }
+    }
+}
+
+impl TryFrom<&Element> for Checksum {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        let val = e.get_text().unwrap().into_owned();
+        match e.attributes.get("type").as_deref() {
+            Some(t) => match t.as_str() {
+                "sha1" => Ok(Checksum::Sha1(val)),
+                "sha256" => Ok(Checksum::Sha256(val)),
+                "blake2b" => Ok(Checksum::Blake2b(val)),
+                "blake2s" => Ok(Checksum::Blake2s(val)),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "checksum".to_string(),
+                )),
+            },
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "provide".to_string(),
             )),
         }
     }
@@ -195,13 +230,20 @@ impl TryFrom<&Element> for Component {
                     }
                     "categories" => {
                         for child in e.children.iter() {
-                            component = component.category(Category::from_str(
-                                &child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::InvalidTag("category".to_string()))?
-                                    .get_text()
-                                    .unwrap()
-                                    .to_string(),
+                            let category = child
+                                .as_element()
+                                .ok_or_else(|| ParseError::InvalidTag("category".to_string()))?
+                                .get_text()
+                                .unwrap()
+                                .to_string();
+                            component = component.category(Category::from_str(&category).map_err(
+                                |_| {
+                                    ParseError::InvalidValue(
+                                        category,
+                                        "$value".to_string(),
+                                        "category".to_string(),
+                                    )
+                                },
                             )?);
                         }
                     }
@@ -219,14 +261,19 @@ impl TryFrom<&Element> for Component {
                     }
                     "kudos" => {
                         for child in e.children.iter() {
-                            component = component.kudo(Kudo::from_str(
-                                &child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::InvalidTag("kudo".to_string()))?
-                                    .get_text()
-                                    .unwrap()
-                                    .to_string(),
-                            )?);
+                            let kudo = child
+                                .as_element()
+                                .ok_or_else(|| ParseError::InvalidTag("kudo".to_string()))?
+                                .get_text()
+                                .unwrap()
+                                .to_string();
+                            component = component.kudo(Kudo::from_str(&kudo).map_err(|_| {
+                                ParseError::InvalidValue(
+                                    kudo,
+                                    "$value".to_string(),
+                                    "kudo".to_string(),
+                                )
+                            })?);
                         }
                     }
                     "mimetypes" => {
@@ -311,6 +358,86 @@ impl TryFrom<&Element> for Component {
     }
 }
 
+impl TryFrom<&Element> for ContentRating {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        let version: ContentRatingVersion = match e.attributes.get("type") {
+            Some(t) => match t.as_str() {
+                "oars-1.0" => ContentRatingVersion::Oars1_0,
+                "oars-1.1" => ContentRatingVersion::Oars1_1,
+                _ => ContentRatingVersion::Unknown,
+            },
+            None => ContentRatingVersion::Unknown,
+        };
+
+        let mut attributes: Vec<ContentAttribute> = Vec::new();
+        for child in e.children.iter() {
+            attributes.push(ContentAttribute::try_from(child.as_element().ok_or_else(
+                || ParseError::InvalidTag("content-attribute".to_string()),
+            )?)?);
+        }
+        Ok(Self {
+            version,
+            attributes,
+        })
+    }
+}
+
+impl TryFrom<&Element> for ContentAttribute {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        let val = e.get_text().unwrap().into_owned();
+
+        let val = ContentState::from_str(&val).map_err(|_| {
+            ParseError::InvalidValue(val, "$value".to_string(), "content-attribute".to_string())
+        })?;
+
+        match e.attributes.get("id").as_deref() {
+            Some(t) => match t.as_str() {
+                "violence-cartoon" => Ok(ContentAttribute::ViolenceCartoon(val)),
+                "violence-fantasy" => Ok(ContentAttribute::ViolenceFantasy(val)),
+                "violence-bloodshed" => Ok(ContentAttribute::ViolenceBloodshed(val)),
+                "violence-sexual" => Ok(ContentAttribute::ViolenceSexual(val)),
+                "violence-desecration" => Ok(ContentAttribute::ViolenceDesecration(val)),
+                "violence-slavery" => Ok(ContentAttribute::ViolenceSlavery(val)),
+                "violence-realistic" => Ok(ContentAttribute::ViolenceRealistic(val)),
+                "violence-worship" => Ok(ContentAttribute::ViolenceWorship(val)),
+                "drugs-alcohol" => Ok(ContentAttribute::DrugsAlcohol(val)),
+                "drugs-narcotics" => Ok(ContentAttribute::DrugsNarcotics(val)),
+                "drugs-tobacco" => Ok(ContentAttribute::DrugsTobacco(val)),
+                "sex-nudity" => Ok(ContentAttribute::SexNudity(val)),
+                "sex-themes" => Ok(ContentAttribute::SexThemes(val)),
+                "sex-homosexuality" => Ok(ContentAttribute::SexHomosexuality(val)),
+                "sex-prostitution" => Ok(ContentAttribute::SexProstitution(val)),
+                "sex-adultery" => Ok(ContentAttribute::SexAdultery(val)),
+                "sex-appearance" => Ok(ContentAttribute::SexAppearance(val)),
+                "language-profanity" => Ok(ContentAttribute::LanguageProfanity(val)),
+                "language-humor" => Ok(ContentAttribute::LanguageHumor(val)),
+                "language-discrimination" => Ok(ContentAttribute::LanguageDiscrimination(val)),
+                "social-chat" => Ok(ContentAttribute::SocialChat(val)),
+                "social-info" => Ok(ContentAttribute::SocialInfo(val)),
+                "social-audio" => Ok(ContentAttribute::SocialAudio(val)),
+                "social-location" => Ok(ContentAttribute::SocialLocation(val)),
+                "social-contacts" => Ok(ContentAttribute::SocialContacts(val)),
+                "money-advertising" => Ok(ContentAttribute::MoneyAdvertising(val)),
+                "money-purchasing" => Ok(ContentAttribute::MoneyPurchasing(val)),
+                "money-gambling" => Ok(ContentAttribute::MoneyGambling(val)),
+                id => Err(ParseError::InvalidValue(
+                    id.to_string(),
+                    "id".to_string(),
+                    "content-attribute".to_string(),
+                )),
+            },
+            None => Err(ParseError::MissingAttribute(
+                "id".to_string(),
+                "content-attribute".to_string(),
+            )),
+        }
+    }
+}
+
 impl TryFrom<&Element> for Icon {
     type Error = ParseError;
 
@@ -351,6 +478,38 @@ impl TryFrom<&Element> for Icon {
     }
 }
 
+impl TryFrom<&Element> for Image {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        let url = Url::parse(&e.get_text().unwrap().into_owned())?;
+        let mut img = ImageBuilder::new(url);
+
+        let kind = match e.attributes.get("type") {
+            Some(t) => ImageKind::from_str(t).map_err(|_| {
+                ParseError::InvalidValue(t.to_string(), "type".to_string(), "image".to_string())
+            })?,
+            None => ImageKind::Source,
+        };
+
+        img = img.kind(kind);
+
+        if let Some(w) = e.attributes.get("width") {
+            img = img.width(w.parse::<u32>().map_err(|_| {
+                ParseError::InvalidValue(w.to_string(), "width".to_string(), "image".to_string())
+            })?);
+        }
+
+        if let Some(h) = e.attributes.get("height") {
+            img = img.height(h.parse::<u32>().map_err(|_| {
+                ParseError::InvalidValue(h.to_string(), "height".to_string(), "image".to_string())
+            })?);
+        }
+
+        Ok(img.build())
+    }
+}
+
 impl TryFrom<&Element> for Language {
     type Error = ParseError;
 
@@ -362,54 +521,6 @@ impl TryFrom<&Element> for Language {
             .get("percentage")
             .map(|p| p.parse::<u32>().unwrap());
         Ok(Self { locale, percentage })
-    }
-}
-
-impl TryFrom<&Element> for Checksum {
-    type Error = ParseError;
-
-    fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
-        match e.attributes.get("type").as_deref() {
-            Some(t) => match t.as_str() {
-                "sha1" => Ok(Checksum::Sha1(val)),
-                "sha256" => Ok(Checksum::Sha256(val)),
-                "blake2b" => Ok(Checksum::Blake2b(val)),
-                "blake2s" => Ok(Checksum::Blake2s(val)),
-                _ => Err(ParseError::InvalidValue(
-                    t.to_string(),
-                    "type".to_string(),
-                    "checksum".to_string(),
-                )),
-            },
-            None => Err(ParseError::MissingAttribute(
-                "type".to_string(),
-                "provide".to_string(),
-            )),
-        }
-    }
-}
-
-impl TryFrom<&Element> for Translation {
-    type Error = ParseError;
-
-    fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap_or_default().into_owned();
-        match e.attributes.get("type").as_deref() {
-            Some(t) => match t.as_str() {
-                "gettext" => Ok(Translation::Gettext(val)),
-                "qt" => Ok(Translation::Qt(val)),
-                _ => Err(ParseError::InvalidValue(
-                    t.to_string(),
-                    "type".to_string(),
-                    "translation".to_string(),
-                )),
-            },
-            None => Err(ParseError::MissingAttribute(
-                "type".to_string(),
-                "translation".to_string(),
-            )),
-        }
     }
 }
 
@@ -510,16 +621,6 @@ impl TryFrom<&Element> for Provide {
             )),
         }
     }
-}
-
-fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
-    Utc.datetime_from_str(&date, "%s").or_else(
-        |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
-            let date: NaiveDateTime =
-                NaiveDate::parse_from_str(&date, "%Y-%m-%d")?.and_hms(0, 0, 0);
-            Ok(DateTime::<Utc>::from_utc(date, Utc))
-        },
-    )
 }
 
 impl TryFrom<&Element> for Release {
@@ -624,36 +725,6 @@ impl TryFrom<&Element> for Release {
     }
 }
 
-impl TryFrom<&Element> for Size {
-    type Error = ParseError;
-
-    fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e
-            .get_text()
-            .ok_or_else(|| ParseError::MissingValue("size".to_string()))?
-            .into_owned();
-
-        match e.attributes.get("type").as_deref() {
-            Some(t) => match t.as_str() {
-                "download" => Ok(Size::Download(val.parse::<u64>().map_err(|_| {
-                    ParseError::InvalidValue(val, "download".to_string(), "size".to_string())
-                })?)),
-                "installed" => Ok(Size::Installed(val.parse::<u64>().map_err(|_| {
-                    ParseError::InvalidValue(val, "installed".to_string(), "size".to_string())
-                })?)),
-                _ => Err(ParseError::InvalidValue(
-                    t.to_string(),
-                    "type".to_string(),
-                    "size".to_string(),
-                )),
-            },
-            None => Err(ParseError::MissingAttribute(
-                "type".to_string(),
-                "size".to_string(),
-            )),
-        }
-    }
-}
 impl TryFrom<&Element> for Screenshot {
     type Error = ParseError;
 
@@ -685,33 +756,57 @@ impl TryFrom<&Element> for Screenshot {
     }
 }
 
-impl TryFrom<&Element> for Image {
+impl TryFrom<&Element> for Size {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let url = Url::parse(&e.get_text().unwrap().into_owned())?;
-        let mut img = ImageBuilder::new(url);
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("size".to_string()))?
+            .into_owned();
 
-        let kind = match e.attributes.get("type") {
-            Some(t) => ImageKind::from_str(t)?,
-            None => ImageKind::Source,
-        };
-
-        img = img.kind(kind);
-
-        if let Some(w) = e.attributes.get("width") {
-            img = img.width(w.parse::<u32>().map_err(|_| {
-                ParseError::InvalidValue(w.to_string(), "width".to_string(), "image".to_string())
-            })?);
+        match e.attributes.get("type").as_deref() {
+            Some(t) => match t.as_str() {
+                "download" => Ok(Size::Download(val.parse::<u64>().map_err(|_| {
+                    ParseError::InvalidValue(val, "download".to_string(), "size".to_string())
+                })?)),
+                "installed" => Ok(Size::Installed(val.parse::<u64>().map_err(|_| {
+                    ParseError::InvalidValue(val, "installed".to_string(), "size".to_string())
+                })?)),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "size".to_string(),
+                )),
+            },
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "size".to_string(),
+            )),
         }
+    }
+}
 
-        if let Some(h) = e.attributes.get("height") {
-            img = img.height(h.parse::<u32>().map_err(|_| {
-                ParseError::InvalidValue(h.to_string(), "height".to_string(), "image".to_string())
-            })?);
+impl TryFrom<&Element> for Translation {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        let val = e.get_text().unwrap_or_default().into_owned();
+        match e.attributes.get("type").as_deref() {
+            Some(t) => match t.as_str() {
+                "gettext" => Ok(Translation::Gettext(val)),
+                "qt" => Ok(Translation::Qt(val)),
+                _ => Err(ParseError::InvalidValue(
+                    t.to_string(),
+                    "type".to_string(),
+                    "translation".to_string(),
+                )),
+            },
+            None => Err(ParseError::MissingAttribute(
+                "type".to_string(),
+                "translation".to_string(),
+            )),
         }
-
-        Ok(img.build())
     }
 }
 
@@ -743,85 +838,5 @@ impl TryFrom<&Element> for Video {
         }
 
         Ok(video.build())
-    }
-}
-
-impl TryFrom<&Element> for ContentRating {
-    type Error = ParseError;
-
-    fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let version: ContentRatingVersion = match e.attributes.get("type") {
-            Some(t) => match t.as_str() {
-                "oars-1.0" => ContentRatingVersion::Oars1_0,
-                "oars-1.1" => ContentRatingVersion::Oars1_1,
-                _ => ContentRatingVersion::Unknown,
-            },
-            None => ContentRatingVersion::Unknown,
-        };
-
-        let mut attributes: Vec<ContentAttribute> = Vec::new();
-        for child in e.children.iter() {
-            attributes.push(ContentAttribute::try_from(child.as_element().ok_or_else(
-                || ParseError::InvalidTag("content-attribute".to_string()),
-            )?)?);
-        }
-        Ok(Self {
-            version,
-            attributes,
-        })
-    }
-}
-
-impl TryFrom<&Element> for ContentAttribute {
-    type Error = ParseError;
-
-    fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
-
-        let val = ContentState::from_str(&val).map_err(|_| {
-            ParseError::InvalidValue(val, "$value".to_string(), "content-attribute".to_string())
-        })?;
-
-        match e.attributes.get("id").as_deref() {
-            Some(t) => match t.as_str() {
-                "violence-cartoon" => Ok(ContentAttribute::ViolenceCartoon(val)),
-                "violence-fantasy" => Ok(ContentAttribute::ViolenceFantasy(val)),
-                "violence-bloodshed" => Ok(ContentAttribute::ViolenceBloodshed(val)),
-                "violence-sexual" => Ok(ContentAttribute::ViolenceSexual(val)),
-                "violence-desecration" => Ok(ContentAttribute::ViolenceDesecration(val)),
-                "violence-slavery" => Ok(ContentAttribute::ViolenceSlavery(val)),
-                "violence-realistic" => Ok(ContentAttribute::ViolenceRealistic(val)),
-                "violence-worship" => Ok(ContentAttribute::ViolenceWorship(val)),
-                "drugs-alcohol" => Ok(ContentAttribute::DrugsAlcohol(val)),
-                "drugs-narcotics" => Ok(ContentAttribute::DrugsNarcotics(val)),
-                "drugs-tobacco" => Ok(ContentAttribute::DrugsTobacco(val)),
-                "sex-nudity" => Ok(ContentAttribute::SexNudity(val)),
-                "sex-themes" => Ok(ContentAttribute::SexThemes(val)),
-                "sex-homosexuality" => Ok(ContentAttribute::SexHomosexuality(val)),
-                "sex-prostitution" => Ok(ContentAttribute::SexProstitution(val)),
-                "sex-adultery" => Ok(ContentAttribute::SexAdultery(val)),
-                "sex-appearance" => Ok(ContentAttribute::SexAppearance(val)),
-                "language-profanity" => Ok(ContentAttribute::LanguageProfanity(val)),
-                "language-humor" => Ok(ContentAttribute::LanguageHumor(val)),
-                "language-discrimination" => Ok(ContentAttribute::LanguageDiscrimination(val)),
-                "social-chat" => Ok(ContentAttribute::SocialChat(val)),
-                "social-info" => Ok(ContentAttribute::SocialInfo(val)),
-                "social-audio" => Ok(ContentAttribute::SocialAudio(val)),
-                "social-location" => Ok(ContentAttribute::SocialLocation(val)),
-                "social-contacts" => Ok(ContentAttribute::SocialContacts(val)),
-                "money-advertising" => Ok(ContentAttribute::MoneyAdvertising(val)),
-                "money-purchasing" => Ok(ContentAttribute::MoneyPurchasing(val)),
-                "money-gambling" => Ok(ContentAttribute::MoneyGambling(val)),
-                id => Err(ParseError::InvalidValue(
-                    id.to_string(),
-                    "id".to_string(),
-                    "content-attribute".to_string(),
-                )),
-            },
-            None => Err(ParseError::MissingAttribute(
-                "id".to_string(),
-                "content-attribute".to_string(),
-            )),
-        }
     }
 }

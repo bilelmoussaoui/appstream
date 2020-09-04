@@ -7,10 +7,6 @@ pub enum ParseError {
     /// Xml error.
     XmlParserError(#[from] xmltree::ParseError),
 
-    #[error("strum error: {0}")]
-    /// Strum error.
-    StrumParseError(#[from] strum::ParseError),
-
     #[error("URL parser error: {0}")]
     /// url failed to parse a URL.
     UrlParseError(#[from] url::ParseError),

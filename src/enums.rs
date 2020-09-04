@@ -642,6 +642,17 @@ impl Default for ContentState {
     }
 }
 
+#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Deserialize, Serialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
+/// Defines the firmware type.
+pub enum FirmwareKind {
+    /// A flashed firmware.
+    Flashed,
+    /// A runtime firmware.
+    Runtime,
+}
+
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase", tag = "type")]
 /// Defines a component icon.
@@ -896,68 +907,6 @@ impl Serialize for ProjectUrl {
     }
 }
 
-#[derive(Clone, Copy, Debug, ToString, EnumString, AsRefStr, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "lowercase")]
-#[strum(serialize_all = "lowercase")]
-/// Classifies the release into stable/development.
-/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
-pub enum ReleaseKind {
-    /// A stable release.
-    Stable,
-    /// A development release, not intended to be installed by users.
-    Development,
-}
-
-impl Default for ReleaseKind {
-    fn default() -> Self {
-        ReleaseKind::Stable
-    }
-}
-
-#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(tag = "type", content = "$value", rename_all = "kebab-case")]
-#[non_exhaustive]
-/// Defines the download and installed size of a `Component` or `Artifact`.
-pub enum Size {
-    /// The downloaded size is bytes.
-    Download(u64),
-    /// The installed size in bytes.
-    Installed(u64),
-}
-
-#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "lowercase")]
-#[strum(serialize_all = "lowercase")]
-/// Defines how important is to install the new release as un update.
-/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
-pub enum ReleaseUrgency {
-    /// Low urgency.
-    Low,
-    /// Medium urgency.
-    Medium,
-    /// High urgency.
-    High,
-    /// Critical urgency.
-    Critical,
-}
-
-impl Default for ReleaseUrgency {
-    fn default() -> Self {
-        ReleaseUrgency::Medium
-    }
-}
-
-#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Deserialize, Serialize, PartialEq)]
-#[serde(rename_all = "lowercase")]
-#[strum(serialize_all = "lowercase")]
-/// Defines the firmware type.
-pub enum FirmwareKind {
-    /// A flashed firmware.
-    Flashed,
-    /// A runtime firmware.
-    Runtime,
-}
-
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 /// Describes the public interfaces the component provides.
@@ -990,6 +939,57 @@ pub enum Provide {
     Id(AppId),
     /// Required only for Codec components.
     Codec(String),
+}
+
+#[derive(Clone, Copy, Debug, ToString, EnumString, AsRefStr, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
+/// Classifies the release into stable/development.
+/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
+pub enum ReleaseKind {
+    /// A stable release.
+    Stable,
+    /// A development release, not intended to be installed by users.
+    Development,
+}
+
+impl Default for ReleaseKind {
+    fn default() -> Self {
+        ReleaseKind::Stable
+    }
+}
+
+#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
+/// Defines how important is to install the new release as un update.
+/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
+pub enum ReleaseUrgency {
+    /// Low urgency.
+    Low,
+    /// Medium urgency.
+    Medium,
+    /// High urgency.
+    High,
+    /// Critical urgency.
+    Critical,
+}
+
+impl Default for ReleaseUrgency {
+    fn default() -> Self {
+        ReleaseUrgency::Medium
+    }
+}
+
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
+#[serde(tag = "type", content = "$value", rename_all = "kebab-case")]
+#[non_exhaustive]
+/// Defines the download and installed size of a `Component` or `Artifact`.
+pub enum Size {
+    /// The downloaded size is bytes.
+    Download(u64),
+    /// The installed size in bytes.
+    Installed(u64),
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
