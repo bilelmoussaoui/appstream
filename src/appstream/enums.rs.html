@@ -1650,6 +1650,17 @@
     }
 }
 
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="doccomment">/// Defines the firmware type.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FirmwareKind</span> {
+    <span class="doccomment">/// A flashed firmware.</span>
+    <span class="ident">Flashed</span>,
+    <span class="doccomment">/// A runtime firmware.</span>
+    <span class="ident">Runtime</span>,
+}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>, <span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>)]</span>
 <span class="doccomment">/// Defines a component icon.</span>
@@ -1904,68 +1915,6 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">ToString</span>, <span class="ident">EnumString</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="doccomment">/// Classifies the release into stable/development.</span>
-<span class="doccomment">/// See [\&lt;releases\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReleaseKind</span> {
-    <span class="doccomment">/// A stable release.</span>
-    <span class="ident">Stable</span>,
-    <span class="doccomment">/// A development release, not intended to be installed by users.</span>
-    <span class="ident">Development</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ReleaseKind</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">ReleaseKind</span>::<span class="ident">Stable</span>
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;$value&quot;</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
-<span class="doccomment">/// Defines the download and installed size of a `Component` or `Artifact`.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Size</span> {
-    <span class="doccomment">/// The downloaded size is bytes.</span>
-    <span class="ident">Download</span>(<span class="ident">u64</span>),
-    <span class="doccomment">/// The installed size in bytes.</span>
-    <span class="ident">Installed</span>(<span class="ident">u64</span>),
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="doccomment">/// Defines how important is to install the new release as un update.</span>
-<span class="doccomment">/// See [\&lt;releases\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReleaseUrgency</span> {
-    <span class="doccomment">/// Low urgency.</span>
-    <span class="ident">Low</span>,
-    <span class="doccomment">/// Medium urgency.</span>
-    <span class="ident">Medium</span>,
-    <span class="doccomment">/// High urgency.</span>
-    <span class="ident">High</span>,
-    <span class="doccomment">/// Critical urgency.</span>
-    <span class="ident">Critical</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ReleaseUrgency</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="ident">ReleaseUrgency</span>::<span class="ident">Medium</span>
-    }
-}
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
-<span class="doccomment">/// Defines the firmware type.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">FirmwareKind</span> {
-    <span class="doccomment">/// A flashed firmware.</span>
-    <span class="ident">Flashed</span>,
-    <span class="doccomment">/// A runtime firmware.</span>
-    <span class="ident">Runtime</span>,
-}
-
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="doccomment">/// Describes the public interfaces the component provides.</span>
@@ -1998,6 +1947,57 @@
     <span class="ident">Id</span>(<span class="ident">AppId</span>),
     <span class="doccomment">/// Required only for Codec components.</span>
     <span class="ident">Codec</span>(<span class="ident">String</span>),
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">ToString</span>, <span class="ident">EnumString</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="doccomment">/// Classifies the release into stable/development.</span>
+<span class="doccomment">/// See [\&lt;releases\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReleaseKind</span> {
+    <span class="doccomment">/// A stable release.</span>
+    <span class="ident">Stable</span>,
+    <span class="doccomment">/// A development release, not intended to be installed by users.</span>
+    <span class="ident">Development</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ReleaseKind</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">ReleaseKind</span>::<span class="ident">Stable</span>
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
+<span class="doccomment">/// Defines how important is to install the new release as un update.</span>
+<span class="doccomment">/// See [\&lt;releases\/\&gt;](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ReleaseUrgency</span> {
+    <span class="doccomment">/// Low urgency.</span>
+    <span class="ident">Low</span>,
+    <span class="doccomment">/// Medium urgency.</span>
+    <span class="ident">Medium</span>,
+    <span class="doccomment">/// High urgency.</span>
+    <span class="ident">High</span>,
+    <span class="doccomment">/// Critical urgency.</span>
+    <span class="ident">Critical</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">ReleaseUrgency</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident">ReleaseUrgency</span>::<span class="ident">Medium</span>
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">tag</span> <span class="op">=</span> <span class="string">&quot;type&quot;</span>, <span class="ident">content</span> <span class="op">=</span> <span class="string">&quot;$value&quot;</span>, <span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
+<span class="doccomment">/// Defines the download and installed size of a `Component` or `Artifact`.</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Size</span> {
+    <span class="doccomment">/// The downloaded size is bytes.</span>
+    <span class="ident">Download</span>(<span class="ident">u64</span>),
+    <span class="doccomment">/// The installed size in bytes.</span>
+    <span class="ident">Installed</span>(<span class="ident">u64</span>),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>

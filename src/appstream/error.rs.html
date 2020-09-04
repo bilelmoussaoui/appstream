@@ -39,10 +39,6 @@
 <span id="39">39</span>
 <span id="40">40</span>
 <span id="41">41</span>
-<span id="42">42</span>
-<span id="43">43</span>
-<span id="44">44</span>
-<span id="45">45</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">thiserror</span>::<span class="ident">Error</span>;
 
@@ -52,10 +48,6 @@
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;XML parser error: {0}&quot;</span>)]</span>
     <span class="doccomment">/// Xml error.</span>
     <span class="ident">XmlParserError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">xmltree</span>::<span class="ident">ParseError</span>),
-
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;strum error: {0}&quot;</span>)]</span>
-    <span class="doccomment">/// Strum error.</span>
-    <span class="ident">StrumParseError</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">strum</span>::<span class="ident">ParseError</span>),
 
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;URL parser error: {0}&quot;</span>)]</span>
     <span class="doccomment">/// url failed to parse a URL.</span>
