@@ -840,6 +840,29 @@
 <span id="840">840</span>
 <span id="841">841</span>
 <span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Collection</span>, <span class="ident">Component</span>};
@@ -1186,6 +1209,15 @@
                     <span class="string">&quot;bundle&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">bundle</span>(<span class="ident">Bundle</span>::<span class="ident">try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
+                    <span class="string">&quot;suggests&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
+                            <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">suggest</span>(<span class="ident">AppId</span>::<span class="ident">try_from</span>(
+                                <span class="ident">child</span>
+                                    .<span class="ident">as_element</span>()
+                                    .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError</span>::<span class="ident">InvalidTag</span>(<span class="string">&quot;id&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>,
+                            )<span class="question-mark">?</span>);
+                        }
+                    }
                     <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
                 }
             };
@@ -1359,11 +1391,25 @@
     <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">get_text</span>().<span class="ident">unwrap</span>().<span class="ident">into_owned</span>();
 
-        <span class="kw">let</span> <span class="ident">percentage</span> <span class="op">=</span> <span class="ident">e</span>
-            .<span class="ident">attributes</span>
-            .<span class="ident">get</span>(<span class="string">&quot;percentage&quot;</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="ident">p</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>());
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> { <span class="ident">locale</span>, <span class="ident">percentage</span> })
+        <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;percentage&quot;</span>) {
+            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="kw">let</span> <span class="ident">percentage</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+                    <span class="ident">ParseError</span>::<span class="ident">InvalidValue</span>(
+                        <span class="ident">p</span>.<span class="ident">to_string</span>(),
+                        <span class="string">&quot;percentage&quot;</span>.<span class="ident">to_string</span>(),
+                        <span class="string">&quot;language&quot;</span>.<span class="ident">to_string</span>(),
+                    )
+                })<span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+                    <span class="ident">locale</span>,
+                    <span class="ident">percentage</span>: <span class="prelude-val">Some</span>(<span class="ident">percentage</span>),
+                })
+            }
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+                <span class="ident">locale</span>,
+                <span class="ident">percentage</span>: <span class="prelude-val">None</span>,
+            }),
+        }
     }
 }
 
