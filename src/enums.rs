@@ -774,46 +774,53 @@ impl Serialize for Icon {
     where
         S: Serializer,
     {
+        let mut s = serializer.serialize_struct("icon", 4)?;
+        let mut w: &Option<u32> = &None;
+        let mut h: &Option<u32> = &None;
+
         match self {
             Icon::Stock(path) => {
-                let mut s = serializer.serialize_struct("icon", 2)?;
                 s.serialize_field("type", "stock")?;
                 s.serialize_field("name", &path)?;
-                s.end()
             }
             Icon::Remote { url, width, height } => {
-                let mut s = serializer.serialize_struct("icon", 4)?;
                 s.serialize_field("type", "remote")?;
                 s.serialize_field("url", &url)?;
-                s.serialize_field("width", &width)?;
-                s.serialize_field("height", &height)?;
-                s.end()
+                w = width;
+                h = height;
             }
             Icon::Cached {
                 path,
                 width,
                 height,
             } => {
-                let mut s = serializer.serialize_struct("icon", 4)?;
                 s.serialize_field("type", "cached")?;
                 s.serialize_field("path", &path)?;
-                s.serialize_field("width", &width)?;
-                s.serialize_field("height", &height)?;
-                s.end()
+                w = width;
+                h = height;
             }
             Icon::Local {
                 path,
                 width,
                 height,
             } => {
-                let mut s = serializer.serialize_struct("icon", 4)?;
                 s.serialize_field("type", "local")?;
                 s.serialize_field("path", &path)?;
-                s.serialize_field("width", &width)?;
-                s.serialize_field("height", &height)?;
-                s.end()
+                w = width;
+                h = height;
             }
-        }
+        };
+
+        match w {
+            Some(v) => s.serialize_field("width", v)?,
+            None => s.skip_field("width")?,
+        };
+
+        match h {
+            Some(v) => s.serialize_field("height", v)?,
+            None => s.skip_field("height")?,
+        };
+        s.end()
     }
 }
 
