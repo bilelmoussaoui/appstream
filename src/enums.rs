@@ -1,8 +1,12 @@
 use super::error::ParseError;
 use super::AppId;
 use serde::ser::{SerializeMap, SerializeStruct};
-use serde::{Deserialize, Serialize, Serializer};
+use serde::{
+    de::{self, Deserializer, MapAccess, Visitor},
+    Deserialize, Serialize, Serializer,
+};
 use std::cmp::{Ord, Ordering};
+use std::fmt;
 use std::path::PathBuf;
 use std::str::FromStr;
 use strum_macros::{AsRefStr, EnumString, ToString};
@@ -653,8 +657,7 @@ pub enum FirmwareKind {
     Runtime,
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq)]
-#[serde(rename_all = "lowercase", tag = "type")]
+#[derive(Clone, Debug, PartialEq)]
 /// Defines a component icon.
 /// See [\<icon\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-icon).
 pub enum Icon {
@@ -664,10 +667,8 @@ pub enum Icon {
     Cached {
         /// The icon path.
         path: PathBuf,
-        #[serde(skip_serializing_if = "Option::is_none")]
         /// The icon width.
         width: Option<u32>,
-        #[serde(skip_serializing_if = "Option::is_none")]
         /// The icon height.
         height: Option<u32>,
     },
@@ -675,10 +676,8 @@ pub enum Icon {
     Remote {
         /// The icon URL.
         url: Url,
-        #[serde(skip_serializing_if = "Option::is_none")]
         /// The icon width.
         width: Option<u32>,
-        #[serde(skip_serializing_if = "Option::is_none")]
         /// The icon height.
         height: Option<u32>,
     },
@@ -686,13 +685,88 @@ pub enum Icon {
     Local {
         /// The icon path.
         path: PathBuf,
-        #[serde(skip_serializing_if = "Option::is_none")]
         /// The icon width.
         width: Option<u32>,
-        #[serde(skip_serializing_if = "Option::is_none")]
         /// The icon height.
         height: Option<u32>,
     },
+}
+
+impl<'de> Deserialize<'de> for Icon {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct IconVisitor;
+
+        impl<'de> Visitor<'de> for IconVisitor {
+            type Value = Icon;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a map representing an icon")
+            }
+
+            fn visit_map<M>(self, mut access: M) -> Result<Self::Value, M::Error>
+            where
+                M: MapAccess<'de>,
+            {
+                let mut kind = None;
+                let mut width = None;
+                let mut height = None;
+                let mut path = None;
+
+                while let Some((key, value)) = access.next_entry::<String, String>()? {
+                    match &*key {
+                        "type" => {
+                            kind = Some(value.clone());
+                        }
+                        "width" => {
+                            width = value.parse::<u32>().ok();
+                        }
+                        "height" => {
+                            height = value.parse::<u32>().ok();
+                        }
+                        "path" | "name" | "url" => {
+                            path = Some(value.clone());
+                        }
+                        _ => (),
+                    }
+                }
+
+                let path = path.ok_or_else(|| de::Error::missing_field("path"))?;
+                let kind = kind.ok_or_else(|| de::Error::missing_field("type"))?;
+
+                match kind.as_ref() {
+                    "remote" => Ok(Icon::Remote {
+                        url: Url::parse(&path).map_err(|_| {
+                            de::Error::invalid_value(
+                                de::Unexpected::Str(&path),
+                                &"expected a valid url",
+                            )
+                        })?,
+                        width,
+                        height,
+                    }),
+                    "stock" => Ok(Icon::Stock(path)),
+                    "cached" => Ok(Icon::Cached {
+                        path: path.into(),
+                        width,
+                        height,
+                    }),
+                    "local" => Ok(Icon::Local {
+                        path: path.into(),
+                        width,
+                        height,
+                    }),
+                    e => Err(de::Error::invalid_value(
+                        de::Unexpected::Str(e),
+                        &"expected a type of local, remote, cached or stock",
+                    )),
+                }
+            }
+        }
+        deserializer.deserialize_map(IconVisitor)
+    }
 }
 
 impl Serialize for Icon {

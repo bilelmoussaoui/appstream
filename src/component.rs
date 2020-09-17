@@ -567,6 +567,15 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "test_json")]
+    fn serde_json_component() {
+        let file = std::fs::File::open("./tests/app-com.github.utsushi.Utsushi.json").unwrap();
+        let c: Component = serde_json::from_reader(&file).unwrap();
+
+        assert_eq!(c.icons, vec![Icon::Stock("scanner".to_string())]);
+    }
+
+    #[test]
     fn contrast_metainfo_component() {
         let c1: Component =
             Component::from_path("./tests/app-org.gnome.design.Contrast.xml".into()).unwrap();

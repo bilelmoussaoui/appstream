@@ -11,6 +11,7 @@ exclude = ["tests/**/*.xml", "tests/**/*.xml.gz", "tests/**/*.json"]
 
 [features]
 gzip = ["flate2"]
+test_json = ["serde_json"]
 
 
 [dependencies]
@@ -24,5 +25,9 @@ strum = "0.19"
 strum_macros = "0.19"
 
 [dependencies.flate2]
+version = "1.0"
+optional = true
+
+[dependencies.serde_json]
 version = "1.0"
 optional = true

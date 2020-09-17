@@ -1,0 +1,208 @@
+{
+  "type": "desktop-application",
+  "id": "com.github.utsushi.Utsushi",
+  "name": {
+    "C": "Image Scan",
+    "es": "Escáner Epson",
+    "pt_BR": "Scanner da Epson"
+  },
+  "summary": {
+    "C": "Image acquisition utilities for Epson",
+    "es": "Haz copias digitales de tus fotos y documentos",
+    "pt_BR": "Faça cópias digitais de suas fotos e documentos"
+  },
+  "description": {
+    "C": "<p>This software provides applications to easily turn hard-copy documents and imagery into formats that are more amenable to computer processing.</p><p>This software only works with Epson scanners.</p>",
+    "es": "<p>¡Ahora preservar tus fotos y documentos importantes es más fácil que nunca! Solo conecta el escáner a tu computadora, abre este programa y comienza a escanear. Una vez que un documento o una foto este digitalizado, compartirlos es igual de fácil. Puedes enviarlos por correo electrónico, cargarlos en tu red social favorita o ponerlos en una memoria USB. Este programa te permitirá asegurarte de que todo lo que escanees sea claro, recto y en el formato que necesitas. **(Esta aplicación sólo funciona con escáneres de Epson).**</p>",
+    "pt_BR": "<p>Preserve suas fotos e documentos importantes criando cópias digitais nunca foi tão fácil! Tenha seu scanner conectado ao seu computador , abra este programa e comece à digitalizar. Quando uma foto ou documento é digitalizado, é super fácil compartilhá-la por e-mail, enviá-la para sua rede social favorita ou colocá-la em um pen-drive. Este programa certamente te ajudará a realizar digitalizações com precisão, clareza e no formato de arquivo que você precisa! **(Este aplicativo só funciona com scanners da Epson).**</p>"
+  },
+  "project_license": "GPL-3.0",
+  "icons": [
+    {
+      "type": "stock",
+      "name": "scanner"
+    }
+  ],
+  "screenshots": [
+    {
+      "is_default": true,
+      "images": [
+        {
+          "type": "source",
+          "url": "https://raw.githubusercontent.com/flathub/com.github.utsushi.Utsushi/master/screenshots/1.png"
+        },
+        {
+          "type": "thumbnail",
+          "width": 624,
+          "height": 351,
+          "url": "https://flathub.org/repo/screenshots/com.github.utsushi.Utsushi-stable/624x351/com.github.utsushi.Utsushi-ca25af50c2f5b2841a17b39c476e8174.png"
+        },
+        {
+          "type": "thumbnail",
+          "width": 112,
+          "height": 63,
+          "url": "https://flathub.org/repo/screenshots/com.github.utsushi.Utsushi-stable/112x63/com.github.utsushi.Utsushi-ca25af50c2f5b2841a17b39c476e8174.png"
+        },
+        {
+          "type": "thumbnail",
+          "width": 224,
+          "height": 126,
+          "url": "https://flathub.org/repo/screenshots/com.github.utsushi.Utsushi-stable/224x126/com.github.utsushi.Utsushi-ca25af50c2f5b2841a17b39c476e8174.png"
+        },
+        {
+          "type": "thumbnail",
+          "width": 752,
+          "height": 423,
+          "url": "https://flathub.org/repo/screenshots/com.github.utsushi.Utsushi-stable/752x423/com.github.utsushi.Utsushi-ca25af50c2f5b2841a17b39c476e8174.png"
+        }
+      ]
+    }
+  ],
+  "urls": [
+    {
+      "type": "homepage",
+      "url": "https://github.com/utsushi/utsushi"
+    }
+  ],
+  "developer_name": {
+    "C": "SEIKO EPSON CORPORATION"
+  },
+  "categories": [
+    "Graphics",
+    "RasterGraphics",
+    "Scanning"
+  ],
+  "bundles": [
+    {
+      "type": "flatpak",
+      "reference": "app/com.github.utsushi.Utsushi/x86_64/stable",
+      "sdk": "org.gnome.Sdk/x86_64/3.26",
+      "runtime": "org.gnome.Platform/x86_64/3.26"
+    }
+  ],
+  "releases": [
+    {
+      "date": "2018-04-02T00:00:00Z",
+      "version": "0.38.0",
+      "type": "stable",
+      "urgency": "medium"
+    }
+  ],
+  "kudos": [
+    "HiDpiIcon",
+    "HiDpiIcon"
+  ],
+  "content_rating": {
+    "type": "oars-1.1",
+    "attributes": [
+      {
+        "id": "violence-cartoon",
+        "$value": "none"
+      },
+      {
+        "id": "violence-fantasy",
+        "$value": "none"
+      },
+      {
+        "id": "violence-realistic",
+        "$value": "none"
+      },
+      {
+        "id": "violence-bloodshed",
+        "$value": "none"
+      },
+      {
+        "id": "violence-sexual",
+        "$value": "none"
+      },
+      {
+        "id": "violence-desecration",
+        "$value": "none"
+      },
+      {
+        "id": "violence-slavery",
+        "$value": "none"
+      },
+      {
+        "id": "violence-worship",
+        "$value": "none"
+      },
+      {
+        "id": "drugs-alcohol",
+        "$value": "none"
+      },
+      {
+        "id": "drugs-narcotics",
+        "$value": "none"
+      },
+      {
+        "id": "drugs-tobacco",
+        "$value": "none"
+      },
+      {
+        "id": "sex-nudity",
+        "$value": "none"
+      },
+      {
+        "id": "sex-themes",
+        "$value": "none"
+      },
+      {
+        "id": "sex-homosexuality",
+        "$value": "none"
+      },
+      {
+        "id": "sex-prostitution",
+        "$value": "none"
+      },
+      {
+        "id": "sex-adultery",
+        "$value": "none"
+      },
+      {
+        "id": "sex-appearance",
+        "$value": "none"
+      },
+      {
+        "id": "language-profanity",
+        "$value": "none"
+      },
+      {
+        "id": "language-humor",
+        "$value": "none"
+      },
+      {
+        "id": "language-discrimination",
+        "$value": "none"
+      },
+      {
+        "id": "social-chat",
+        "$value": "none"
+      },
+      {
+        "id": "social-info",
+        "$value": "none"
+      },
+      {
+        "id": "social-audio",
+        "$value": "none"
+      },
+      {
+        "id": "social-location",
+        "$value": "none"
+      },
+      {
+        "id": "social-contacts",
+        "$value": "none"
+      },
+      {
+        "id": "money-purchasing",
+        "$value": "none"
+      },
+      {
+        "id": "money-gambling",
+        "$value": "none"
+      }
+    ]
+  }
+}
