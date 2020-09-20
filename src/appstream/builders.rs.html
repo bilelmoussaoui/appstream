@@ -828,6 +828,20 @@
 <span id="828">828</span>
 <span id="829">829</span>
 <span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>::<span class="ident">Collection</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">component</span>::<span class="ident">Component</span>;
@@ -1275,13 +1289,17 @@
 <span class="doccomment">/// use url::Url;</span>
 <span class="doccomment">/// use appstream::{enums::ImageKind, builders::ImageBuilder};</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let image= ImageBuilder::new(</span>
-<span class="doccomment">///                 Url::parse(&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;).unwrap()</span>
-<span class="doccomment">///            )</span>
-<span class="doccomment">///            .kind(ImageKind::Thumbnail)</span>
-<span class="doccomment">///            .width(112)</span>
-<span class="doccomment">///            .height(63)</span>
-<span class="doccomment">///            .build();</span>
+<span class="doccomment">/// fn main() -&gt; Result&lt;(), url::ParseError&gt; {</span>
+<span class="doccomment">///     let image = ImageBuilder::new(</span>
+<span class="doccomment">///                     Url::parse(&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;)?</span>
+<span class="doccomment">///                 )</span>
+<span class="doccomment">///                 .kind(ImageKind::Thumbnail)</span>
+<span class="doccomment">///                 .width(112)</span>
+<span class="doccomment">///                 .height(63)</span>
+<span class="doccomment">///                 .build();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     Ok(())</span>
+<span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ImageBuilder</span> {
     <span class="doccomment">/// The image width.</span>
@@ -1501,18 +1519,23 @@
 <span class="doccomment">/// use url::Url;</span>
 <span class="doccomment">/// use appstream::TranslatableString;</span>
 <span class="doccomment">/// use appstream::builders::{ScreenshotBuilder, ImageBuilder};</span>
-<span class="doccomment">/// let screenshot = ScreenshotBuilder::default()</span>
-<span class="doccomment">///             .caption(</span>
-<span class="doccomment">///                 TranslatableString::with_default(&quot;FooBar showing kitchen-sink functionality.&quot;)</span>
-<span class="doccomment">///                     .and_locale(&quot;de&quot;, &quot;FooBar beim Ausführen der Spühlbecken-Funktion.&quot;),</span>
-<span class="doccomment">///             )</span>
-<span class="doccomment">///             .image(</span>
-<span class="doccomment">///                 ImageBuilder::new(Url::parse(&quot;https://www.example.org/en_US/main.png&quot;).unwrap())</span>
-<span class="doccomment">///                     .width(800)</span>
-<span class="doccomment">///                     .height(600)</span>
-<span class="doccomment">///                     .build()</span>
-<span class="doccomment">///             )</span>
-<span class="doccomment">///             .build();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// fn main() -&gt; Result&lt;(), url::ParseError&gt; {</span>
+<span class="doccomment">///     let screenshot = ScreenshotBuilder::default()</span>
+<span class="doccomment">///                 .caption(</span>
+<span class="doccomment">///                     TranslatableString::with_default(&quot;FooBar showing kitchen-sink functionality.&quot;)</span>
+<span class="doccomment">///                         .and_locale(&quot;de&quot;, &quot;FooBar beim Ausführen der Spühlbecken-Funktion.&quot;),</span>
+<span class="doccomment">///                 )</span>
+<span class="doccomment">///                 .image(</span>
+<span class="doccomment">///                     ImageBuilder::new(Url::parse(&quot;https://www.example.org/en_US/main.png&quot;)?)</span>
+<span class="doccomment">///                         .width(800)</span>
+<span class="doccomment">///                         .height(600)</span>
+<span class="doccomment">///                         .build()</span>
+<span class="doccomment">///                 )</span>
+<span class="doccomment">///                 .build();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     Ok(())</span>
+<span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScreenshotBuilder</span> {
     <span class="doccomment">/// Whether the screenhot is the default one or not.</span>
@@ -1588,11 +1611,16 @@
 <span class="doccomment">/// use url::Url;</span>
 <span class="doccomment">/// use appstream::builders::VideoBuilder;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let video = VideoBuilder::new(Url::parse(&quot;https://example.com/foobar/screencast.mkv&quot;).unwrap())</span>
-<span class="doccomment">///             .width(1600)</span>
-<span class="doccomment">///             .height(900)</span>
-<span class="doccomment">///             .codec(&quot;av1&quot;)</span>
-<span class="doccomment">///             .build();</span>
+<span class="doccomment">/// fn main() -&gt; Result&lt;(), url::ParseError&gt; {</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     let video = VideoBuilder::new(Url::parse(&quot;https://example.com/foobar/screencast.mkv&quot;)?)</span>
+<span class="doccomment">///                 .width(1600)</span>
+<span class="doccomment">///                 .height(900)</span>
+<span class="doccomment">///                 .codec(&quot;av1&quot;)</span>
+<span class="doccomment">///                 .build();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     Ok(())</span>
+<span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">VideoBuilder</span> {
     <span class="doccomment">/// The video width.</span>

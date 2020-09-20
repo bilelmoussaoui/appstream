@@ -355,12 +355,6 @@
 <span id="355">355</span>
 <span id="356">356</span>
 <span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
@@ -445,40 +439,40 @@
     };
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{<span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">ImageKind</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>};
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">flathub_latest_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/appstream.xml.gz&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">flathub_latest_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/appstream.xml.gz&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">components</span>.<span class="ident">len</span>(), <span class="number">1257</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
         {
-            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span>
-                <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">c1</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">c1</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">flathub_beta_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span>
-            <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/flathub-beta.xml.gz&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">flathub_beta_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/flathub-beta.xml.gz&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">components</span>.<span class="ident">len</span>(), <span class="number">112</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
         {
-            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span>
-                <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">c1</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">c1</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">spec_example_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/spec_example.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">spec_example_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/spec_example.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.10&quot;</span>)
         .<span class="ident">component</span>(
@@ -492,17 +486,17 @@
             .<span class="ident">project_license</span>(<span class="string">&quot;MPL-2.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">keywords</span>(<span class="ident">TranslatableList</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;internet&quot;</span>,<span class="string">&quot;web&quot;</span>, <span class="string">&quot;browser&quot;</span>]).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;navigateur&quot;</span>]))
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Web browser&quot;</span>).<span class="ident">and_locale</span>(<span class="string">&quot;fr_FR&quot;</span>, <span class="string">&quot;Navigateur web&quot;</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.mozilla.com&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.mozilla.com&quot;</span>)<span class="question-mark">?</span>))
             .<span class="ident">screenshot</span>(
                 <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
                 .<span class="ident">image</span>(
-                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png&quot;</span>).<span class="ident">unwrap</span>())
+                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png&quot;</span>)<span class="question-mark">?</span>)
                         .<span class="ident">width</span>(<span class="number">800</span>)
                         .<span class="ident">height</span>(<span class="number">600</span>)
                         .<span class="ident">build</span>(),
                 )
                 .<span class="ident">image</span>(
-                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png&quot;</span>).<span class="ident">unwrap</span>())
+                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png&quot;</span>)<span class="question-mark">?</span>)
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">200</span>)
                         .<span class="ident">height</span>(<span class="number">150</span>)
@@ -537,7 +531,7 @@
             )
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The PulseAudio sound server&quot;</span>))
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-2.0+&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.freedesktop.org/wiki/Software/PulseAudio/&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.freedesktop.org/wiki/Software/PulseAudio/&quot;</span>)<span class="question-mark">?</span>))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libpulse-simple.so.0&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libpulse.so.0&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;start-pulseaudio-kde&quot;</span>.<span class="ident">into</span>()))
@@ -559,13 +553,15 @@
             .<span class="ident">build</span>()
         )
         .<span class="ident">build</span>();
+
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">generic_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span>
-            <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/fedora-other-repos.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">generic_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/fedora-other-repos.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.8&quot;</span>)
             .<span class="ident">component</span>(
@@ -615,11 +611,12 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">web_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/fedora-web-apps.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">web_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/fedora-web-apps.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">CollectionBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.8&quot;</span>)
             .<span class="ident">component</span>(
@@ -638,91 +635,82 @@
                 .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Remote</span>{
                     <span class="ident">width</span>: <span class="prelude-val">None</span>,
                     <span class="ident">height</span>: <span class="prelude-val">None</span>,
-                    <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png&quot;</span>).<span class="ident">unwrap</span>()
+                    <span class="ident">url</span>: <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png&quot;</span>)<span class="question-mark">?</span>
                 })
                 .<span class="ident">metadata</span>(<span class="string">&quot;X-Needs-Dark-Theme&quot;</span>.<span class="ident">to_string</span>(), <span class="prelude-val">None</span>)
                 .<span class="ident">metadata</span>(<span class="string">&quot;X-Kudo-Popular&quot;</span>.<span class="ident">to_string</span>(), <span class="prelude-val">None</span>)
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Education</span>)
                 .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Literature</span>)
                 .<span class="ident">keywords</span>(<span class="ident">TranslatableList</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;book&quot;</span>, <span class="string">&quot;ebook&quot;</span>, <span class="string">&quot;reader&quot;</span>]))
-                .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://read.amazon.com&quot;</span>).<span class="ident">unwrap</span>()))
+                .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://read.amazon.com&quot;</span>)<span class="question-mark">?</span>))
                 .<span class="ident">build</span>()
             )
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">endless_os_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/endless-apps.xml&quot;</span>.<span class="ident">into</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">endless_os_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/endless-apps.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">631</span>, <span class="ident">collection</span>.<span class="ident">components</span>.<span class="ident">len</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;flatpak&quot;</span>.<span class="ident">into</span>()), <span class="ident">collection</span>.<span class="ident">origin</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;0.8&quot;</span>, <span class="ident">collection</span>.<span class="ident">version</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
         {
-            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span>
-                <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">c2</span>);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">gnome_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/gnome-apps.xml&quot;</span>.<span class="ident">into</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">gnome_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/gnome-apps.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">24</span>, <span class="ident">collection</span>.<span class="ident">components</span>.<span class="ident">len</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;flatpak&quot;</span>.<span class="ident">into</span>()), <span class="ident">collection</span>.<span class="ident">origin</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;0.8&quot;</span>, <span class="ident">collection</span>.<span class="ident">version</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
         {
-            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span>
-                <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">c2</span>);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">kde_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/kde-apps.xml&quot;</span>.<span class="ident">into</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">kde_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/kde-apps.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">69</span>, <span class="ident">collection</span>.<span class="ident">components</span>.<span class="ident">len</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;flatpak&quot;</span>.<span class="ident">into</span>()), <span class="ident">collection</span>.<span class="ident">origin</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;0.8&quot;</span>, <span class="ident">collection</span>.<span class="ident">version</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
         {
-            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span>
-                <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">c2</span>);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">flathub_collection</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> <span class="op">=</span>
-            <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/flathub-apps.xml&quot;</span>.<span class="ident">into</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">is_ok</span>(), <span class="bool-val">true</span>);
-        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">c1</span>.<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">flathub_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/flathub-apps.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">376</span>, <span class="ident">collection</span>.<span class="ident">components</span>.<span class="ident">len</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;flatpak&quot;</span>.<span class="ident">into</span>()), <span class="ident">collection</span>.<span class="ident">origin</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;0.8&quot;</span>, <span class="ident">collection</span>.<span class="ident">version</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
         {
-            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span>
-                <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>).<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">c2</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">serde_json</span>::<span class="ident">to_string_pretty</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">c2</span>);
         }
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre></div>

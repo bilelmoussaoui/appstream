@@ -757,6 +757,19 @@
 <span id="757">757</span>
 <span id="758">758</span>
 <span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
     <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
@@ -949,11 +962,12 @@
     };
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ContentRating</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>};
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">addon_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/addon.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">addon_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/addon.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.gnome.gedit_code_assistance&quot;</span>.<span class="ident">into</span>())
@@ -965,17 +979,18 @@
                 <span class="string">&quot;Code assistance for C, C++ and Objective-C&quot;</span>,
             ))
             .<span class="ident">update_contact</span>(<span class="string">&quot;developer_AT_example.com&quot;</span>)
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://projects.gnome.org/gedit&quot;</span>).<span class="ident">unwrap</span>(),
-            ))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(
+                <span class="string">&quot;http://projects.gnome.org/gedit&quot;</span>,
+            )<span class="question-mark">?</span>))
             .<span class="ident">extend</span>(<span class="string">&quot;org.gnome.gedit&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">codec_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/codec.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">codec_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/codec.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.freedesktop.gstreamer.codecs-good&quot;</span>.<span class="ident">into</span>())
@@ -1003,11 +1018,12 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/desktop.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/desktop.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.gnome.gnome-power-statistics&quot;</span>.<span class="ident">into</span>())
@@ -1024,7 +1040,7 @@
                 <span class="string">&quot;org.gnome.gnome-power-statistics.desktop&quot;</span>.<span class="ident">to_string</span>(),
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.gnome.org/projects/en_US/gnome-power-manager&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.gnome.org/projects/en_US/gnome-power-manager&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;gnome-power-statistics&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Id</span>(<span class="string">&quot;gnome-power-statistics.desktop&quot;</span>.<span class="ident">into</span>()))
@@ -1033,7 +1049,7 @@
                     .<span class="ident">caption</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The options dialog&quot;</span>))
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>).<span class="ident">unwrap</span>(),
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>)<span class="question-mark">?</span>,
                         )
                         .<span class="ident">build</span>(),
                     )
@@ -1044,7 +1060,7 @@
                     .<span class="ident">set_default</span>(<span class="bool-val">false</span>)
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>).<span class="ident">unwrap</span>(),
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>)<span class="question-mark">?</span>,
                         )
                         .<span class="ident">build</span>(),
                     )
@@ -1058,11 +1074,12 @@
             )
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">driver_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/driver.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">driver_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/driver.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.nvidia.GeForce&quot;</span>.<span class="ident">into</span>())
@@ -1081,15 +1098,16 @@
                 <span class="string">&quot;pci:v000010DEd*sv*sd*bc03sc00i00*&quot;</span>.<span class="ident">into</span>(),
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.nvidia.com/Download/index.aspx&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.nvidia.com/Download/index.aspx&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">firmware_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/firmware.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">firmware_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/firmware.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.hughski.ColorHug2.firmware&quot;</span>.<span class="ident">into</span>())
@@ -1104,7 +1122,7 @@
                 )
             )
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-2.0+&quot;</span>.<span class="ident">into</span>())
@@ -1118,7 +1136,7 @@
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2015</span>, <span class="number">2</span>, <span class="number">16</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">artifact</span>(
                         <span class="ident">ArtifactBuilder</span>::<span class="ident">default</span>()
-                        .<span class="ident">url</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>).<span class="ident">unwrap</span>()) 
+                        .<span class="ident">url</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>)<span class="question-mark">?</span>) 
                         .<span class="ident">kind</span>(<span class="ident">ArtifactKind</span>::<span class="ident">Binary</span>)
                         .<span class="ident">build</span>()
                     )
@@ -1128,11 +1146,12 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">font_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/font.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">font_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/font.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.latofonts.Lato&quot;</span>.<span class="ident">into</span>())
@@ -1156,20 +1175,19 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">generic_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/generic.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">generic_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/generic.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.example.foobar&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Foo Bar&quot;</span>))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;A foo-ish bar&quot;</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.example.org&quot;</span>).<span class="ident">unwrap</span>(),
-            ))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.example.org&quot;</span>)<span class="question-mark">?</span>))
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;FooBar Team&quot;</span>))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libfoobar.so.2&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;foo.ttf&quot;</span>.<span class="ident">into</span>()))
@@ -1181,11 +1199,12 @@
             )
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/icon-theme.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/icon-theme.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;io.git.PapirusIconTheme&quot;</span>.<span class="ident">into</span>())
@@ -1201,7 +1220,7 @@
                 <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
                 .<span class="ident">image</span>(
                     <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>()
+                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>)<span class="question-mark">?</span>
                     )
                     .<span class="ident">build</span>()
                 )
@@ -1210,11 +1229,12 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">input_method_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/input-method.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">input_method_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/input-method.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.github.ibus.mathwriter-ibus.db&quot;</span>.<span class="ident">into</span>())
@@ -1228,16 +1248,17 @@
                 <span class="string">&quot;&lt;p&gt;\n      The input method is designed for entering mathematical symbols.\n    &lt;/p&gt;&lt;p&gt;\n      Input methods are typing systems allowing users to input complex languages.\n      They are necessary because these contain too many characters to simply be laid\n      out on a traditional keyboard.\n    &lt;/p&gt;&quot;</span>
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://github.com/mike-fabian/ibus-table-others&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://github.com/mike-fabian/ibus-table-others&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">localization_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/localization.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">localization_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/localization.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.kde.l10n.de&quot;</span>.<span class="ident">into</span>())
@@ -1251,19 +1272,20 @@
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.plasmashell&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.gwenview.desktop&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.dolphin.desktop&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://i18n.kde.org/team-infos.php?teamcode=de&quot;</span>).<span class="ident">unwrap</span>(),
-            ))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(
+                <span class="string">&quot;http://i18n.kde.org/team-infos.php?teamcode=de&quot;</span>,
+            )<span class="question-mark">?</span>))
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de_DE&quot;</span>).<span class="ident">build</span>())
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de_AT&quot;</span>).<span class="ident">percentage</span>(<span class="number">96</span>).<span class="ident">build</span>())
             .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">os_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/os.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">os_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/os.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="string">&quot;&lt;p&gt;\n      Debian is a free operating system (OS) for your computer.\n      An operating system is the set of basic programs and utilities that make your computer run.\n        &lt;/p&gt;&quot;</span>;
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1275,7 +1297,7 @@
                 <span class="string">&quot;The universal operating system&quot;</span>,
             ))
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.debian.org/&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.debian.org/&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The Debian Project&quot;</span>))
@@ -1294,11 +1316,12 @@
             )
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">runtime_component</span>() {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/runtime.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">runtime_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/runtime.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.freedesktop.Platform&quot;</span>.<span class="ident">into</span>())
@@ -1313,7 +1336,7 @@
                 <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        &lt;/p&gt;&quot;</span>)
             )
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://freedesktop-sdk.gitlab.io/&quot;</span>).<span class="ident">unwrap</span>(),
+                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://freedesktop-sdk.gitlab.io/&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">release</span>(<span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;10.0&quot;</span>).<span class="ident">build</span>())
             .<span class="ident">release</span>(
@@ -1324,21 +1347,23 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">serde_json_component</span>() {
-        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="string">&quot;./tests/app-com.github.utsushi.Utsushi.json&quot;</span>).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_reader</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>).<span class="ident">unwrap</span>();
+    <span class="kw">fn</span> <span class="ident">serde_json_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="string">&quot;./tests/app-com.github.utsushi.Utsushi.json&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_reader</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>;
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">icons</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Icon</span>::<span class="ident">Stock</span>(<span class="string">&quot;scanner&quot;</span>.<span class="ident">to_string</span>())]);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() {
+    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span>
-            <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/app-org.gnome.design.Contrast.xml&quot;</span>.<span class="ident">into</span>()).<span class="ident">unwrap</span>();
+            <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/app-org.gnome.design.Contrast.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Contrast&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
@@ -1416,10 +1441,10 @@
                 <span class="ident">sdk</span>: <span class="string">&quot;org.gnome.Sdk/x86_64/3.36&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">reference</span>: <span class="string">&quot;app/org.gnome.design.Contrast/x86_64/stable&quot;</span>.<span class="ident">into</span>()
             })
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>).<span class="ident">unwrap</span>()))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Donation</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>).<span class="ident">unwrap</span>()))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>).<span class="ident">unwrap</span>()))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Translate</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>).<span class="ident">unwrap</span>()))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Donation</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Translate</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>)<span class="question-mark">?</span>))
             .<span class="ident">translation</span>(<span class="ident">Translation</span>::<span class="ident">Gettext</span>(<span class="string">&quot;contrast&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">launchable</span>(<span class="ident">Launchable</span>::<span class="ident">DesktopId</span>(<span class="string">&quot;org.gnome.design.Contrast.desktop&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Bilal Elmoussaoui&quot;</span>))
@@ -1439,19 +1464,19 @@
             })
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.3&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1582329600&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1582329600&quot;</span>, <span class="string">&quot;%s&quot;</span>)<span class="question-mark">?</span>)
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Stylesheet fixes&lt;/p&gt;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.2&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1566691200&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1566691200&quot;</span>, <span class="string">&quot;%s&quot;</span>)<span class="question-mark">?</span>)
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
             .<span class="ident">release</span>(
                 <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.1&quot;</span>)
-                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1565136000&quot;</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">unwrap</span>())
+                    .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1565136000&quot;</span>, <span class="string">&quot;%s&quot;</span>)<span class="question-mark">?</span>)
                     .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;First release of Contrast&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
@@ -1472,12 +1497,12 @@
             .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>)<span class="question-mark">?</span>
                         ).<span class="ident">build</span>()
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">624</span>)
@@ -1486,7 +1511,7 @@
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">112</span>)
@@ -1495,7 +1520,7 @@
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">224</span>)
@@ -1504,7 +1529,7 @@
                     )
                     .<span class="ident">image</span>(
                         <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>).<span class="ident">unwrap</span>()
+                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
                         .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">752</span>)
@@ -1515,6 +1540,7 @@
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre></div>

@@ -111,6 +111,15 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Appstream</span>
 <span class="doccomment">//!</span>
@@ -128,7 +137,7 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Examples</span>
 <span class="doccomment">//! ```</span>
-<span class="doccomment">//! use appstream::Component;</span>
+<span class="doccomment">//! use appstream::{Component, ParseError};</span>
 <span class="doccomment">//! use appstream::builders::{ComponentBuilder, ReleaseBuilder};</span>
 <span class="doccomment">//! use appstream::TranslatableString;</span>
 <span class="doccomment">//! use appstream::enums::{Provide, ProjectUrl};</span>
@@ -136,63 +145,72 @@
 <span class="doccomment">//! use chrono::{Utc, TimeZone};</span>
 <span class="doccomment">//! use std::convert::TryFrom;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let xml = r&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;</span>
-<span class="doccomment">//!                 &lt;component&gt;</span>
-<span class="doccomment">//!                     &lt;id&gt;com.example.foobar&lt;/id&gt;</span>
-<span class="doccomment">//!                     &lt;name&gt;Foo Bar&lt;/name&gt;</span>
-<span class="doccomment">//!                     &lt;summary&gt;A foo-ish bar&lt;/summary&gt;</span>
-<span class="doccomment">//!                     &lt;url type=&#39;homepage&#39;&gt;http://www.example.org&lt;/url&gt;</span>
-<span class="doccomment">//!                     &lt;metadata_license&gt;CC0-1.0&lt;/metadata_license&gt;</span>
-<span class="doccomment">//!                     </span>
-<span class="doccomment">//!                     &lt;provides&gt;</span>
-<span class="doccomment">//!                       &lt;library&gt;libfoobar.so.2&lt;/library&gt;</span>
-<span class="doccomment">//!                       &lt;font&gt;foo.ttf&lt;/font&gt;</span>
-<span class="doccomment">//!                       &lt;binary&gt;foobar&lt;/binary&gt;</span>
-<span class="doccomment">//!                     &lt;/provides&gt;</span>
-<span class="doccomment">//!                     &lt;releases&gt;</span>
-<span class="doccomment">//!                       &lt;release version=&#39;1.2&#39; date=&#39;2015-02-16&#39;/&gt;</span>
-<span class="doccomment">//!                     &lt;/releases&gt;</span>
-<span class="doccomment">//!                     &lt;developer_name&gt;FooBar Team&lt;/developer_name&gt;</span>
-<span class="doccomment">//!                 &lt;/component&gt;&quot;;</span>
-<span class="doccomment">//! let element = xmltree::Element::parse(xml.as_bytes()).unwrap();</span>
-<span class="doccomment">//! let c1 = Component::try_from(&amp;element).unwrap();</span>
+<span class="doccomment">//! fn main() -&gt; Result&lt;(), ParseError&gt; {</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let c2 = ComponentBuilder::default()</span>
-<span class="doccomment">//!     .id(&quot;com.example.foobar&quot;.into())</span>
-<span class="doccomment">//!     .name(TranslatableString::with_default(&quot;Foo Bar&quot;))</span>
-<span class="doccomment">//!     .metadata_license(&quot;CC0-1.0&quot;.into())</span>
-<span class="doccomment">//!     .summary(TranslatableString::with_default(&quot;A foo-ish bar&quot;))</span>
-<span class="doccomment">//!     .url(ProjectUrl::Homepage(</span>
-<span class="doccomment">//!         Url::parse(&quot;http://www.example.org&quot;).unwrap(),</span>
-<span class="doccomment">//!     ))</span>
-<span class="doccomment">//!     .developer_name(TranslatableString::with_default(&quot;FooBar Team&quot;))</span>
-<span class="doccomment">//!     .provide(Provide::Library(&quot;libfoobar.so.2&quot;.into()))</span>
-<span class="doccomment">//!     .provide(Provide::Font(&quot;foo.ttf&quot;.into()))</span>
-<span class="doccomment">//!     .provide(Provide::Binary(&quot;foobar&quot;.into()))</span>
-<span class="doccomment">//!     .release(</span>
-<span class="doccomment">//!         ReleaseBuilder::new(&quot;1.2&quot;)</span>
-<span class="doccomment">//!             .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))</span>
-<span class="doccomment">//!             .build(),</span>
-<span class="doccomment">//!     )</span>
-<span class="doccomment">//!     .build();</span>
+<span class="doccomment">//!     let xml = r&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;UTF-8&#39;?&gt;</span>
+<span class="doccomment">//!                     &lt;component&gt;</span>
+<span class="doccomment">//!                         &lt;id&gt;com.example.foobar&lt;/id&gt;</span>
+<span class="doccomment">//!                         &lt;name&gt;Foo Bar&lt;/name&gt;</span>
+<span class="doccomment">//!                         &lt;summary&gt;A foo-ish bar&lt;/summary&gt;</span>
+<span class="doccomment">//!                         &lt;url type=&#39;homepage&#39;&gt;http://www.example.org&lt;/url&gt;</span>
+<span class="doccomment">//!                         &lt;metadata_license&gt;CC0-1.0&lt;/metadata_license&gt;</span>
+<span class="doccomment">//!                         </span>
+<span class="doccomment">//!                         &lt;provides&gt;</span>
+<span class="doccomment">//!                           &lt;library&gt;libfoobar.so.2&lt;/library&gt;</span>
+<span class="doccomment">//!                           &lt;font&gt;foo.ttf&lt;/font&gt;</span>
+<span class="doccomment">//!                           &lt;binary&gt;foobar&lt;/binary&gt;</span>
+<span class="doccomment">//!                         &lt;/provides&gt;</span>
+<span class="doccomment">//!                         &lt;releases&gt;</span>
+<span class="doccomment">//!                           &lt;release version=&#39;1.2&#39; date=&#39;2015-02-16&#39;/&gt;</span>
+<span class="doccomment">//!                         &lt;/releases&gt;</span>
+<span class="doccomment">//!                         &lt;developer_name&gt;FooBar Team&lt;/developer_name&gt;</span>
+<span class="doccomment">//!                     &lt;/component&gt;&quot;;</span>
+<span class="doccomment">//!     let element = xmltree::Element::parse(xml.as_bytes())?;</span>
+<span class="doccomment">//!     let c1 = Component::try_from(&amp;element)?;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! assert_eq!(c1, c2);</span>
+<span class="doccomment">//!     let c2 = ComponentBuilder::default()</span>
+<span class="doccomment">//!         .id(&quot;com.example.foobar&quot;.into())</span>
+<span class="doccomment">//!         .name(TranslatableString::with_default(&quot;Foo Bar&quot;))</span>
+<span class="doccomment">//!         .metadata_license(&quot;CC0-1.0&quot;.into())</span>
+<span class="doccomment">//!         .summary(TranslatableString::with_default(&quot;A foo-ish bar&quot;))</span>
+<span class="doccomment">//!         .url(ProjectUrl::Homepage(</span>
+<span class="doccomment">//!             Url::parse(&quot;http://www.example.org&quot;)?,</span>
+<span class="doccomment">//!         ))</span>
+<span class="doccomment">//!         .developer_name(TranslatableString::with_default(&quot;FooBar Team&quot;))</span>
+<span class="doccomment">//!         .provide(Provide::Library(&quot;libfoobar.so.2&quot;.into()))</span>
+<span class="doccomment">//!         .provide(Provide::Font(&quot;foo.ttf&quot;.into()))</span>
+<span class="doccomment">//!         .provide(Provide::Binary(&quot;foobar&quot;.into()))</span>
+<span class="doccomment">//!         .release(</span>
+<span class="doccomment">//!             ReleaseBuilder::new(&quot;1.2&quot;)</span>
+<span class="doccomment">//!                 .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))</span>
+<span class="doccomment">//!                 .build(),</span>
+<span class="doccomment">//!         )</span>
+<span class="doccomment">//!         .build();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     assert_eq!(c1, c2);</span>
+<span class="doccomment">//!     </span>
+<span class="doccomment">//!     Ok(())</span>
+<span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The library can parse a collection of components as well</span>
 <span class="doccomment">//! ```no_run</span>
-<span class="doccomment">//! use appstream::{Collection, Component};</span>
+<span class="doccomment">//! use appstream::{Collection, Component, ParseError};</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! let collection = Collection::from_path(&quot;/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml&quot;.into()).unwrap();</span>
-<span class="doccomment">//! #[cfg(feature=&quot;gzip&quot;)]</span>
-<span class="doccomment">//! let collection = Collection::from_gzipped(&quot;/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz&quot;.into()).unwrap();</span>
-<span class="doccomment">//! // Find a specific application by id</span>
-<span class="doccomment">//! println!(&quot;{:#?}&quot;, collection.find_by_id(&quot;org.gnome.design.Contrast&quot;.into()));</span>
+<span class="doccomment">//! fn main() -&gt; Result&lt;(), ParseError&gt; {</span>
+<span class="doccomment">//!     let collection = Collection::from_path(&quot;/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml&quot;.into())?;</span>
+<span class="doccomment">//!     #[cfg(feature=&quot;gzip&quot;)]</span>
+<span class="doccomment">//!     let collection = Collection::from_gzipped(&quot;/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz&quot;.into())?;</span>
+<span class="doccomment">//!     // Find a specific application by id</span>
+<span class="doccomment">//!     println!(&quot;{:#?}&quot;, collection.find_by_id(&quot;org.gnome.design.Contrast&quot;.into()));</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! // Find the list of gedit plugins</span>
-<span class="doccomment">//! collection.components.iter()</span>
-<span class="doccomment">//!     .filter(|c| c.extends.contains(&amp;&quot;org.gnome.gedit&quot;.into()))</span>
-<span class="doccomment">//!     .collect::&lt;Vec&lt;&amp;Component&gt;&gt;();</span>
+<span class="doccomment">//!     // Find the list of gedit plugins</span>
+<span class="doccomment">//!     collection.components.iter()</span>
+<span class="doccomment">//!         .filter(|c| c.extends.contains(&amp;&quot;org.gnome.gedit&quot;.into()))</span>
+<span class="doccomment">//!         .collect::&lt;Vec&lt;&amp;Component&gt;&gt;();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     Ok(())</span>
+<span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>

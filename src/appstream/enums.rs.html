@@ -1161,8 +1161,8 @@
                 <span class="ident">bundle_map</span>.<span class="ident">serialize_entry</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;flatpak&quot;</span>)<span class="question-mark">?</span>;
                 <span class="ident">bundle_map</span>.<span class="ident">serialize_entry</span>(<span class="string">&quot;reference&quot;</span>, <span class="ident">reference</span>)<span class="question-mark">?</span>;
                 <span class="ident">bundle_map</span>.<span class="ident">serialize_entry</span>(<span class="string">&quot;sdk&quot;</span>, <span class="ident">sdk</span>)<span class="question-mark">?</span>;
-                <span class="kw">if</span> <span class="ident">runtime</span>.<span class="ident">is_some</span>() {
-                    <span class="ident">bundle_map</span>.<span class="ident">serialize_entry</span>(<span class="string">&quot;runtime&quot;</span>, <span class="ident">runtime</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>())<span class="question-mark">?</span>;
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">runtime</span>) <span class="op">=</span> <span class="ident">runtime</span> {
+                    <span class="ident">bundle_map</span>.<span class="ident">serialize_entry</span>(<span class="string">&quot;runtime&quot;</span>, <span class="ident">runtime</span>)<span class="question-mark">?</span>;
                 }
             }
             <span class="ident">Bundle</span>::<span class="ident">AppImage</span>(<span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> {

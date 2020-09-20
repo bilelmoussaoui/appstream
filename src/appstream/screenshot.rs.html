@@ -250,28 +250,30 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">builders</span>::{<span class="ident">ImageBuilder</span>, <span class="ident">ScreenshotBuilder</span>, <span class="ident">VideoBuilder</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">default_screenshot</span>() {
+    <span class="kw">fn</span> <span class="ident">default_screenshot</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">xml</span> <span class="op">=</span> <span class="string">r&quot;
             &lt;screenshot type=&#39;default&#39;&gt;
                 &lt;image type=&#39;source&#39;&gt;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&lt;/image&gt;
             &lt;/screenshot&gt;&quot;</span>;
 
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>().<span class="ident">image</span>(
-                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>).<span class="ident">unwrap</span>())
+                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>)<span class="question-mark">?</span>)
                 .<span class="ident">build</span>()
             )
             .<span class="ident">build</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s1</span>, <span class="ident">s2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">screenshot_caption</span>() {
+    <span class="kw">fn</span> <span class="ident">screenshot_caption</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">xml</span> <span class="op">=</span> <span class="string">r&quot;
         &lt;screenshot type=&#39;default&#39;&gt;
             &lt;caption&gt;FooBar showing kitchen-sink functionality.&lt;/caption&gt;
@@ -281,8 +283,8 @@
             &lt;image type=&#39;thumbnail&#39; width=&#39;112&#39; height=&#39;63&#39;&gt;https://www.example.org/en_US/main-small.png&lt;/image&gt;
         &lt;/screenshot&gt;&quot;</span>;
 
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">caption</span>(
@@ -290,46 +292,43 @@
                     .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="string">&quot;FooBar beim Ausführen der Spühlbecken-Funktion.&quot;</span>),
             )
             .<span class="ident">image</span>(
-                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.example.org/en_US/main.png&quot;</span>).<span class="ident">unwrap</span>())
+                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.example.org/en_US/main.png&quot;</span>)<span class="question-mark">?</span>)
                     .<span class="ident">width</span>(<span class="number">800</span>)
                     .<span class="ident">height</span>(<span class="number">600</span>)
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">image</span>(
-                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.example.org/en_US/main-large.png&quot;</span>).<span class="ident">unwrap</span>(),
-                )
-                .<span class="ident">width</span>(<span class="number">752</span>)
-                .<span class="ident">height</span>(<span class="number">423</span>)
-                .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
-                .<span class="ident">build</span>(),
+                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.example.org/en_US/main-large.png&quot;</span>)<span class="question-mark">?</span>)
+                    .<span class="ident">width</span>(<span class="number">752</span>)
+                    .<span class="ident">height</span>(<span class="number">423</span>)
+                    .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                    .<span class="ident">build</span>(),
             )
             .<span class="ident">image</span>(
-                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                    <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.example.org/en_US/main-small.png&quot;</span>).<span class="ident">unwrap</span>(),
-                )
-                .<span class="ident">width</span>(<span class="number">112</span>)
-                .<span class="ident">height</span>(<span class="number">63</span>)
-                .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
-                .<span class="ident">build</span>(),
+                <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.example.org/en_US/main-small.png&quot;</span>)<span class="question-mark">?</span>)
+                    .<span class="ident">width</span>(<span class="number">112</span>)
+                    .<span class="ident">height</span>(<span class="number">63</span>)
+                    .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                    .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s1</span>, <span class="ident">s2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">screenshot_video</span>() {
+    <span class="kw">fn</span> <span class="ident">screenshot_video</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">xml</span> <span class="op">=</span> <span class="string">r&quot;
             &lt;screenshot&gt;
                 &lt;video codec=&#39;av1&#39; width=&#39;1600&#39; height=&#39;900&#39;&gt;https://example.com/foobar/screencast.mkv&lt;/video&gt;
             &lt;/screenshot&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">xml</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">s1</span> <span class="op">=</span> <span class="ident">Screenshot</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">s2</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
             .<span class="ident">set_default</span>(<span class="bool-val">false</span>)
             .<span class="ident">video</span>(
-                <span class="ident">VideoBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.com/foobar/screencast.mkv&quot;</span>).<span class="ident">unwrap</span>())
+                <span class="ident">VideoBuilder</span>::<span class="ident">new</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://example.com/foobar/screencast.mkv&quot;</span>)<span class="question-mark">?</span>)
                     .<span class="ident">width</span>(<span class="number">1600</span>)
                     .<span class="ident">height</span>(<span class="number">900</span>)
                     .<span class="ident">codec</span>(<span class="string">&quot;av1&quot;</span>)
@@ -337,6 +336,7 @@
             )
             .<span class="ident">build</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">s1</span>, <span class="ident">s2</span>);
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre></div>
