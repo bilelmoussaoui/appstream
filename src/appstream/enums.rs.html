@@ -1086,6 +1086,8 @@
 <span id="1086">1086</span>
 <span id="1087">1087</span>
 <span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
@@ -1804,18 +1806,20 @@
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">height</span> <span class="op">=</span> <span class="prelude-val">None</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="prelude-val">None</span>;
 
-                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">key</span>, <span class="ident">value</span>)) <span class="op">=</span> <span class="ident">access</span>.<span class="ident">next_entry</span>::<span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>()<span class="question-mark">?</span> {
+                <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="ident">access</span>.<span class="ident">next_key</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()<span class="question-mark">?</span> {
                     <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">key</span> {
                         <span class="string">&quot;type&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">access</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
                             <span class="ident">kind</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>.<span class="ident">clone</span>());
                         }
                         <span class="string">&quot;width&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="ident">width</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>();
+                            <span class="ident">width</span> <span class="op">=</span> <span class="ident">access</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>();
                         }
                         <span class="string">&quot;height&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="ident">height</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>();
+                            <span class="ident">height</span> <span class="op">=</span> <span class="ident">access</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>();
                         }
                         <span class="string">&quot;path&quot;</span> <span class="op">|</span> <span class="string">&quot;name&quot;</span> <span class="op">|</span> <span class="string">&quot;url&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">access</span>.<span class="ident">next_value</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
                             <span class="ident">path</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">value</span>.<span class="ident">clone</span>());
                         }
                         <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
