@@ -262,7 +262,7 @@
     <span class="ident">e</span>.<span class="ident">children</span>
         .<span class="ident">iter</span>()
         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">node</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">node</span> {
-            <span class="ident">xmltree</span>::<span class="ident">XMLNode</span>::<span class="ident">Element</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">xmltree</span>::<span class="ident">XMLNode</span>::<span class="ident">Element</span>(<span class="kw-2">ref</span> <span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;&lt;{}&gt;{}&lt;/{}&gt;&quot;</span>, <span class="ident">c</span>.<span class="ident">name</span>, <span class="ident">element_to_xml</span>(<span class="ident">c</span>), <span class="ident">c</span>.<span class="ident">name</span>)
             }
             <span class="ident">xmltree</span>::<span class="ident">XMLNode</span>::<span class="ident">Text</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">t</span>.<span class="ident">clone</span>(),
@@ -316,7 +316,7 @@
     <span class="doccomment">/// and can be used to feed the `MarkupTranslatableString`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_for_element</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="ident">xmltree</span>::<span class="ident">Element</span>) {
         <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">element</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;lang&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">as_str</span>());
-        <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="ident">locale</span>, <span class="kw-2">&amp;</span><span class="ident">element_to_xml</span>(<span class="ident">element</span>));
+        <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="ident">locale</span>, <span class="kw-2">&amp;</span><span class="ident">element_to_xml</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>));
     }
 
     <span class="doccomment">/// Adds a new translation for a speicifc locale.</span>

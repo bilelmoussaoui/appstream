@@ -1084,10 +1084,6 @@
 <span id="1084">1084</span>
 <span id="1085">1085</span>
 <span id="1086">1086</span>
-<span id="1087">1087</span>
-<span id="1088">1088</span>
-<span id="1089">1089</span>
-<span id="1090">1090</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
@@ -1577,11 +1573,7 @@
             <span class="string">&quot;codec&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ComponentKind</span>::<span class="ident">Codec</span>),
             <span class="string">&quot;localization&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ComponentKind</span>::<span class="ident">Localization</span>),
             <span class="string">&quot;&quot;</span> <span class="op">|</span> <span class="string">&quot;generic&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ComponentKind</span>::<span class="ident">default</span>()),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError</span>::<span class="ident">InvalidValue</span>(
-                <span class="ident">c</span>.<span class="ident">to_string</span>(),
-                <span class="string">&quot;type&quot;</span>.<span class="ident">to_string</span>(),
-                <span class="string">&quot;component&quot;</span>.<span class="ident">to_string</span>(),
-            )),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError</span>::<span class="ident">invalid_value</span>(<span class="ident">c</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;component&quot;</span>)),
         }
     }
 }
