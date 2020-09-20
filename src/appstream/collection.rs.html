@@ -445,7 +445,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">flathub_latest_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/appstream.xml.gz&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_gzipped</span>(<span class="string">&quot;./tests/collections/flathub.xml.gz&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>.<span class="ident">components</span>.<span class="ident">len</span>(), <span class="number">1257</span>);
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
@@ -700,7 +700,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">flathub_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/flathub-apps.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/collections/flathub-old.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="number">376</span>, <span class="ident">collection</span>.<span class="ident">components</span>.<span class="ident">len</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;flatpak&quot;</span>.<span class="ident">into</span>()), <span class="ident">collection</span>.<span class="ident">origin</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;0.8&quot;</span>, <span class="ident">collection</span>.<span class="ident">version</span>);
