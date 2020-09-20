@@ -14,7 +14,7 @@
 //!
 //! # Examples
 //! ```
-//! use appstream::Component;
+//! use appstream::{Component, ParseError};
 //! use appstream::builders::{ComponentBuilder, ReleaseBuilder};
 //! use appstream::TranslatableString;
 //! use appstream::enums::{Provide, ProjectUrl};
@@ -22,63 +22,72 @@
 //! use chrono::{Utc, TimeZone};
 //! use std::convert::TryFrom;
 //!
-//! let xml = r"<?xml version='1.0' encoding='UTF-8'?>
-//!                 <component>
-//!                     <id>com.example.foobar</id>
-//!                     <name>Foo Bar</name>
-//!                     <summary>A foo-ish bar</summary>
-//!                     <url type='homepage'>http://www.example.org</url>
-//!                     <metadata_license>CC0-1.0</metadata_license>
-//!                     
-//!                     <provides>
-//!                       <library>libfoobar.so.2</library>
-//!                       <font>foo.ttf</font>
-//!                       <binary>foobar</binary>
-//!                     </provides>
-//!                     <releases>
-//!                       <release version='1.2' date='2015-02-16'/>
-//!                     </releases>
-//!                     <developer_name>FooBar Team</developer_name>
-//!                 </component>";
-//! let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
-//! let c1 = Component::try_from(&element).unwrap();
+//! fn main() -> Result<(), ParseError> {
 //!
-//! let c2 = ComponentBuilder::default()
-//!     .id("com.example.foobar".into())
-//!     .name(TranslatableString::with_default("Foo Bar"))
-//!     .metadata_license("CC0-1.0".into())
-//!     .summary(TranslatableString::with_default("A foo-ish bar"))
-//!     .url(ProjectUrl::Homepage(
-//!         Url::parse("http://www.example.org").unwrap(),
-//!     ))
-//!     .developer_name(TranslatableString::with_default("FooBar Team"))
-//!     .provide(Provide::Library("libfoobar.so.2".into()))
-//!     .provide(Provide::Font("foo.ttf".into()))
-//!     .provide(Provide::Binary("foobar".into()))
-//!     .release(
-//!         ReleaseBuilder::new("1.2")
-//!             .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
-//!             .build(),
-//!     )
-//!     .build();
+//!     let xml = r"<?xml version='1.0' encoding='UTF-8'?>
+//!                     <component>
+//!                         <id>com.example.foobar</id>
+//!                         <name>Foo Bar</name>
+//!                         <summary>A foo-ish bar</summary>
+//!                         <url type='homepage'>http://www.example.org</url>
+//!                         <metadata_license>CC0-1.0</metadata_license>
+//!                         
+//!                         <provides>
+//!                           <library>libfoobar.so.2</library>
+//!                           <font>foo.ttf</font>
+//!                           <binary>foobar</binary>
+//!                         </provides>
+//!                         <releases>
+//!                           <release version='1.2' date='2015-02-16'/>
+//!                         </releases>
+//!                         <developer_name>FooBar Team</developer_name>
+//!                     </component>";
+//!     let element = xmltree::Element::parse(xml.as_bytes())?;
+//!     let c1 = Component::try_from(&element)?;
 //!
-//! assert_eq!(c1, c2);
+//!     let c2 = ComponentBuilder::default()
+//!         .id("com.example.foobar".into())
+//!         .name(TranslatableString::with_default("Foo Bar"))
+//!         .metadata_license("CC0-1.0".into())
+//!         .summary(TranslatableString::with_default("A foo-ish bar"))
+//!         .url(ProjectUrl::Homepage(
+//!             Url::parse("http://www.example.org")?,
+//!         ))
+//!         .developer_name(TranslatableString::with_default("FooBar Team"))
+//!         .provide(Provide::Library("libfoobar.so.2".into()))
+//!         .provide(Provide::Font("foo.ttf".into()))
+//!         .provide(Provide::Binary("foobar".into()))
+//!         .release(
+//!             ReleaseBuilder::new("1.2")
+//!                 .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+//!                 .build(),
+//!         )
+//!         .build();
+//!
+//!     assert_eq!(c1, c2);
+//!     
+//!     Ok(())
+//! }
 //! ```
 //!
 //! The library can parse a collection of components as well
 //! ```no_run
-//! use appstream::{Collection, Component};
+//! use appstream::{Collection, Component, ParseError};
 //!
-//! let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into()).unwrap();
-//! #[cfg(feature="gzip")]
-//! let collection = Collection::from_gzipped("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz".into()).unwrap();
-//! // Find a specific application by id
-//! println!("{:#?}", collection.find_by_id("org.gnome.design.Contrast".into()));
+//! fn main() -> Result<(), ParseError> {
+//!     let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into())?;
+//!     #[cfg(feature="gzip")]
+//!     let collection = Collection::from_gzipped("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz".into())?;
+//!     // Find a specific application by id
+//!     println!("{:#?}", collection.find_by_id("org.gnome.design.Contrast".into()));
 //!
-//! // Find the list of gedit plugins
-//! collection.components.iter()
-//!     .filter(|c| c.extends.contains(&"org.gnome.gedit".into()))
-//!     .collect::<Vec<&Component>>();
+//!     // Find the list of gedit plugins
+//!     collection.components.iter()
+//!         .filter(|c| c.extends.contains(&"org.gnome.gedit".into()))
+//!         .collect::<Vec<&Component>>();
+//!
+//!     Ok(())
+//! }
 //! ```
 //!
 #![deny(missing_docs)]

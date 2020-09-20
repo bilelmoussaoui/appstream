@@ -189,11 +189,12 @@ mod tests {
     };
     use crate::{ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString};
     use chrono::{TimeZone, Utc};
+    use std::error::Error;
     use url::Url;
 
     #[test]
-    fn addon_component() {
-        let c1 = Component::from_path("./tests/addon.xml".into()).unwrap();
+    fn addon_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/addon.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("org.gnome.gedit_code_assistance".into())
@@ -205,17 +206,18 @@ mod tests {
                 "Code assistance for C, C++ and Objective-C",
             ))
             .update_contact("developer_AT_example.com")
-            .url(ProjectUrl::Homepage(
-                Url::parse("http://projects.gnome.org/gedit").unwrap(),
-            ))
+            .url(ProjectUrl::Homepage(Url::parse(
+                "http://projects.gnome.org/gedit",
+            )?))
             .extend("org.gnome.gedit".into())
             .build();
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn codec_component() {
-        let c1 = Component::from_path("./tests/codec.xml".into()).unwrap();
+    fn codec_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/codec.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("org.freedesktop.gstreamer.codecs-good".into())
@@ -243,11 +245,12 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn desktop_application_component() {
-        let c1: Component = Component::from_path("./tests/desktop.xml".into()).unwrap();
+    fn desktop_application_component() -> Result<(), Box<dyn Error>> {
+        let c1: Component = Component::from_path("./tests/desktop.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("org.gnome.gnome-power-statistics".into())
@@ -264,7 +267,7 @@ mod tests {
                 "org.gnome.gnome-power-statistics.desktop".to_string(),
             ))
             .url(ProjectUrl::Homepage(
-                Url::parse("http://www.gnome.org/projects/en_US/gnome-power-manager").unwrap(),
+                Url::parse("http://www.gnome.org/projects/en_US/gnome-power-manager")?,
             ))
             .provide(Provide::Binary("gnome-power-statistics".into()))
             .provide(Provide::Id("gnome-power-statistics.desktop".into()))
@@ -273,7 +276,7 @@ mod tests {
                     .caption(TranslatableString::with_default("The options dialog"))
                     .image(
                         ImageBuilder::new(
-                            Url::parse("http://www.hughsie.com/en_US/main.png").unwrap(),
+                            Url::parse("http://www.hughsie.com/en_US/main.png")?,
                         )
                         .build(),
                     )
@@ -284,7 +287,7 @@ mod tests {
                     .set_default(false)
                     .image(
                         ImageBuilder::new(
-                            Url::parse("http://www.hughsie.com/en_US/preferences.png").unwrap(),
+                            Url::parse("http://www.hughsie.com/en_US/preferences.png")?,
                         )
                         .build(),
                     )
@@ -298,11 +301,12 @@ mod tests {
             )
             .build();
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn driver_component() {
-        let c1: Component = Component::from_path("./tests/driver.xml".into()).unwrap();
+    fn driver_component() -> Result<(), Box<dyn Error>> {
+        let c1: Component = Component::from_path("./tests/driver.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("com.nvidia.GeForce".into())
@@ -321,15 +325,16 @@ mod tests {
                 "pci:v000010DEd*sv*sd*bc03sc00i00*".into(),
             ))
             .url(ProjectUrl::Homepage(
-                Url::parse("http://www.nvidia.com/Download/index.aspx").unwrap(),
+                Url::parse("http://www.nvidia.com/Download/index.aspx")?,
             ))
             .build();
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn firmware_component() {
-        let c1 = Component::from_path("./tests/firmware.xml".into()).unwrap();
+    fn firmware_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/firmware.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("com.hughski.ColorHug2.firmware".into())
@@ -344,7 +349,7 @@ mod tests {
                 )
             )
             .url(ProjectUrl::Homepage(
-                Url::parse("http://www.hughski.com/").unwrap(),
+                Url::parse("http://www.hughski.com/")?,
             ))
             .metadata_license("CC0-1.0".into())
             .project_license("GPL-2.0+".into())
@@ -358,7 +363,7 @@ mod tests {
                     .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
                     .artifact(
                         ArtifactBuilder::default()
-                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab").unwrap()) 
+                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab")?) 
                         .kind(ArtifactKind::Binary)
                         .build()
                     )
@@ -368,11 +373,12 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn font_component() {
-        let c1 = Component::from_path("./tests/font.xml".into()).unwrap();
+    fn font_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/font.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("com.latofonts.Lato".into())
@@ -396,20 +402,19 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn generic_component() {
-        let c1 = Component::from_path("./tests/generic.xml".into()).unwrap();
+    fn generic_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/generic.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("com.example.foobar".into())
             .name(TranslatableString::with_default("Foo Bar"))
             .metadata_license("CC0-1.0".into())
             .summary(TranslatableString::with_default("A foo-ish bar"))
-            .url(ProjectUrl::Homepage(
-                Url::parse("http://www.example.org").unwrap(),
-            ))
+            .url(ProjectUrl::Homepage(Url::parse("http://www.example.org")?))
             .developer_name(TranslatableString::with_default("FooBar Team"))
             .provide(Provide::Library("libfoobar.so.2".into()))
             .provide(Provide::Font("foo.ttf".into()))
@@ -421,11 +426,12 @@ mod tests {
             )
             .build();
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn icon_theme_component() {
-        let c1 = Component::from_path("./tests/icon-theme.xml".into()).unwrap();
+    fn icon_theme_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/icon-theme.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("io.git.PapirusIconTheme".into())
@@ -441,7 +447,7 @@ mod tests {
                 ScreenshotBuilder::default()
                 .image(
                     ImageBuilder::new(
-                        Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap()
+                        Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png")?
                     )
                     .build()
                 )
@@ -450,11 +456,12 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn input_method_component() {
-        let c1 = Component::from_path("./tests/input-method.xml".into()).unwrap();
+    fn input_method_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/input-method.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("com.github.ibus.mathwriter-ibus.db".into())
@@ -468,16 +475,17 @@ mod tests {
                 "<p>\n      The input method is designed for entering mathematical symbols.\n    </p><p>\n      Input methods are typing systems allowing users to input complex languages.\n      They are necessary because these contain too many characters to simply be laid\n      out on a traditional keyboard.\n    </p>"
             ))
             .url(ProjectUrl::Homepage(
-                Url::parse("https://github.com/mike-fabian/ibus-table-others").unwrap(),
+                Url::parse("https://github.com/mike-fabian/ibus-table-others")?,
             ))
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn localization_component() {
-        let c1 = Component::from_path("./tests/localization.xml".into()).unwrap();
+    fn localization_component() -> Result<(), Box<dyn Error>> {
+        let c1 = Component::from_path("./tests/localization.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("org.kde.l10n.de".into())
@@ -491,19 +499,20 @@ mod tests {
             .extend("org.kde.plasmashell".into())
             .extend("org.kde.gwenview.desktop".into())
             .extend("org.kde.dolphin.desktop".into())
-            .url(ProjectUrl::Homepage(
-                Url::parse("http://i18n.kde.org/team-infos.php?teamcode=de").unwrap(),
-            ))
+            .url(ProjectUrl::Homepage(Url::parse(
+                "http://i18n.kde.org/team-infos.php?teamcode=de",
+            )?))
             .language(LanguageBuilder::new("de_DE").build())
             .language(LanguageBuilder::new("de_AT").percentage(96).build())
             .language(LanguageBuilder::new("de").percentage(100).build())
             .build();
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn os_component() {
-        let c1: Component = Component::from_path("./tests/os.xml".into()).unwrap();
+    fn os_component() -> Result<(), Box<dyn Error>> {
+        let c1: Component = Component::from_path("./tests/os.xml".into())?;
 
         let description = "<p>\n      Debian is a free operating system (OS) for your computer.\n      An operating system is the set of basic programs and utilities that make your computer run.\n        </p>";
         let c2 = ComponentBuilder::default()
@@ -515,7 +524,7 @@ mod tests {
                 "The universal operating system",
             ))
             .url(ProjectUrl::Homepage(
-                Url::parse("https://www.debian.org/").unwrap(),
+                Url::parse("https://www.debian.org/")?,
             ))
             .metadata_license("FSFAP".into())
             .developer_name(TranslatableString::with_default("The Debian Project"))
@@ -534,11 +543,12 @@ mod tests {
             )
             .build();
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn runtime_component() {
-        let c1: Component = Component::from_path("./tests/runtime.xml".into()).unwrap();
+    fn runtime_component() -> Result<(), Box<dyn Error>> {
+        let c1: Component = Component::from_path("./tests/runtime.xml".into())?;
 
         let c2 = ComponentBuilder::default()
             .id("org.freedesktop.Platform".into())
@@ -553,7 +563,7 @@ mod tests {
                 MarkupTranslatableString::with_default("<p>\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        </p>")
             )
             .url(ProjectUrl::Homepage(
-                Url::parse("https://freedesktop-sdk.gitlab.io/").unwrap(),
+                Url::parse("https://freedesktop-sdk.gitlab.io/")?,
             ))
             .release(ReleaseBuilder::new("10.0").build())
             .release(
@@ -564,21 +574,23 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
     #[cfg(feature = "test_json")]
-    fn serde_json_component() {
-        let file = std::fs::File::open("./tests/app-com.github.utsushi.Utsushi.json").unwrap();
-        let c: Component = serde_json::from_reader(&file).unwrap();
+    fn serde_json_component() -> Result<(), Box<dyn Error>> {
+        let file = std::fs::File::open("./tests/app-com.github.utsushi.Utsushi.json")?;
+        let c: Component = serde_json::from_reader(&file)?;
 
         assert_eq!(c.icons, vec![Icon::Stock("scanner".to_string())]);
+        Ok(())
     }
 
     #[test]
-    fn contrast_metainfo_component() {
+    fn contrast_metainfo_component() -> Result<(), Box<dyn Error>> {
         let c1: Component =
-            Component::from_path("./tests/app-org.gnome.design.Contrast.xml".into()).unwrap();
+            Component::from_path("./tests/app-org.gnome.design.Contrast.xml".into())?;
 
         let name = TranslatableString::with_default("Contrast")
             .and_locale("cs", "Kontrast")
@@ -656,10 +668,10 @@ mod tests {
                 sdk: "org.gnome.Sdk/x86_64/3.36".into(),
                 reference: "app/org.gnome.design.Contrast/x86_64/stable".into()
             })
-            .url(ProjectUrl::BugTracker(Url::parse("https://gitlab.gnome.org/World/design/contrast/issues").unwrap()))
-            .url(ProjectUrl::Donation(Url::parse("https://liberapay.com/bielmoussaoui").unwrap()))
-            .url(ProjectUrl::Homepage(Url::parse("https://gitlab.gnome.org/World/design/contrast").unwrap()))
-            .url(ProjectUrl::Translate(Url::parse("https://l10n.gnome.org/module/contrast/").unwrap()))
+            .url(ProjectUrl::BugTracker(Url::parse("https://gitlab.gnome.org/World/design/contrast/issues")?))
+            .url(ProjectUrl::Donation(Url::parse("https://liberapay.com/bielmoussaoui")?))
+            .url(ProjectUrl::Homepage(Url::parse("https://gitlab.gnome.org/World/design/contrast")?))
+            .url(ProjectUrl::Translate(Url::parse("https://l10n.gnome.org/module/contrast/")?))
             .translation(Translation::Gettext("contrast".into()))
             .launchable(Launchable::DesktopId("org.gnome.design.Contrast.desktop".into()))
             .developer_name(TranslatableString::with_default("Bilal Elmoussaoui"))
@@ -679,19 +691,19 @@ mod tests {
             })
             .release(
                 ReleaseBuilder::new("0.0.3")
-                    .date(Utc.datetime_from_str("1582329600", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1582329600", "%s")?)
                     .description(MarkupTranslatableString::with_default("<p>Stylesheet fixes</p><p>Translations updates</p>"))
                     .build()
             )
             .release(
                 ReleaseBuilder::new("0.0.2")
-                    .date(Utc.datetime_from_str("1566691200", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1566691200", "%s")?)
                     .description(MarkupTranslatableString::with_default("<p>Translations updates</p>"))
                     .build()
             )
             .release(
                 ReleaseBuilder::new("0.0.1")
-                    .date(Utc.datetime_from_str("1565136000", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1565136000", "%s")?)
                     .description(MarkupTranslatableString::with_default("<p>First release of Contrast</p>"))
                     .build()
             )
@@ -712,12 +724,12 @@ mod tests {
             .screenshot(ScreenshotBuilder::default()
                     .image(
                         ImageBuilder::new(
-                            Url::parse("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png").unwrap()
+                            Url::parse("https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png")?
                         ).build()
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png")?
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(624)
@@ -726,7 +738,7 @@ mod tests {
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png")?
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(112)
@@ -735,7 +747,7 @@ mod tests {
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png")?
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(224)
@@ -744,7 +756,7 @@ mod tests {
                     )
                     .image(
                         ImageBuilder::new(
-                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
+                            Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png")?
                         )
                         .kind(ImageKind::Thumbnail)
                         .width(752)
@@ -755,5 +767,6 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 }

@@ -81,40 +81,40 @@ mod tests {
     };
     use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
     use crate::{MarkupTranslatableString, TranslatableList, TranslatableString};
+    use std::error::Error;
     use url::Url;
 
     #[cfg(feature = "gzip")]
     #[test]
-    fn flathub_latest_collection() {
-        let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into()).unwrap();
+    fn flathub_latest_collection() -> Result<(), Box<dyn Error>> {
+        let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into())?;
         assert_eq!(c1.components.len(), 1257);
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection =
-                serde_json::from_str(&serde_json::to_string_pretty(&c1).unwrap()).unwrap();
+            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&c1)?)?;
             assert_eq!(c1, c2);
         }
+        Ok(())
     }
 
     #[cfg(feature = "gzip")]
     #[test]
-    fn flathub_beta_collection() {
-        let c1 =
-            Collection::from_gzipped("./tests/collections/flathub-beta.xml.gz".into()).unwrap();
+    fn flathub_beta_collection() -> Result<(), Box<dyn Error>> {
+        let c1 = Collection::from_gzipped("./tests/collections/flathub-beta.xml.gz".into())?;
         assert_eq!(c1.components.len(), 112);
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection =
-                serde_json::from_str(&serde_json::to_string_pretty(&c1).unwrap()).unwrap();
+            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&c1)?)?;
             assert_eq!(c1, c2);
         }
+        Ok(())
     }
 
     #[test]
-    fn spec_example_collection() {
-        let c1 = Collection::from_path("./tests/collections/spec_example.xml".into()).unwrap();
+    fn spec_example_collection() -> Result<(), Box<dyn Error>> {
+        let c1 = Collection::from_path("./tests/collections/spec_example.xml".into())?;
 
         let c2 = CollectionBuilder::new("0.10")
         .component(
@@ -128,17 +128,17 @@ mod tests {
             .project_license("MPL-2.0".into())
             .keywords(TranslatableList::with_default(vec!["internet","web", "browser"]).and_locale("fr_FR", vec!["navigateur"]))
             .summary(TranslatableString::with_default("Web browser").and_locale("fr_FR", "Navigateur web"))
-            .url(ProjectUrl::Homepage(Url::parse("https://www.mozilla.com").unwrap()))
+            .url(ProjectUrl::Homepage(Url::parse("https://www.mozilla.com")?))
             .screenshot(
                 ScreenshotBuilder::default()
                 .image(
-                    ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png").unwrap())
+                    ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main.png")?)
                         .width(800)
                         .height(600)
                         .build(),
                 )
                 .image(
-                    ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png").unwrap())
+                    ImageBuilder::new(Url::parse("https://www.awesomedistro.example.org/en_US/firefox.desktop/main-small.png")?)
                         .kind(ImageKind::Thumbnail)
                         .width(200)
                         .height(150)
@@ -173,7 +173,7 @@ mod tests {
             )
             .summary(TranslatableString::with_default("The PulseAudio sound server"))
             .project_license("GPL-2.0+".into())
-            .url(ProjectUrl::Homepage(Url::parse("https://www.freedesktop.org/wiki/Software/PulseAudio/").unwrap()))
+            .url(ProjectUrl::Homepage(Url::parse("https://www.freedesktop.org/wiki/Software/PulseAudio/")?))
             .provide(Provide::Library("libpulse-simple.so.0".into()))
             .provide(Provide::Library("libpulse.so.0".into()))
             .provide(Provide::Binary("start-pulseaudio-kde".into()))
@@ -195,13 +195,15 @@ mod tests {
             .build()
         )
         .build();
+
         assert_eq!(c1, c2);
+
+        Ok(())
     }
 
     #[test]
-    fn generic_collection() {
-        let c1 =
-            Collection::from_path("./tests/collections/fedora-other-repos.xml".into()).unwrap();
+    fn generic_collection() -> Result<(), Box<dyn Error>> {
+        let c1 = Collection::from_path("./tests/collections/fedora-other-repos.xml".into())?;
 
         let c2 = CollectionBuilder::new("0.8")
             .component(
@@ -251,11 +253,12 @@ mod tests {
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn web_collection() {
-        let c1 = Collection::from_path("./tests/collections/fedora-web-apps.xml".into()).unwrap();
+    fn web_collection() -> Result<(), Box<dyn Error>> {
+        let c1 = Collection::from_path("./tests/collections/fedora-web-apps.xml".into())?;
 
         let c2 = CollectionBuilder::new("0.8")
             .component(
@@ -274,90 +277,81 @@ mod tests {
                 .icon(Icon::Remote{
                     width: None,
                     height: None,
-                    url: Url::parse("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png").unwrap()
+                    url: Url::parse("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png")?
                 })
                 .metadata("X-Needs-Dark-Theme".to_string(), None)
                 .metadata("X-Kudo-Popular".to_string(), None)
                 .category(Category::Education)
                 .category(Category::Literature)
                 .keywords(TranslatableList::with_default(vec!["book", "ebook", "reader"]))
-                .url(ProjectUrl::Homepage(Url::parse("https://read.amazon.com").unwrap()))
+                .url(ProjectUrl::Homepage(Url::parse("https://read.amazon.com")?))
                 .build()
             )
             .build();
 
         assert_eq!(c1, c2);
+        Ok(())
     }
 
     #[test]
-    fn endless_os_collection() {
-        let c1: Result<Collection, ParseError> =
-            Collection::from_path("./tests/collections/endless-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
-        let collection = c1.unwrap();
+    fn endless_os_collection() -> Result<(), Box<dyn Error>> {
+        let collection = Collection::from_path("./tests/collections/endless-apps.xml".into())?;
+
         assert_eq!(631, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection =
-                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
             assert_eq!(collection, c2);
         }
+        Ok(())
     }
 
     #[test]
-    fn gnome_collection() {
-        let c1: Result<Collection, ParseError> =
-            Collection::from_path("./tests/collections/gnome-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
-        let collection = c1.unwrap();
+    fn gnome_collection() -> Result<(), Box<dyn Error>> {
+        let collection = Collection::from_path("./tests/collections/gnome-apps.xml".into())?;
+
         assert_eq!(24, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection =
-                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
             assert_eq!(collection, c2);
         }
+        Ok(())
     }
 
     #[test]
-    fn kde_collection() {
-        let c1: Result<Collection, ParseError> =
-            Collection::from_path("./tests/collections/kde-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
-        let collection = c1.unwrap();
+    fn kde_collection() -> Result<(), Box<dyn Error>> {
+        let collection = Collection::from_path("./tests/collections/kde-apps.xml".into())?;
         assert_eq!(69, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection =
-                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
             assert_eq!(collection, c2);
         }
+        Ok(())
     }
 
     #[test]
-    fn flathub_collection() {
-        let c1: Result<Collection, ParseError> =
-            Collection::from_path("./tests/collections/flathub-apps.xml".into());
-        assert_eq!(c1.is_ok(), true);
-        let collection = c1.unwrap();
+    fn flathub_collection() -> Result<(), Box<dyn Error>> {
+        let collection = Collection::from_path("./tests/collections/flathub-apps.xml".into())?;
         assert_eq!(376, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection =
-                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
             assert_eq!(collection, c2);
         }
+        Ok(())
     }
 }

@@ -34,7 +34,10 @@ impl TryFrom<&Element> for AppId {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        Ok(e.get_text().unwrap().into_owned().into())
+        Ok(e.get_text()
+            .ok_or_else(|| ParseError::MissingValue("id".to_string()))?
+            .into_owned()
+            .into())
     }
 }
 
@@ -63,7 +66,11 @@ impl TryFrom<&Element> for Artifact {
             if let xmltree::XMLNode::Element(ref e) = node {
                 match &*e.name {
                     "location" => {
-                        let url = Url::parse(&e.get_text().unwrap().to_string())?;
+                        let url = Url::parse(
+                            &e.get_text()
+                                .ok_or_else(|| ParseError::MissingValue("location".to_string()))?
+                                .into_owned(),
+                        )?;
                         artifact = artifact.url(url);
                     }
                     "size" => {
@@ -85,7 +92,10 @@ impl TryFrom<&Element> for Bundle {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("bundle".to_string()))?
+            .into_owned();
 
         match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
@@ -122,7 +132,11 @@ impl TryFrom<&Element> for Checksum {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("checksum".to_string()))?
+            .into_owned();
+
         match e.attributes.get("type").as_deref() {
             Some(t) => match t.as_str() {
                 "sha1" => Ok(Checksum::Sha1(val)),
@@ -216,17 +230,34 @@ impl TryFrom<&Element> for Component {
                         component = component.icon(Icon::try_from(e)?);
                     }
                     "update_contact" => {
-                        component = component.update_contact(&e.get_text().unwrap().into_owned());
+                        let contact = e
+                            .get_text()
+                            .ok_or_else(|| ParseError::MissingValue("update_contact".to_string()))?
+                            .into_owned();
+                        component = component.update_contact(&contact);
                     }
                     "project_group" => {
-                        component = component.project_group(&e.get_text().unwrap().into_owned());
+                        let project_group = e
+                            .get_text()
+                            .ok_or_else(|| ParseError::MissingValue("project_group".to_string()))?
+                            .into_owned();
+                        component = component.project_group(&project_group);
                     }
                     "compulsory_for_desktop" => {
-                        component =
-                            component.compulsory_for_desktop(&e.get_text().unwrap().into_owned());
+                        let compulsory_for_desktop = e
+                            .get_text()
+                            .ok_or_else(|| {
+                                ParseError::MissingValue("compulsory_for_desktop".to_string())
+                            })?
+                            .into_owned();
+                        component = component.compulsory_for_desktop(&compulsory_for_desktop);
                     }
                     "pkgname" => {
-                        component = component.pkgname(&e.get_text().unwrap().into_owned());
+                        let pkgname = e
+                            .get_text()
+                            .ok_or_else(|| ParseError::MissingValue("pkgname".to_string()))?
+                            .into_owned();
+                        component = component.pkgname(&pkgname);
                     }
                     "categories" => {
                         for child in e.children.iter() {
@@ -234,7 +265,7 @@ impl TryFrom<&Element> for Component {
                                 .as_element()
                                 .ok_or_else(|| ParseError::InvalidTag("category".to_string()))?
                                 .get_text()
-                                .unwrap()
+                                .ok_or_else(|| ParseError::MissingValue("category".to_string()))?
                                 .to_string();
                             component = component.category(Category::from_str(&category).map_err(
                                 |_| {
@@ -248,7 +279,11 @@ impl TryFrom<&Element> for Component {
                         }
                     }
                     "source_pkgname" => {
-                        component = component.source_pkgname(&e.get_text().unwrap().into_owned());
+                        let source_pkgname = e
+                            .get_text()
+                            .ok_or_else(|| ParseError::MissingValue("source_pkgname".to_string()))?
+                            .into_owned();
+                        component = component.source_pkgname(&source_pkgname);
                     }
                     "keywords" => {
                         for c in e.children.iter() {
@@ -265,7 +300,7 @@ impl TryFrom<&Element> for Component {
                                 .as_element()
                                 .ok_or_else(|| ParseError::InvalidTag("kudo".to_string()))?
                                 .get_text()
-                                .unwrap()
+                                .ok_or_else(|| ParseError::MissingValue("kudo".to_string()))?
                                 .to_string();
                             component = component.kudo(Kudo::from_str(&kudo).map_err(|_| {
                                 ParseError::InvalidValue(
@@ -283,7 +318,9 @@ impl TryFrom<&Element> for Component {
                                     .as_element()
                                     .ok_or_else(|| ParseError::InvalidTag("mimetype".to_string()))?
                                     .get_text()
-                                    .unwrap()
+                                    .ok_or_else(|| {
+                                        ParseError::MissingValue("mimetype".to_string())
+                                    })?
                                     .to_string(),
                             );
                         }
@@ -420,7 +457,10 @@ impl TryFrom<&Element> for ContentAttribute {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("content-attribute".to_string()))?
+            .into_owned();
 
         let val = ContentState::from_str(&val).map_err(|_| {
             ParseError::InvalidValue(val, "$value".to_string(), "content-attribute".to_string())
@@ -474,37 +514,42 @@ impl TryFrom<&Element> for Icon {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("icon".to_string()))?
+            .into_owned();
+
         let kind = match e.attributes.get("type") {
             Some(t) => t.as_str(),
             None => "local",
+        };
+
+        let width: Option<u32> = match e.attributes.get("width") {
+            Some(w) => w.parse::<u32>().ok(),
+            _ => None,
+        };
+
+        let height: Option<u32> = match e.attributes.get("height") {
+            Some(h) => h.parse::<u32>().ok(),
+            _ => None,
         };
 
         Ok(match kind {
             "stock" => Icon::Stock(val),
             "cached" => Icon::Cached {
                 path: val.into(),
-                width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
-                height: e
-                    .attributes
-                    .get("height")
-                    .map(|w| w.parse::<u32>().unwrap()),
+                width,
+                height,
             },
             "remote" => Icon::Remote {
                 url: Url::parse(&val)?,
-                width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
-                height: e
-                    .attributes
-                    .get("height")
-                    .map(|w| w.parse::<u32>().unwrap()),
+                width,
+                height,
             },
             _ => Icon::Local {
                 path: val.into(),
-                width: e.attributes.get("width").map(|w| w.parse::<u32>().unwrap()),
-                height: e
-                    .attributes
-                    .get("height")
-                    .map(|w| w.parse::<u32>().unwrap()),
+                width,
+                height,
             },
         })
     }
@@ -514,7 +559,11 @@ impl TryFrom<&Element> for Image {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let url = Url::parse(&e.get_text().unwrap().into_owned())?;
+        let url = Url::parse(
+            &e.get_text()
+                .ok_or_else(|| ParseError::MissingValue("image".to_string()))?
+                .into_owned(),
+        )?;
         let mut img = ImageBuilder::new(url);
 
         let kind = match e.attributes.get("type") {
@@ -546,7 +595,10 @@ impl TryFrom<&Element> for Language {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let locale = e.get_text().unwrap().into_owned();
+        let locale = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("language".to_string()))?
+            .into_owned();
 
         match e.attributes.get("percentage") {
             Some(p) => {
@@ -596,7 +648,10 @@ impl TryFrom<&Element> for License {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        Ok(e.get_text().unwrap().into_owned().into())
+        Ok(e.get_text()
+            .ok_or_else(|| ParseError::MissingValue("license".to_string()))?
+            .into_owned()
+            .into())
     }
 }
 
@@ -632,7 +687,10 @@ impl TryFrom<&Element> for Provide {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let val = e.get_text().unwrap().into_owned();
+        let val = e
+            .get_text()
+            .ok_or_else(|| ParseError::MissingValue("provide".to_string()))?
+            .into_owned();
 
         match e.name.as_ref() {
             "library" => Ok(Provide::Library(val.into())),
@@ -760,7 +818,11 @@ impl TryFrom<&Element> for Release {
                     }
                     "description" => description.add_for_element(c),
                     "url" => {
-                        release = release.url(Url::parse(&c.get_text().unwrap().to_string())?);
+                        release = release.url(Url::parse(
+                            &c.get_text()
+                                .ok_or_else(|| ParseError::MissingValue("url".to_string()))?
+                                .to_string(),
+                        )?);
                     }
                     _ => (),
                 }
@@ -860,7 +922,11 @@ impl TryFrom<&Element> for Video {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let url = Url::parse(&e.get_text().unwrap().into_owned())?;
+        let url = Url::parse(
+            &e.get_text()
+                .ok_or_else(|| ParseError::MissingValue("video".to_string()))?
+                .into_owned(),
+        )?;
         let mut video = VideoBuilder::new(url);
 
         if let Some(container) = e.attributes.get("container") {

@@ -444,13 +444,17 @@ impl ComponentBuilder {
 /// use url::Url;
 /// use appstream::{enums::ImageKind, builders::ImageBuilder};
 ///
-/// let image= ImageBuilder::new(
-///                 Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png").unwrap()
-///            )
-///            .kind(ImageKind::Thumbnail)
-///            .width(112)
-///            .height(63)
-///            .build();
+/// fn main() -> Result<(), url::ParseError> {
+///     let image = ImageBuilder::new(
+///                     Url::parse("https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png")?
+///                 )
+///                 .kind(ImageKind::Thumbnail)
+///                 .width(112)
+///                 .height(63)
+///                 .build();
+///
+///     Ok(())
+/// }
 /// ```
 pub struct ImageBuilder {
     /// The image width.
@@ -670,18 +674,23 @@ impl ReleaseBuilder {
 /// use url::Url;
 /// use appstream::TranslatableString;
 /// use appstream::builders::{ScreenshotBuilder, ImageBuilder};
-/// let screenshot = ScreenshotBuilder::default()
-///             .caption(
-///                 TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
-///                     .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
-///             )
-///             .image(
-///                 ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png").unwrap())
-///                     .width(800)
-///                     .height(600)
-///                     .build()
-///             )
-///             .build();
+///
+/// fn main() -> Result<(), url::ParseError> {
+///     let screenshot = ScreenshotBuilder::default()
+///                 .caption(
+///                     TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
+///                         .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
+///                 )
+///                 .image(
+///                     ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png")?)
+///                         .width(800)
+///                         .height(600)
+///                         .build()
+///                 )
+///                 .build();
+///
+///     Ok(())
+/// }
 /// ```
 pub struct ScreenshotBuilder {
     /// Whether the screenhot is the default one or not.
@@ -757,11 +766,16 @@ impl ScreenshotBuilder {
 /// use url::Url;
 /// use appstream::builders::VideoBuilder;
 ///
-/// let video = VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv").unwrap())
-///             .width(1600)
-///             .height(900)
-///             .codec("av1")
-///             .build();
+/// fn main() -> Result<(), url::ParseError> {
+///
+///     let video = VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv")?)
+///                 .width(1600)
+///                 .height(900)
+///                 .codec("av1")
+///                 .build();
+///
+///     Ok(())
+/// }
 /// ```
 pub struct VideoBuilder {
     /// The video width.

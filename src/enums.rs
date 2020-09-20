@@ -70,8 +70,8 @@ impl Serialize for Bundle {
                 bundle_map.serialize_entry("type", "flatpak")?;
                 bundle_map.serialize_entry("reference", reference)?;
                 bundle_map.serialize_entry("sdk", sdk)?;
-                if runtime.is_some() {
-                    bundle_map.serialize_entry("runtime", runtime.as_ref().unwrap())?;
+                if let Some(runtime) = runtime {
+                    bundle_map.serialize_entry("runtime", runtime)?;
                 }
             }
             Bundle::AppImage(id) => {

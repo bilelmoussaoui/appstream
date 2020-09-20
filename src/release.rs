@@ -81,8 +81,10 @@ mod tests {
     use chrono::{TimeZone, Utc};
     use std::convert::TryFrom;
 
+    use std::error::Error;
+
     #[test]
-    fn release_artifacts() {
+    fn release_artifacts() -> Result<(), Box<dyn Error>> {
         let x = r"
         <releases>
         <release version='1.2' date='2014-04-12' urgency='high'>
@@ -118,10 +120,10 @@ mod tests {
         <release version='1.0' date='2012-08-26' />
         </releases>";
 
-        let element = xmltree::Element::parse(x.as_bytes()).unwrap();
+        let element = xmltree::Element::parse(x.as_bytes())?;
         let mut releases1: Vec<Release> = vec![];
         for e in element.children.iter() {
-            releases1.push(Release::try_from(e.as_element().unwrap()).unwrap());
+            releases1.push(Release::try_from(e.as_element().unwrap())?);
         }
 
         let releases2 = vec![
@@ -131,10 +133,10 @@ mod tests {
                     "<p>This stable release fixes bugs.</p>",
                 ))
                 .date(Utc.ymd(2014, 4, 12).and_hms_milli(0, 0, 0, 0))
-                .url(Url::parse("https://example.org/releases/version-1.2.html").unwrap())
+                .url(Url::parse("https://example.org/releases/version-1.2.html")?)
                 .artifact(
                     ArtifactBuilder::default()
-                        .url(Url::parse("https://example.com/mytarball.bin.tar.xz").unwrap())
+                        .url(Url::parse("https://example.com/mytarball.bin.tar.xz")?)
                         .kind(ArtifactKind::Binary)
                         .platform("x86_64-linux-gnu")
                         .size(Size::Download(12345678))
@@ -145,14 +147,14 @@ mod tests {
                 )
                 .artifact(
                     ArtifactBuilder::default()
-                        .url(Url::parse("https://example.com/mytarball.bin.exe").unwrap())
+                        .url(Url::parse("https://example.com/mytarball.bin.exe")?)
                         .kind(ArtifactKind::Binary)
                         .platform("win32")
                         .build(),
                 )
                 .artifact(
                     ArtifactBuilder::default()
-                        .url(Url::parse("https://example.com/mytarball.tar.xz").unwrap())
+                        .url(Url::parse("https://example.com/mytarball.tar.xz")?)
                         .kind(ArtifactKind::Source)
                         .checksum(Checksum::Sha256("....".into()))
                         .build(),
@@ -167,10 +169,11 @@ mod tests {
                 .build(),
         ];
         assert_eq!(releases1, releases2);
+        Ok(())
     }
 
     #[test]
-    fn release_size() {
+    fn release_size() -> Result<(), Box<dyn Error>> {
         let x = r"
         <releases>
             <release version='1.8' timestamp='1424116753'>
@@ -187,10 +190,10 @@ mod tests {
             <release version='1.0' timestamp='1345932000' />
         </releases>
         ";
-        let element = xmltree::Element::parse(x.as_bytes()).unwrap();
+        let element = xmltree::Element::parse(x.as_bytes())?;
         let mut releases: Vec<Release> = vec![];
         for e in element.children.iter() {
-            releases.push(Release::try_from(e.as_element().unwrap()).unwrap());
+            releases.push(Release::try_from(e.as_element().unwrap())?);
         }
 
         assert_eq!(
@@ -198,16 +201,17 @@ mod tests {
             vec![
                 ReleaseBuilder::new("1.8")
                     .description(MarkupTranslatableString::with_default("<p>This stable release fixes the following bug:</p><ul><li>CPU no longer overheats when you hold down spacebar</li></ul>"))
-                    .date(Utc.datetime_from_str("1424116753", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1424116753", "%s")?)
                     .sizes(vec![Size::Download(12345678), Size::Installed(42424242)])
                     .build(),
                 ReleaseBuilder::new("1.2")
-                    .date(Utc.datetime_from_str("1397253600", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1397253600", "%s")?)
                     .build(),
                 ReleaseBuilder::new("1.0")
-                    .date(Utc.datetime_from_str("1345932000", "%s").unwrap())
+                    .date(Utc.datetime_from_str("1345932000", "%s")?)
                     .build()
             ]
-        )
+        );
+        Ok(())
     }
 }

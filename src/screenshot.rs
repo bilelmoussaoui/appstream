@@ -79,28 +79,30 @@ mod tests {
     use super::*;
     use crate::builders::{ImageBuilder, ScreenshotBuilder, VideoBuilder};
     use std::convert::TryFrom;
+    use std::error::Error;
 
     #[test]
-    fn default_screenshot() {
+    fn default_screenshot() -> Result<(), Box<dyn Error>> {
         let xml = r"
             <screenshot type='default'>
                 <image type='source'>https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png</image>
             </screenshot>";
 
-        let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
-        let s1 = Screenshot::try_from(&element).unwrap();
+        let element = xmltree::Element::parse(xml.as_bytes())?;
+        let s1 = Screenshot::try_from(&element)?;
 
         let s2 = ScreenshotBuilder::default().image(
-                ImageBuilder::new(Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png").unwrap())
+                ImageBuilder::new(Url::parse("https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png")?)
                 .build()
             )
             .build();
 
         assert_eq!(s1, s2);
+        Ok(())
     }
 
     #[test]
-    fn screenshot_caption() {
+    fn screenshot_caption() -> Result<(), Box<dyn Error>> {
         let xml = r"
         <screenshot type='default'>
             <caption>FooBar showing kitchen-sink functionality.</caption>
@@ -110,8 +112,8 @@ mod tests {
             <image type='thumbnail' width='112' height='63'>https://www.example.org/en_US/main-small.png</image>
         </screenshot>";
 
-        let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
-        let s1 = Screenshot::try_from(&element).unwrap();
+        let element = xmltree::Element::parse(xml.as_bytes())?;
+        let s1 = Screenshot::try_from(&element)?;
 
         let s2 = ScreenshotBuilder::default()
             .caption(
@@ -119,46 +121,43 @@ mod tests {
                     .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
             )
             .image(
-                ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png").unwrap())
+                ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png")?)
                     .width(800)
                     .height(600)
                     .build(),
             )
             .image(
-                ImageBuilder::new(
-                    Url::parse("https://www.example.org/en_US/main-large.png").unwrap(),
-                )
-                .width(752)
-                .height(423)
-                .kind(ImageKind::Thumbnail)
-                .build(),
+                ImageBuilder::new(Url::parse("https://www.example.org/en_US/main-large.png")?)
+                    .width(752)
+                    .height(423)
+                    .kind(ImageKind::Thumbnail)
+                    .build(),
             )
             .image(
-                ImageBuilder::new(
-                    Url::parse("https://www.example.org/en_US/main-small.png").unwrap(),
-                )
-                .width(112)
-                .height(63)
-                .kind(ImageKind::Thumbnail)
-                .build(),
+                ImageBuilder::new(Url::parse("https://www.example.org/en_US/main-small.png")?)
+                    .width(112)
+                    .height(63)
+                    .kind(ImageKind::Thumbnail)
+                    .build(),
             )
             .build();
         assert_eq!(s1, s2);
+        Ok(())
     }
 
     #[test]
-    fn screenshot_video() {
+    fn screenshot_video() -> Result<(), Box<dyn Error>> {
         let xml = r"
             <screenshot>
                 <video codec='av1' width='1600' height='900'>https://example.com/foobar/screencast.mkv</video>
             </screenshot>";
-        let element = xmltree::Element::parse(xml.as_bytes()).unwrap();
-        let s1 = Screenshot::try_from(&element).unwrap();
+        let element = xmltree::Element::parse(xml.as_bytes())?;
+        let s1 = Screenshot::try_from(&element)?;
 
         let s2 = ScreenshotBuilder::default()
             .set_default(false)
             .video(
-                VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv").unwrap())
+                VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv")?)
                     .width(1600)
                     .height(900)
                     .codec("av1")
@@ -166,5 +165,6 @@ mod tests {
             )
             .build();
         assert_eq!(s1, s2);
+        Ok(())
     }
 }

@@ -139,10 +139,10 @@ impl TranslatableString {
     /// XML elements containing a `lang` attribute are marked as translatable
     /// and can be used to feed the `TranslatableString`.
     pub fn add_for_element(&mut self, element: &xmltree::Element) {
-        let locale = element.attributes.get("lang").map(|l| l.as_str());
-        if let Some(text) = element.get_text() {
-            self.add_for_locale(locale, &text.into_owned());
-        }
+        self.add_for_locale(
+            element.attributes.get("lang").map(|l| l.as_str()),
+            &element.get_text().unwrap_or_default(), // for some reason some description tags contains empty strings.
+        );
     }
 
     /// Adds a new translation for a speicifc locale.
@@ -228,7 +228,7 @@ impl TranslatableList {
     pub fn add_for_element(&mut self, element: &xmltree::Element) {
         self.add_for_locale(
             element.attributes.get("lang").map(|l| l.as_str()),
-            &element.get_text().unwrap().into_owned(),
+            &element.get_text().unwrap_or_default(),
         );
     }
 
