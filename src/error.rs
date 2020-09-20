@@ -39,3 +39,30 @@ pub enum ParseError {
     /// A value passed to an attribute for a specific tag is invalid.
     InvalidValue(String, String, String),
 }
+
+impl ParseError {
+    /// Creates an invalid value error.
+    pub fn invalid_value(val: &str, attr: &str, tag: &str) -> Self {
+        ParseError::InvalidValue(val.to_string(), attr.to_string(), tag.to_string())
+    }
+
+    /// Creates an invalid tag error.
+    pub fn invalid_tag(tag: &str) -> Self {
+        ParseError::InvalidTag(tag.to_string())
+    }
+
+    /// Creates a missing attribute error.
+    pub fn missing_attribute(attr: &str, tag: &str) -> Self {
+        ParseError::MissingAttribute(attr.to_string(), tag.to_string())
+    }
+
+    /// Creates a missing tag error.
+    pub fn missing_tag(tag: &str) -> Self {
+        ParseError::MissingTag(tag.to_string())
+    }
+
+    /// Creates a missing value error.
+    pub fn missing_value(tag: &str) -> Self {
+        ParseError::MissingValue(tag.to_string())
+    }
+}

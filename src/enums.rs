@@ -486,11 +486,7 @@ impl FromStr for ComponentKind {
             "codec" => Ok(ComponentKind::Codec),
             "localization" => Ok(ComponentKind::Localization),
             "" | "generic" => Ok(ComponentKind::default()),
-            _ => Err(ParseError::InvalidValue(
-                c.to_string(),
-                "type".to_string(),
-                "component".to_string(),
-            )),
+            _ => Err(ParseError::invalid_value(c, "type", "component")),
         }
     }
 }

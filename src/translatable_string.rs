@@ -7,7 +7,7 @@ fn element_to_xml(e: &xmltree::Element) -> String {
     e.children
         .iter()
         .map(|node| match node {
-            xmltree::XMLNode::Element(c) => {
+            xmltree::XMLNode::Element(ref c) => {
                 format!("<{}>{}</{}>", c.name, element_to_xml(c), c.name)
             }
             xmltree::XMLNode::Text(t) => t.clone(),
@@ -61,7 +61,7 @@ impl MarkupTranslatableString {
     /// and can be used to feed the `MarkupTranslatableString`.
     pub fn add_for_element(&mut self, element: &xmltree::Element) {
         let locale = element.attributes.get("lang").map(|l| l.as_str());
-        self.add_for_locale(locale, &element_to_xml(element));
+        self.add_for_locale(locale, &element_to_xml(&element));
     }
 
     /// Adds a new translation for a speicifc locale.
