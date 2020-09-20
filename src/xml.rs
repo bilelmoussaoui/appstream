@@ -36,7 +36,7 @@ impl TryFrom<&Element> for AppId {
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         Ok(e.get_text()
             .ok_or_else(|| ParseError::MissingValue("id".to_string()))?
-            .into_owned()
+            .as_ref()
             .into())
     }
 }
@@ -69,7 +69,7 @@ impl TryFrom<&Element> for Artifact {
                         let url = Url::parse(
                             &e.get_text()
                                 .ok_or_else(|| ParseError::MissingValue("location".to_string()))?
-                                .into_owned(),
+                                .as_ref(),
                         )?;
                         artifact = artifact.url(url);
                     }
@@ -232,32 +232,29 @@ impl TryFrom<&Element> for Component {
                     "update_contact" => {
                         let contact = e
                             .get_text()
-                            .ok_or_else(|| ParseError::MissingValue("update_contact".to_string()))?
-                            .into_owned();
-                        component = component.update_contact(&contact);
+                            .ok_or_else(|| ParseError::MissingValue("update_contact".to_string()))?;
+                        component = component.update_contact(contact.as_ref());
                     }
                     "project_group" => {
                         let project_group = e
                             .get_text()
                             .ok_or_else(|| ParseError::MissingValue("project_group".to_string()))?
-                            .into_owned();
-                        component = component.project_group(&project_group);
+                            ;
+                        component = component.project_group(project_group.as_ref());
                     }
                     "compulsory_for_desktop" => {
                         let compulsory_for_desktop = e
                             .get_text()
                             .ok_or_else(|| {
                                 ParseError::MissingValue("compulsory_for_desktop".to_string())
-                            })?
-                            .into_owned();
-                        component = component.compulsory_for_desktop(&compulsory_for_desktop);
+                            })?;
+                        component = component.compulsory_for_desktop(compulsory_for_desktop.as_ref());
                     }
                     "pkgname" => {
                         let pkgname = e
                             .get_text()
-                            .ok_or_else(|| ParseError::MissingValue("pkgname".to_string()))?
-                            .into_owned();
-                        component = component.pkgname(&pkgname);
+                            .ok_or_else(|| ParseError::MissingValue("pkgname".to_string()))?;
+                        component = component.pkgname(pkgname.as_ref());
                     }
                     "categories" => {
                         for child in e.children.iter() {
@@ -282,8 +279,8 @@ impl TryFrom<&Element> for Component {
                         let source_pkgname = e
                             .get_text()
                             .ok_or_else(|| ParseError::MissingValue("source_pkgname".to_string()))?
-                            .into_owned();
-                        component = component.source_pkgname(&source_pkgname);
+                            ;
+                        component = component.source_pkgname(source_pkgname.as_ref());
                     }
                     "keywords" => {
                         for c in e.children.iter() {
@@ -562,7 +559,7 @@ impl TryFrom<&Element> for Image {
         let url = Url::parse(
             &e.get_text()
                 .ok_or_else(|| ParseError::MissingValue("image".to_string()))?
-                .into_owned(),
+                .as_ref(),
         )?;
         let mut img = ImageBuilder::new(url);
 
@@ -650,7 +647,7 @@ impl TryFrom<&Element> for License {
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         Ok(e.get_text()
             .ok_or_else(|| ParseError::MissingValue("license".to_string()))?
-            .into_owned()
+            .as_ref()
             .into())
     }
 }
@@ -925,7 +922,7 @@ impl TryFrom<&Element> for Video {
         let url = Url::parse(
             &e.get_text()
                 .ok_or_else(|| ParseError::MissingValue("video".to_string()))?
-                .into_owned(),
+                .as_ref(),
         )?;
         let mut video = VideoBuilder::new(url);
 
