@@ -945,10 +945,6 @@
 <span id="945">945</span>
 <span id="946">946</span>
 <span id="947">947</span>
-<span id="948">948</span>
-<span id="949">949</span>
-<span id="950">950</span>
-<span id="951">951</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Collection</span>, <span class="ident">Component</span>};
@@ -1182,25 +1178,22 @@
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
                     <span class="string">&quot;update_contact&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">contact</span> <span class="op">=</span> <span class="ident">e</span>
-                            .<span class="ident">get_text</span>()
-                            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;update_contact&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
+                        <span class="kw">let</span> <span class="ident">contact</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">get_text</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+                            <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;update_contact&quot;</span>.<span class="ident">to_string</span>())
+                        })<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">update_contact</span>(<span class="ident">contact</span>.<span class="ident">as_ref</span>());
                     }
                     <span class="string">&quot;project_group&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="kw">let</span> <span class="ident">project_group</span> <span class="op">=</span> <span class="ident">e</span>
                             .<span class="ident">get_text</span>()
-                            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;project_group&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>
-                            ;
+                            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;project_group&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">project_group</span>(<span class="ident">project_group</span>.<span class="ident">as_ref</span>());
                     }
                     <span class="string">&quot;compulsory_for_desktop&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">compulsory_for_desktop</span> <span class="op">=</span> <span class="ident">e</span>
-                            .<span class="ident">get_text</span>()
-                            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
-                                <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;compulsory_for_desktop&quot;</span>.<span class="ident">to_string</span>())
-                            })<span class="question-mark">?</span>;
-                        <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">compulsory_for_desktop</span>(<span class="ident">compulsory_for_desktop</span>.<span class="ident">as_ref</span>());
+                        <span class="kw">let</span> <span class="ident">compulsory</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">get_text</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+                            <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;compulsory_for_desktop&quot;</span>.<span class="ident">to_string</span>())
+                        })<span class="question-mark">?</span>;
+                        <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">compulsory_for_desktop</span>(<span class="ident">compulsory</span>.<span class="ident">as_ref</span>());
                     }
                     <span class="string">&quot;pkgname&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
                         <span class="kw">let</span> <span class="ident">pkgname</span> <span class="op">=</span> <span class="ident">e</span>
@@ -1228,10 +1221,9 @@
                         }
                     }
                     <span class="string">&quot;source_pkgname&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="kw">let</span> <span class="ident">source_pkgname</span> <span class="op">=</span> <span class="ident">e</span>
-                            .<span class="ident">get_text</span>()
-                            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;source_pkgname&quot;</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>
-                            ;
+                        <span class="kw">let</span> <span class="ident">source_pkgname</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">get_text</span>().<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+                            <span class="ident">ParseError</span>::<span class="ident">MissingValue</span>(<span class="string">&quot;source_pkgname&quot;</span>.<span class="ident">to_string</span>())
+                        })<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">source_pkgname</span>(<span class="ident">source_pkgname</span>.<span class="ident">as_ref</span>());
                     }
                     <span class="string">&quot;keywords&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
