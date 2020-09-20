@@ -715,18 +715,20 @@ impl<'de> Deserialize<'de> for Icon {
                 let mut height = None;
                 let mut path = None;
 
-                while let Some((key, value)) = access.next_entry::<String, String>()? {
+                while let Some(key) = access.next_key::<String>()? {
                     match &*key {
                         "type" => {
+                            let value = access.next_value::<String>()?;
                             kind = Some(value.clone());
                         }
                         "width" => {
-                            width = value.parse::<u32>().ok();
+                            width = access.next_value::<u32>().ok();
                         }
                         "height" => {
-                            height = value.parse::<u32>().ok();
+                            height = access.next_value::<u32>().ok();
                         }
                         "path" | "name" | "url" => {
+                            let value = access.next_value::<String>()?;
                             path = Some(value.clone());
                         }
                         _ => (),

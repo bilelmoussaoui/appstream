@@ -88,6 +88,13 @@ mod tests {
     fn flathub_latest_collection() {
         let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into()).unwrap();
         assert_eq!(c1.components.len(), 1257);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection =
+                serde_json::from_str(&serde_json::to_string_pretty(&c1).unwrap()).unwrap();
+            assert_eq!(c1, c2);
+        }
     }
 
     #[cfg(feature = "gzip")]
@@ -96,6 +103,13 @@ mod tests {
         let c1 =
             Collection::from_gzipped("./tests/collections/flathub-beta.xml.gz".into()).unwrap();
         assert_eq!(c1.components.len(), 112);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection =
+                serde_json::from_str(&serde_json::to_string_pretty(&c1).unwrap()).unwrap();
+            assert_eq!(c1, c2);
+        }
     }
 
     #[test]
@@ -284,6 +298,13 @@ mod tests {
         assert_eq!(631, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection =
+                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            assert_eq!(collection, c2);
+        }
     }
 
     #[test]
@@ -295,6 +316,13 @@ mod tests {
         assert_eq!(24, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection =
+                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            assert_eq!(collection, c2);
+        }
     }
 
     #[test]
@@ -306,6 +334,13 @@ mod tests {
         assert_eq!(69, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection =
+                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            assert_eq!(collection, c2);
+        }
     }
 
     #[test]
@@ -317,5 +352,12 @@ mod tests {
         assert_eq!(376, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection =
+                serde_json::from_str(&serde_json::to_string_pretty(&collection).unwrap()).unwrap();
+            assert_eq!(collection, c2);
+        }
     }
 }
