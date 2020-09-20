@@ -87,7 +87,7 @@ mod tests {
     #[cfg(feature = "gzip")]
     #[test]
     fn flathub_latest_collection() -> Result<(), Box<dyn Error>> {
-        let c1 = Collection::from_gzipped("./tests/collections/appstream.xml.gz".into())?;
+        let c1 = Collection::from_gzipped("./tests/collections/flathub.xml.gz".into())?;
         assert_eq!(c1.components.len(), 1257);
 
         #[cfg(feature = "test_json")]
@@ -342,7 +342,7 @@ mod tests {
 
     #[test]
     fn flathub_collection() -> Result<(), Box<dyn Error>> {
-        let collection = Collection::from_path("./tests/collections/flathub-apps.xml".into())?;
+        let collection = Collection::from_path("./tests/collections/flathub-old.xml".into())?;
         assert_eq!(376, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);

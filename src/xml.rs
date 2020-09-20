@@ -230,25 +230,22 @@ impl TryFrom<&Element> for Component {
                         component = component.icon(Icon::try_from(e)?);
                     }
                     "update_contact" => {
-                        let contact = e
-                            .get_text()
-                            .ok_or_else(|| ParseError::MissingValue("update_contact".to_string()))?;
+                        let contact = e.get_text().ok_or_else(|| {
+                            ParseError::MissingValue("update_contact".to_string())
+                        })?;
                         component = component.update_contact(contact.as_ref());
                     }
                     "project_group" => {
                         let project_group = e
                             .get_text()
-                            .ok_or_else(|| ParseError::MissingValue("project_group".to_string()))?
-                            ;
+                            .ok_or_else(|| ParseError::MissingValue("project_group".to_string()))?;
                         component = component.project_group(project_group.as_ref());
                     }
                     "compulsory_for_desktop" => {
-                        let compulsory_for_desktop = e
-                            .get_text()
-                            .ok_or_else(|| {
-                                ParseError::MissingValue("compulsory_for_desktop".to_string())
-                            })?;
-                        component = component.compulsory_for_desktop(compulsory_for_desktop.as_ref());
+                        let compulsory = e.get_text().ok_or_else(|| {
+                            ParseError::MissingValue("compulsory_for_desktop".to_string())
+                        })?;
+                        component = component.compulsory_for_desktop(compulsory.as_ref());
                     }
                     "pkgname" => {
                         let pkgname = e
@@ -276,10 +273,9 @@ impl TryFrom<&Element> for Component {
                         }
                     }
                     "source_pkgname" => {
-                        let source_pkgname = e
-                            .get_text()
-                            .ok_or_else(|| ParseError::MissingValue("source_pkgname".to_string()))?
-                            ;
+                        let source_pkgname = e.get_text().ok_or_else(|| {
+                            ParseError::MissingValue("source_pkgname".to_string())
+                        })?;
                         component = component.source_pkgname(source_pkgname.as_ref());
                     }
                     "keywords" => {
