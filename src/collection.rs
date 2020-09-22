@@ -65,9 +65,14 @@ impl Collection {
 
     /// Find the components that corresponds to a specific `AppId`
     pub fn find_by_id(&self, id: AppId) -> Vec<&Component> {
+        // For some obscure reasons & history
+        // Some apps uses $app-id.desktop as the id on the appdata/metainfo file
+        // Let's automatically check for those as well.
+        let alternative_id: AppId = format!("{}.desktop", id.to_string()).into();
+        
         self.components
             .iter()
-            .filter(|c| c.id == id)
+            .filter(|c| c.id == id || c.id == alternative_id)
             .collect::<Vec<&Component>>()
     }
 }
