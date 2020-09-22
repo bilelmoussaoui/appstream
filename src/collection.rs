@@ -69,7 +69,7 @@ impl Collection {
         // Some apps uses $app-id.desktop as the id on the appdata/metainfo file
         // Let's automatically check for those as well.
         let alternative_id: AppId = format!("{}.desktop", id.to_string()).into();
-        
+
         self.components
             .iter()
             .filter(|c| c.id == id || c.id == alternative_id)
