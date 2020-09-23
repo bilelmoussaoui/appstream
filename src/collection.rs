@@ -7,7 +7,6 @@ use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 use std::fs::File;
 #[cfg(feature = "gzip")]
-use std::io::prelude::*;
 use std::io::BufReader;
 use std::path::PathBuf;
 use xmltree::Element;
@@ -54,11 +53,9 @@ impl Collection {
     pub fn from_gzipped(path: PathBuf) -> Result<Self, ParseError> {
         let f = File::open(path)?;
 
-        let mut d = GzDecoder::new(f);
-        let mut xml = String::new();
-        d.read_to_string(&mut xml)?;
-
-        let collection: Collection = Collection::try_from(&Element::parse(xml.as_bytes())?)?;
+        let d = GzDecoder::new(f);
+        let element = Element::parse(d)?; 
+        let collection: Collection = Collection::try_from(&element)?;
 
         Ok(collection)
     }
