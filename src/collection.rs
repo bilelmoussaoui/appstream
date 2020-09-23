@@ -97,7 +97,7 @@ mod tests {
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&c1)?)?;
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&c1)?)?;
             assert_eq!(c1, c2);
         }
         Ok(())
@@ -111,7 +111,7 @@ mod tests {
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&c1)?)?;
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&c1)?)?;
             assert_eq!(c1, c2);
         }
         Ok(())
@@ -308,7 +308,7 @@ mod tests {
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&collection)?)?;
             assert_eq!(collection, c2);
         }
         Ok(())
@@ -324,7 +324,7 @@ mod tests {
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&collection)?)?;
             assert_eq!(collection, c2);
         }
         Ok(())
@@ -339,7 +339,7 @@ mod tests {
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&collection)?)?;
             assert_eq!(collection, c2);
         }
         Ok(())
@@ -354,7 +354,7 @@ mod tests {
 
         #[cfg(feature = "test_json")]
         {
-            let c2: Collection = serde_json::from_str(&serde_json::to_string_pretty(&collection)?)?;
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&collection)?)?;
             assert_eq!(collection, c2);
         }
         Ok(())
