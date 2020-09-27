@@ -356,7 +356,6 @@
 <span id="356">356</span>
 <span id="357">357</span>
 <span id="358">358</span>
-<span id="359">359</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">AppId</span>;
@@ -366,7 +365,6 @@
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>;
@@ -414,7 +412,7 @@
         <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">GzDecoder</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">d</span>)<span class="question-mark">?</span>; 
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">d</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">collection</span>: <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Collection</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">collection</span>)
