@@ -6,7 +6,6 @@ use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
 use std::convert::TryFrom;
 use std::fs::File;
-#[cfg(feature = "gzip")]
 use std::io::BufReader;
 use std::path::PathBuf;
 use xmltree::Element;
@@ -54,7 +53,7 @@ impl Collection {
         let f = File::open(path)?;
 
         let d = GzDecoder::new(f);
-        let element = Element::parse(d)?; 
+        let element = Element::parse(d)?;
         let collection: Collection = Collection::try_from(&element)?;
 
         Ok(collection)
