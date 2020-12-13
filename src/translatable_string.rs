@@ -72,7 +72,7 @@ impl MarkupTranslatableString {
     /// * `text` - The translation corresponding to the locale.
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0.insert(
-            locale.unwrap_or_else(|| DEFAULT_LOCALE).to_string(),
+            locale.unwrap_or(DEFAULT_LOCALE).to_string(),
             text.to_string(),
         );
     }
@@ -153,7 +153,7 @@ impl TranslatableString {
     /// * `text` - The translation corresponding to the locale.
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0.insert(
-            locale.unwrap_or_else(|| DEFAULT_LOCALE).to_string(),
+            locale.unwrap_or(DEFAULT_LOCALE).to_string(),
             text.to_string(),
         );
     }
@@ -240,7 +240,7 @@ impl TranslatableList {
     /// * `text` - The string to add.
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0
-            .entry(locale.unwrap_or_else(|| DEFAULT_LOCALE).into())
+            .entry(locale.unwrap_or(DEFAULT_LOCALE).into())
             .and_modify(|sentenses| {
                 sentenses.push(text.into());
             })
