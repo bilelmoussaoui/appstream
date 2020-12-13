@@ -89,7 +89,7 @@ mod tests {
     #[test]
     fn flathub_latest_collection() -> Result<(), Box<dyn Error>> {
         let c1 = Collection::from_gzipped("./tests/collections/flathub.xml.gz".into())?;
-        assert_eq!(c1.components.len(), 1257);
+        assert_eq!(c1.components.len(), 1420);
 
         #[cfg(feature = "test_json")]
         {
@@ -103,7 +103,7 @@ mod tests {
     #[test]
     fn flathub_beta_collection() -> Result<(), Box<dyn Error>> {
         let c1 = Collection::from_gzipped("./tests/collections/flathub-beta.xml.gz".into())?;
-        assert_eq!(c1.components.len(), 112);
+        assert_eq!(c1.components.len(), 149);
 
         #[cfg(feature = "test_json")]
         {
@@ -345,6 +345,21 @@ mod tests {
     fn flathub_collection() -> Result<(), Box<dyn Error>> {
         let collection = Collection::from_path("./tests/collections/flathub-old.xml".into())?;
         assert_eq!(376, collection.components.len());
+        assert_eq!(Some("flatpak".into()), collection.origin);
+        assert_eq!("0.8", collection.version);
+
+        #[cfg(feature = "test_json")]
+        {
+            let c2: Collection = serde_json::from_str(&serde_json::to_string(&collection)?)?;
+            assert_eq!(collection, c2);
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn gnome_nightly_collection() -> Result<(), Box<dyn Error>> {
+        let collection = Collection::from_path("./tests/collections/gnome-nightly.xml".into())?;
+        assert_eq!(58, collection.components.len());
         assert_eq!(Some("flatpak".into()), collection.origin);
         assert_eq!("0.8", collection.version);
 
