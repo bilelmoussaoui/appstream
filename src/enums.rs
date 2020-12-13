@@ -63,13 +63,15 @@ impl Serialize for Bundle {
                 bundle_map.serialize_entry("id", id)?;
             }
             Bundle::Flatpak {
-                runtime,
                 sdk,
+                runtime,
                 reference,
             } => {
                 bundle_map.serialize_entry("type", "flatpak")?;
                 bundle_map.serialize_entry("reference", reference)?;
-                bundle_map.serialize_entry("sdk", sdk)?;
+                if let Some(sdk) = sdk {
+                    bundle_map.serialize_entry("sdk", sdk)?;
+                }
                 if let Some(runtime) = runtime {
                     bundle_map.serialize_entry("runtime", runtime)?;
                 }
