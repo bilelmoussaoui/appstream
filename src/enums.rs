@@ -38,7 +38,7 @@ pub enum Bundle {
         /// The required runtime to run the application.
         runtime: Option<String>,
         /// The SDK used to build the application.
-        sdk: String,
+        sdk: Option<String>,
         /// The application reference.
         reference: String,
     },

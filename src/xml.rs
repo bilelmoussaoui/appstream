@@ -103,8 +103,7 @@ impl TryFrom<&Element> for Bundle {
                     sdk: e
                         .attributes
                         .get("sdk")
-                        .ok_or_else(|| ParseError::missing_attribute("sdk", "bundle"))?
-                        .to_string(),
+                        .map(|s| s.to_string()),
                     reference: val,
                 }),
                 _ => Err(ParseError::invalid_value(t, "type", "bundle")),

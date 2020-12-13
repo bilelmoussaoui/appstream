@@ -662,7 +662,7 @@ mod tests {
             .require("org.gnome.design.AppIconPreview".into())
             .bundle(Bundle::Flatpak {
                 runtime: Some("org.gnome.Platform/x86_64/3.36".into()),
-                sdk: "org.gnome.Sdk/x86_64/3.36".into(),
+                sdk: Some("org.gnome.Sdk/x86_64/3.36".into()),
                 reference: "app/org.gnome.design.Contrast/x86_64/stable".into()
             })
             .url(ProjectUrl::BugTracker(Url::parse("https://gitlab.gnome.org/World/design/contrast/issues")?))
