@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["appstream"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html\" title=\"trait core::cmp::Ord\">Ord</a> for <a class=\"enum\" href=\"appstream/enums/enum.ContentRatingVersion.html\" title=\"enum appstream::enums::ContentRatingVersion\">ContentRatingVersion</a>","synthetic":false,"types":["appstream::enums::ContentRatingVersion"]}];
+implementors["appstream"] = [{"text":"impl Ord for ContentRatingVersion","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

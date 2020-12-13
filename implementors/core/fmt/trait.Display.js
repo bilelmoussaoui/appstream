@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["appstream"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html\" title=\"trait core::fmt::Display\">Display</a> for <a class=\"enum\" href=\"appstream/enum.ParseError.html\" title=\"enum appstream::ParseError\">ParseError</a>","synthetic":false,"types":["appstream::error::ParseError"]}];
+implementors["appstream"] = [{"text":"impl Display for ParseError","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

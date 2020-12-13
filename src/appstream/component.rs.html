@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/component.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>component.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../appstream/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/component.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>component.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../appstream/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
+                <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -960,7 +963,7 @@
     <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">addon_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">addon_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/addon.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -983,7 +986,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">codec_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">codec_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/codec.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1016,7 +1019,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/desktop.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1072,7 +1075,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">driver_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">driver_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/driver.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1100,7 +1103,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">firmware_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">firmware_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/firmware.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1144,7 +1147,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">font_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">font_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/font.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1173,7 +1176,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">generic_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">generic_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/generic.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1197,7 +1200,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/icon-theme.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1227,7 +1230,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">input_method_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">input_method_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/input-method.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1251,7 +1254,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">localization_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">localization_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/localization.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1278,7 +1281,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">os_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">os_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/os.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="string">&quot;&lt;p&gt;\n      Debian is a free operating system (OS) for your computer.\n      An operating system is the set of basic programs and utilities that make your computer run.\n        &lt;/p&gt;&quot;</span>;
@@ -1314,7 +1317,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">runtime_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">runtime_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/runtime.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
@@ -1346,7 +1349,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">serde_json_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">serde_json_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="string">&quot;./tests/app-com.github.utsushi.Utsushi.json&quot;</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_reader</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>;
 
@@ -1355,7 +1358,7 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span>
             <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/app-org.gnome.design.Contrast.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
@@ -1432,7 +1435,7 @@
             .<span class="ident">require</span>(<span class="string">&quot;org.gnome.design.AppIconPreview&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">bundle</span>(<span class="ident">Bundle</span>::<span class="ident">Flatpak</span> {
                 <span class="ident">runtime</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;org.gnome.Platform/x86_64/3.36&quot;</span>.<span class="ident">into</span>()),
-                <span class="ident">sdk</span>: <span class="string">&quot;org.gnome.Sdk/x86_64/3.36&quot;</span>.<span class="ident">into</span>(),
+                <span class="ident">sdk</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;org.gnome.Sdk/x86_64/3.36&quot;</span>.<span class="ident">into</span>()),
                 <span class="ident">reference</span>: <span class="string">&quot;app/org.gnome.design.Contrast/x86_64/stable&quot;</span>.<span class="ident">into</span>()
             })
             .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>)<span class="question-mark">?</span>))
