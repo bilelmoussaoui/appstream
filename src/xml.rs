@@ -100,10 +100,7 @@ impl TryFrom<&Element> for Bundle {
                 "limba" => Ok(Bundle::Limba(val)),
                 "flatpak" => Ok(Bundle::Flatpak {
                     runtime: e.attributes.get("runtime").map(|r| r.to_string()),
-                    sdk: e
-                        .attributes
-                        .get("sdk")
-                        .map(|s| s.to_string()),
+                    sdk: e.attributes.get("sdk").map(|s| s.to_string()),
                     reference: val,
                 }),
                 _ => Err(ParseError::invalid_value(t, "type", "bundle")),
