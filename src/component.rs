@@ -170,6 +170,20 @@ impl Component {
         let component: Component = Component::try_from(&element)?;
         Ok(component)
     }
+
+    #[cfg(feature = "gzip")]
+    /// Create a new `Component` from a gzipped bytes.
+    ///
+    /// # Arguments
+    ///
+    /// * `bytes` - The byte slice (gzip compressed).
+    pub fn from_gzipped_bytes(bytes: &[u8]) -> Result<Self, ParseError> {
+        let d = GzDecoder::new(bytes);
+        let element = Element::parse(d)?;
+
+        let component: Component = Component::try_from(&element)?;
+        Ok(component)
+    }
 }
 
 #[cfg(test)]

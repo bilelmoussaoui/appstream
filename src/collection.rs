@@ -59,6 +59,20 @@ impl Collection {
         Ok(collection)
     }
 
+    #[cfg(feature = "gzip")]
+    /// Create a new `Collection` from a gzipped bytes.
+    ///
+    /// # Arguments
+    ///
+    /// * `bytes` - The byte slice (gzip compressed).
+    pub fn from_gzipped_bytes(bytes: &[u8]) -> Result<Self, ParseError> {
+        let d = GzDecoder::new(bytes);
+        let element = Element::parse(d)?;
+
+        let collection: Collection = Collection::try_from(&element)?;
+        Ok(collection)
+    }
+
     /// Find the components that corresponds to a specific `AppId`
     pub fn find_by_id(&self, id: AppId) -> Vec<&Component> {
         // For some obscure reasons & history
