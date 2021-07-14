@@ -16,12 +16,6 @@ impl From<String> for AppId {
     }
 }
 
-impl Into<String> for AppId {
-    fn into(self) -> String {
-        self.0
-    }
-}
-
 impl ToString for AppId {
     fn to_string(&self) -> String {
         self.0.clone()

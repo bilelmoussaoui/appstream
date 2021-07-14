@@ -16,12 +16,6 @@ impl From<&str> for License {
     }
 }
 
-impl Into<String> for License {
-    fn into(self) -> String {
-        self.0
-    }
-}
-
 impl ToString for License {
     fn to_string(&self) -> String {
         self.0.clone()
