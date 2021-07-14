@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/component.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>component.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/component.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>component.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../appstream/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><span class="help-button">?</span>
-                <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../appstream/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -785,24 +785,24 @@
 <span id="782">782</span>
 <span id="783">783</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">enums</span>::{
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::enums</span>::{
     <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">Icon</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">Translation</span>,
 };
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::<span class="ident">ParseError</span>;
+<span class="kw">use</span> <span class="kw">super</span><span class="ident">::error::ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">AppId</span>, <span class="ident">ContentRating</span>, <span class="ident">Language</span>, <span class="ident">License</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">Release</span>, <span class="ident">Screenshot</span>,
     <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>,
 };
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;gzip&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">flate2</span>::<span class="ident">read</span>::<span class="ident">GzDecoder</span>;
+<span class="kw">use</span> <span class="ident">flate2::read::GzDecoder</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
+<span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">TryFrom</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">BufReader</span>;
-<span class="kw">use</span> <span class="ident">xmltree</span>::<span class="ident">Element</span>;
+<span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
+<span class="kw">use</span> <span class="ident">std::fs::File</span>;
+<span class="kw">use</span> <span class="ident">std::io::BufReader</span>;
+<span class="kw">use</span> <span class="ident">xmltree::Element</span>;
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="doccomment">/// A component is wrapper around a `metainfo.xml` file or previously an `appdata.xml` file.</span>
 <span class="doccomment">/// It describes an application to the various stores out there on Linux.</span>
@@ -937,8 +937,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `path` - The path to the component.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>);
-        <span class="kw">let</span> <span class="ident">component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">file</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">BufReader::new</span>(<span class="ident">File::open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>);
+        <span class="kw">let</span> <span class="ident">component</span> <span class="op">=</span> <span class="ident">Component::try_from</span>(<span class="kw-2">&amp;</span><span class="ident">Element::parse</span>(<span class="ident">file</span>)<span class="question-mark">?</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">component</span>)
     }
 
@@ -949,12 +949,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `path` - The path to the gzipped component.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_gzipped</span>(<span class="ident">path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">File::open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">GzDecoder</span>::<span class="ident">new</span>(<span class="ident">f</span>);
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">d</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">GzDecoder::new</span>(<span class="ident">f</span>);
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">Element::parse</span>(<span class="ident">d</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">component</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">component</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component::try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">component</span>)
     }
 
@@ -965,10 +965,10 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `bytes` - The byte slice (gzip compressed).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_gzipped_bytes</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">ParseError</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">GzDecoder</span>::<span class="ident">new</span>(<span class="ident">bytes</span>);
-        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">Element</span>::<span class="ident">parse</span>(<span class="ident">d</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">GzDecoder::new</span>(<span class="ident">bytes</span>);
+        <span class="kw">let</span> <span class="ident">element</span> <span class="op">=</span> <span class="ident">Element::parse</span>(<span class="ident">d</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">component</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">component</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component::try_from</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">component</span>)
     }
 }
@@ -976,276 +976,276 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
 
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Component</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">builders</span>::{
+    <span class="kw">use</span> <span class="kw">super</span><span class="ident">::Component</span>;
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::builders</span>::{
         <span class="ident">ArtifactBuilder</span>, <span class="ident">ComponentBuilder</span>, <span class="ident">ImageBuilder</span>, <span class="ident">LanguageBuilder</span>, <span class="ident">ReleaseBuilder</span>,
         <span class="ident">ScreenshotBuilder</span>,
     };
-    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">enums</span>::{
+    <span class="kw">use</span> <span class="kw">crate</span><span class="ident">::enums</span>::{
         <span class="ident">ArtifactKind</span>, <span class="ident">Bundle</span>, <span class="ident">Category</span>, <span class="ident">ComponentKind</span>, <span class="ident">ContentRatingVersion</span>, <span class="ident">FirmwareKind</span>, <span class="ident">Icon</span>,
         <span class="ident">ImageKind</span>, <span class="ident">Kudo</span>, <span class="ident">Launchable</span>, <span class="ident">ProjectUrl</span>, <span class="ident">Provide</span>, <span class="ident">ReleaseKind</span>, <span class="ident">Translation</span>,
     };
     <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">ContentRating</span>, <span class="ident">MarkupTranslatableString</span>, <span class="ident">TranslatableList</span>, <span class="ident">TranslatableString</span>};
     <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
-    <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
+    <span class="kw">use</span> <span class="ident">std::error::Error</span>;
+    <span class="kw">use</span> <span class="ident">url::Url</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">addon_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/addon.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">addon_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/addon.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.gnome.gedit_code_assistance&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Code Assistance&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Addon</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Code Assistance&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Addon</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-3.0+&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;Code assistance for C, C++ and Objective-C&quot;</span>,
             ))
             .<span class="ident">update_contact</span>(<span class="string">&quot;developer_AT_example.com&quot;</span>)
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(<span class="ident">Url::parse</span>(
                 <span class="string">&quot;http://projects.gnome.org/gedit&quot;</span>,
             )<span class="question-mark">?</span>))
             .<span class="ident">extend</span>(<span class="string">&quot;org.gnome.gedit&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">build</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">codec_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/codec.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">codec_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/codec.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.freedesktop.gstreamer.codecs-good&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;GStreamer Multimedia Codecs - Extra&quot;</span>,
             ))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Codec</span>)
-            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Codec</span>)
+            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(
                 <span class="string">&quot;&lt;p&gt;\n      This addon includes several additional codecs that are missing\n      something - perhaps a good code review, some documentation, a set of\n      tests, a real live maintainer, or some actual wide use.\n      However, they might be good enough to play your media files.\n    &lt;/p&gt;&lt;p&gt;\n      These codecs can be used to encode and decode media files where the\n      format is not patent encumbered.\n    &lt;/p&gt;&lt;p&gt;\n      A codec decodes audio and video for for playback or editing and is also\n      used for transmission or storage.\n      Different codecs are used in video-conferencing, streaming media and\n      video editing applications.\n    &lt;/p&gt;&quot;</span>
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;encoder-audio/mpeg&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;mpegversion=(int){ 4, 2 }&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;stream-format=(string){ adts, raw }&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;encoder-video/mpeg&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;systemstream=(boolean)false&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;mpegversion=(int){ 1, 2, 4 }&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;systemstream=(boolean)true&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;encoder-video/x-xvid&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;element-faac&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;element-mpeg2enc&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;element-mplex&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;element-xviddec&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Codec</span>(<span class="string">&quot;element-xvidenc&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;encoder-audio/mpeg&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;mpegversion=(int){ 4, 2 }&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;stream-format=(string){ adts, raw }&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;encoder-video/mpeg&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;systemstream=(boolean)false&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;mpegversion=(int){ 1, 2, 4 }&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;systemstream=(boolean)true&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;encoder-video/x-xvid&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;element-faac&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;element-mpeg2enc&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;element-mplex&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;element-xviddec&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Codec</span>(<span class="string">&quot;element-xvidenc&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/desktop.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">desktop_application_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/desktop.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.gnome.gnome-power-statistics&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Power Statistics&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">DesktopApplication</span>)
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Observe power management&quot;</span>))
-            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Power Statistics&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::DesktopApplication</span>)
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Observe power management&quot;</span>))
+            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(
                 <span class="string">&quot;&lt;p&gt;\n      Power Statistics is a program used to view historical and current battery\n      information and will show programs running on your computer using power.\n        &lt;/p&gt;&lt;p&gt;Example list:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;First item&lt;/li&gt;&lt;li&gt;Second item&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;\n      You probably only need to install this application if you are having problems\n      with your laptop battery, or are trying to work out what programs are using\n      significant amounts of power.\n        &lt;/p&gt;&quot;</span>
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-2.0+&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_group</span>(<span class="string">&quot;GNOME&quot;</span>)
-            .<span class="ident">launchable</span>(<span class="ident">Launchable</span>::<span class="ident">DesktopId</span>(
+            .<span class="ident">launchable</span>(<span class="ident">Launchable::DesktopId</span>(
                 <span class="string">&quot;org.gnome.gnome-power-statistics.desktop&quot;</span>.<span class="ident">to_string</span>(),
             ))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.gnome.org/projects/en_US/gnome-power-manager&quot;</span>)<span class="question-mark">?</span>,
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(
+                <span class="ident">Url::parse</span>(<span class="string">&quot;http://www.gnome.org/projects/en_US/gnome-power-manager&quot;</span>)<span class="question-mark">?</span>,
             ))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;gnome-power-statistics&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Id</span>(<span class="string">&quot;gnome-power-statistics.desktop&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Binary</span>(<span class="string">&quot;gnome-power-statistics&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Id</span>(<span class="string">&quot;gnome-power-statistics.desktop&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">screenshot</span>(
-                <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
-                    .<span class="ident">caption</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The options dialog&quot;</span>))
+                <span class="ident">ScreenshotBuilder::default</span>()
+                    .<span class="ident">caption</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;The options dialog&quot;</span>))
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>)<span class="question-mark">?</span>,
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/main.png&quot;</span>)<span class="question-mark">?</span>,
                         )
                         .<span class="ident">build</span>(),
                     )
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">screenshot</span>(
-                <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
+                <span class="ident">ScreenshotBuilder::default</span>()
                     .<span class="ident">set_default</span>(<span class="bool-val">false</span>)
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>)<span class="question-mark">?</span>,
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;http://www.hughsie.com/en_US/preferences.png&quot;</span>)<span class="question-mark">?</span>,
                         )
                         .<span class="ident">build</span>(),
                     )
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;3.12.2&quot;</span>)
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Fixes issues X, Y and Z&lt;/p&gt;&quot;</span>))
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;3.12.2&quot;</span>)
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;Fixes issues X, Y and Z&lt;/p&gt;&quot;</span>))
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2013</span>, <span class="number">4</span>, <span class="number">12</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">driver_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/driver.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">driver_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/driver.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.nvidia.GeForce&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;NVIDIA GeForce&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Driver</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;NVIDIA GeForce&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Driver</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;LicenseRef-proprietary:NVIDIA&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;NVIDIA Graphics Driver&quot;</span>))
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;NVIDIA Graphics Driver&quot;</span>))
             .<span class="ident">description</span>(
-                <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+                <span class="ident">MarkupTranslatableString::with_default</span>(
                     <span class="string">&quot;&lt;p&gt;\n      The NVIDIA Accelerated Linux Graphics Driver brings accelerated 2D\n      functionality and high-performance OpenGL support to Linux x86 with the\n      use of NVIDIA graphics processing units.\n    &lt;/p&gt;&quot;</span>
                 )
             )
-            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;NVIDIA Corporation&quot;</span>))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Modalias</span>(
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;NVIDIA Corporation&quot;</span>))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Modalias</span>(
                 <span class="string">&quot;pci:v000010DEd*sv*sd*bc03sc00i00*&quot;</span>.<span class="ident">into</span>(),
             ))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.nvidia.com/Download/index.aspx&quot;</span>)<span class="question-mark">?</span>,
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(
+                <span class="ident">Url::parse</span>(<span class="string">&quot;http://www.nvidia.com/Download/index.aspx&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">build</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">firmware_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/firmware.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">firmware_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/firmware.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.hughski.ColorHug2.firmware&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;ColorHugALS Firmware&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Firmware</span>)
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;ColorHugALS Firmware&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Firmware</span>)
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;Firmware for the ColorHugALS Ambient Light Sensor&quot;</span>,
             ))
             .<span class="ident">description</span>(
-                <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+                <span class="ident">MarkupTranslatableString::with_default</span>(
                     <span class="string">&quot;&lt;p&gt;\n      Updating the firmware on your ColorHugALS device improves performance and\n      adds new features.\n    &lt;/p&gt;&quot;</span>
                 )
             )
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/&quot;</span>)<span class="question-mark">?</span>,
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(
+                <span class="ident">Url::parse</span>(<span class="string">&quot;http://www.hughski.com/&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-2.0+&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Hughski Limited&quot;</span>))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Firmware</span> {
-                <span class="ident">kind</span>: <span class="ident">FirmwareKind</span>::<span class="ident">Flashed</span>,
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Hughski Limited&quot;</span>))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Firmware</span> {
+                <span class="ident">kind</span>: <span class="ident">FirmwareKind::Flashed</span>,
                 <span class="ident">item</span>: <span class="string">&quot;84f40464-9272-4ef7-9399-cd95f12da696&quot;</span>.<span class="ident">into</span>(),
             })
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;3.0.2&quot;</span>)
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;3.0.2&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2015</span>, <span class="number">2</span>, <span class="number">16</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">artifact</span>(
-                        <span class="ident">ArtifactBuilder</span>::<span class="ident">default</span>()
-                        .<span class="ident">url</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>)<span class="question-mark">?</span>) 
-                        .<span class="ident">kind</span>(<span class="ident">ArtifactKind</span>::<span class="ident">Binary</span>)
+                        <span class="ident">ArtifactBuilder::default</span>()
+                        .<span class="ident">url</span>(<span class="ident">Url::parse</span>(<span class="string">&quot;http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab&quot;</span>)<span class="question-mark">?</span>) 
+                        .<span class="ident">kind</span>(<span class="ident">ArtifactKind::Binary</span>)
                         .<span class="ident">build</span>()
                     )
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;This stable release fixes the following bugs:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Fix the return code from GetHardwareVersion&lt;/li&gt;&lt;li&gt;Scale the output of TakeReadingRaw by the datasheet values&lt;/li&gt;&lt;/ul&gt;&quot;</span>))
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;This stable release fixes the following bugs:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Fix the return code from GetHardwareVersion&lt;/li&gt;&lt;li&gt;Scale the output of TakeReadingRaw by the datasheet values&lt;/li&gt;&lt;/ul&gt;&quot;</span>))
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">font_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/font.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">font_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/font.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.latofonts.Lato&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Lato&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Font</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Lato&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Font</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;MIT&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;OFL-1.1&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;A sanserif type­face fam­ily&quot;</span>,
             ))
             .<span class="ident">description</span>(
-                <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+                <span class="ident">MarkupTranslatableString::with_default</span>(
                     <span class="string">&quot;&lt;p&gt;\n      Lato is a sanserif type\u{ad}face fam\u{ad}ily designed in the Sum\u{ad}mer 2010 by Warsaw-\u{200b}\u{200b}based designer\n      Łukasz Dziedzic (“Lato” means “Sum\u{ad}mer” in Pol\u{ad}ish). In Decem\u{ad}ber 2010 the Lato fam\u{ad}ily\n      was pub\u{ad}lished under the open-\u{200b}\u{200b}source Open Font License by his foundry tyPoland, with\n      sup\u{ad}port from Google.\n    &lt;/p&gt;&quot;</span>
                 )
             )
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;Lato Regular&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;Lato Italic&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;Lato Bold&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;Lato Light&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;Lato Light Italic&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Font</span>(<span class="string">&quot;Lato Regular&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Font</span>(<span class="string">&quot;Lato Italic&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Font</span>(<span class="string">&quot;Lato Bold&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Font</span>(<span class="string">&quot;Lato Light&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Font</span>(<span class="string">&quot;Lato Light Italic&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">generic_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/generic.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">generic_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/generic.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.example.foobar&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Foo Bar&quot;</span>))
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Foo Bar&quot;</span>))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;CC0-1.0&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;A foo-ish bar&quot;</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;http://www.example.org&quot;</span>)<span class="question-mark">?</span>))
-            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;FooBar Team&quot;</span>))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Library</span>(<span class="string">&quot;libfoobar.so.2&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Font</span>(<span class="string">&quot;foo.ttf&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">provide</span>(<span class="ident">Provide</span>::<span class="ident">Binary</span>(<span class="string">&quot;foobar&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;A foo-ish bar&quot;</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(<span class="ident">Url::parse</span>(<span class="string">&quot;http://www.example.org&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;FooBar Team&quot;</span>))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Library</span>(<span class="string">&quot;libfoobar.so.2&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Font</span>(<span class="string">&quot;foo.ttf&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">provide</span>(<span class="ident">Provide::Binary</span>(<span class="string">&quot;foobar&quot;</span>.<span class="ident">into</span>()))
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;1.2&quot;</span>)
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;1.2&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2015</span>, <span class="number">2</span>, <span class="number">16</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/icon-theme.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">icon_theme_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/icon-theme.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;io.git.PapirusIconTheme&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Papirus&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">IconTheme</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Papirus&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::IconTheme</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-3.0&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">description</span>(
-                <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;\n      Papirus is a free and open source SVG icon theme for Linux, based on Paper Icon Set\n      with a lot of new icons and a few extras, like Hardcode-Tray support, KDE colorscheme\n      support, Folder Color support, and others.\n      It is available in four variants:\n    &lt;/p&gt;&lt;ul&gt;&lt;li&gt;Papirus&lt;/li&gt;&lt;li&gt;Papirus Dark&lt;/li&gt;&lt;li&gt;Papirus Light&lt;/li&gt;&lt;li&gt;ePapirus (for elementary OS and Pantheon Desktop)&lt;/li&gt;&lt;/ul&gt;&quot;</span>)
+                <span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;\n      Papirus is a free and open source SVG icon theme for Linux, based on Paper Icon Set\n      with a lot of new icons and a few extras, like Hardcode-Tray support, KDE colorscheme\n      support, Folder Color support, and others.\n      It is available in four variants:\n    &lt;/p&gt;&lt;ul&gt;&lt;li&gt;Papirus&lt;/li&gt;&lt;li&gt;Papirus Dark&lt;/li&gt;&lt;li&gt;Papirus Light&lt;/li&gt;&lt;li&gt;ePapirus (for elementary OS and Pantheon Desktop)&lt;/li&gt;&lt;/ul&gt;&quot;</span>)
             )
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;A free and open source icon theme for Linux, based on the Paper Icon Set&quot;</span>))
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;A free and open source icon theme for Linux, based on the Paper Icon Set&quot;</span>))
             .<span class="ident">screenshot</span>(
-                <span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
+                <span class="ident">ScreenshotBuilder::default</span>()
                 .<span class="ident">image</span>(
-                    <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>)<span class="question-mark">?</span>
+                    <span class="ident">ImageBuilder::new</span>(
+                        <span class="ident">Url::parse</span>(<span class="string">&quot;https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-icon-theme/master/preview.png&quot;</span>)<span class="question-mark">?</span>
                     )
                     .<span class="ident">build</span>()
                 )
@@ -1253,144 +1253,144 @@
             )
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">input_method_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/input-method.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">input_method_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/input-method.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;com.github.ibus.mathwriter-ibus.db&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Mathwriter&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">InputMethod</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Mathwriter&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::InputMethod</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;Math symbols input method&quot;</span>,
             ))
-            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(
                 <span class="string">&quot;&lt;p&gt;\n      The input method is designed for entering mathematical symbols.\n    &lt;/p&gt;&lt;p&gt;\n      Input methods are typing systems allowing users to input complex languages.\n      They are necessary because these contain too many characters to simply be laid\n      out on a traditional keyboard.\n    &lt;/p&gt;&quot;</span>
             ))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://github.com/mike-fabian/ibus-table-others&quot;</span>)<span class="question-mark">?</span>,
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(
+                <span class="ident">Url::parse</span>(<span class="string">&quot;https://github.com/mike-fabian/ibus-table-others&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">localization_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/localization.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">localization_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/localization.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.kde.l10n.de&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;KDE German Language&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Localization</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;KDE German Language&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Localization</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;German localization for the KDE desktop and apps&quot;</span>,
             ))
-            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The KDE German L10N team&quot;</span>))
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;The KDE German L10N team&quot;</span>))
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.plasmashell&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.gwenview.desktop&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">extend</span>(<span class="string">&quot;org.kde.dolphin.desktop&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(<span class="ident">Url::parse</span>(
                 <span class="string">&quot;http://i18n.kde.org/team-infos.php?teamcode=de&quot;</span>,
             )<span class="question-mark">?</span>))
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de_DE&quot;</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de_AT&quot;</span>).<span class="ident">percentage</span>(<span class="number">96</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;de_DE&quot;</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;de_AT&quot;</span>).<span class="ident">percentage</span>(<span class="number">96</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;de&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
             .<span class="ident">build</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">os_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/os.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">os_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/os.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="string">&quot;&lt;p&gt;\n      Debian is a free operating system (OS) for your computer.\n      An operating system is the set of basic programs and utilities that make your computer run.\n        &lt;/p&gt;&quot;</span>;
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.debian.debian&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Debian GNU/Linux&quot;</span>))
-            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="ident">description</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">OS</span>)
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Debian GNU/Linux&quot;</span>))
+            .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="ident">description</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::OS</span>)
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;The universal operating system&quot;</span>,
             ))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://www.debian.org/&quot;</span>)<span class="question-mark">?</span>,
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(
+                <span class="ident">Url::parse</span>(<span class="string">&quot;https://www.debian.org/&quot;</span>)<span class="question-mark">?</span>,
             ))
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;The Debian Project&quot;</span>))
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;The Debian Project&quot;</span>))
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;10.0&quot;</span>)
-                    .<span class="ident">kind</span>(<span class="ident">ReleaseKind</span>::<span class="ident">Development</span>)
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;The next release of Debian.&lt;/p&gt;&quot;</span>))
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;10.0&quot;</span>)
+                    .<span class="ident">kind</span>(<span class="ident">ReleaseKind::Development</span>)
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;The next release of Debian.&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;9.0&quot;</span>)
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Now contains the Linux kernel 4.9, GNOME 3.22, KDE Plasma 5, LibreOffice 5.2 and Qt 5.7. LXQt has been added.&lt;/p&gt;&quot;</span>))
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;9.0&quot;</span>)
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;Now contains the Linux kernel 4.9, GNOME 3.22, KDE Plasma 5, LibreOffice 5.2 and Qt 5.7. LXQt has been added.&lt;/p&gt;&quot;</span>))
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2017</span>, <span class="number">7</span>, <span class="number">17</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">date_eol</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2020</span>, <span class="number">7</span>, <span class="number">17</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">runtime_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/runtime.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">runtime_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/runtime.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.freedesktop.Platform&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Freedesktop Platform&quot;</span>))
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">Runtime</span>)
+            .<span class="ident">name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Freedesktop Platform&quot;</span>))
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::Runtime</span>)
             .<span class="ident">metadata_license</span>(<span class="string">&quot;FSFAP&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_license</span>(<span class="string">&quot;LicenseRef-free=https://freedesktop-sdk.gitlab.io/&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">summary</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(
+            .<span class="ident">summary</span>(<span class="ident">TranslatableString::with_default</span>(
                 <span class="string">&quot;Basic libraries to run Linux desktop applications&quot;</span>,
             ))
             .<span class="ident">description</span>(
-                <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        &lt;/p&gt;&quot;</span>)
+                <span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;\n      The Freedesktop Platform is a runtime that contains the most basic libraries\n      and files needed to run a Linux desktop application.\n        &lt;/p&gt;&quot;</span>)
             )
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(
-                <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://freedesktop-sdk.gitlab.io/&quot;</span>)<span class="question-mark">?</span>,
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(
+                <span class="ident">Url::parse</span>(<span class="string">&quot;https://freedesktop-sdk.gitlab.io/&quot;</span>)<span class="question-mark">?</span>,
             ))
-            .<span class="ident">release</span>(<span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;10.0&quot;</span>).<span class="ident">build</span>())
+            .<span class="ident">release</span>(<span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;10.0&quot;</span>).<span class="ident">build</span>())
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;9.0&quot;</span>)
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;9.0&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">ymd</span>(<span class="number">2020</span>, <span class="number">01</span>, <span class="number">12</span>).<span class="ident">and_hms_milli</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))
                     .<span class="ident">build</span>(),
             )
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test_json&quot;</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">serde_json_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>::<span class="ident">open</span>(<span class="string">&quot;./tests/app-com.github.utsushi.Utsushi.json&quot;</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">serde_json</span>::<span class="ident">from_reader</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>;
+    <span class="kw">fn</span> <span class="ident">serde_json_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">std::fs::File::open</span>(<span class="string">&quot;./tests/app-com.github.utsushi.Utsushi.json&quot;</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">c</span>: <span class="ident">Component</span> <span class="op">=</span> <span class="ident">serde_json::from_reader</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>)<span class="question-mark">?</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c</span>.<span class="ident">icons</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Icon</span>::<span class="ident">Stock</span>(<span class="string">&quot;scanner&quot;</span>.<span class="ident">to_string</span>())]);
+        <span class="macro">assert_eq!</span>(<span class="ident">c</span>.<span class="ident">icons</span>, <span class="macro">vec!</span>[<span class="ident">Icon::Stock</span>(<span class="string">&quot;scanner&quot;</span>.<span class="ident">to_string</span>())]);
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">contrast_metainfo_component</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">c1</span>: <span class="ident">Component</span> <span class="op">=</span>
-            <span class="ident">Component</span>::<span class="ident">from_path</span>(<span class="string">&quot;./tests/app-org.gnome.design.Contrast.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
+            <span class="ident">Component::from_path</span>(<span class="string">&quot;./tests/app-org.gnome.design.Contrast.xml&quot;</span>.<span class="ident">into</span>())<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Contrast&quot;</span>)
+        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Contrast&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
@@ -1404,7 +1404,7 @@
             .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="string">&quot;Contraste&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>);
-        <span class="kw">let</span> <span class="ident">summary</span> <span class="op">=</span> <span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Check contrast between two colors&quot;</span>)
+        <span class="kw">let</span> <span class="ident">summary</span> <span class="op">=</span> <span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Check contrast between two colors&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;Zkontrolujte kontrast mezi dvěma barvami&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="string">&quot;Undersøg kontrasten mellem to farver&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="string">&quot;Kontrast zwischen zwei Farben vergleichen&quot;</span>)
@@ -1419,22 +1419,22 @@
             .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="string">&quot;Verifique o contraste entre duas cores&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="string">&quot;Kontrollera kontrast mellan två färger&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="string">&quot;İki renk arasındaki karşıtlığı gözden geçir&quot;</span>);
-        <span class="kw">let</span> <span class="ident">keywords</span> <span class="op">=</span> <span class="ident">TranslatableList</span>::<span class="ident">with_default</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Color&quot;</span>, <span class="string">&quot;Contrast&quot;</span>, <span class="string">&quot;GNOME&quot;</span>, <span class="string">&quot;GTK&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;barva&quot;</span>, <span class="string">&quot;kontrast&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Farve&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Farbe&quot;</span>, <span class="string">&quot;Farben&quot;</span>, <span class="string">&quot;GTK+&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;en_GB&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Colour&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;es&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Contraste&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;eu&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Kolorea&quot;</span>, <span class="string">&quot;Kontrastea&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;fi&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;kontrasti&quot;</span>, <span class="string">&quot;väri&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;fur&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Colôr&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;hu&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;kontraszt&quot;</span>, <span class="string">&quot;szín&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;id&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Kontras&quot;</span>, <span class="string">&quot;Warna&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;pl&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Colour&quot;</span>, <span class="string">&quot;GTK+&quot;</span>, <span class="string">&quot;Kolor&quot;</span>, <span class="string">&quot;Kolory&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Contraste&quot;</span>, <span class="string">&quot;cor&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Färg&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
-            .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">&quot;Karşıtlık&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>, <span class="string">&quot;Renk&quot;</span>]);
-        <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Contrast checks whether the contrast between two colors meet the WCAG requirements.&lt;/p&gt;&quot;</span>)
+        <span class="kw">let</span> <span class="ident">keywords</span> <span class="op">=</span> <span class="ident">TranslatableList::with_default</span>(<span class="macro">vec!</span>[<span class="string">&quot;Color&quot;</span>, <span class="string">&quot;Contrast&quot;</span>, <span class="string">&quot;GNOME&quot;</span>, <span class="string">&quot;GTK&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;barva&quot;</span>, <span class="string">&quot;kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;da&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Farve&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;de&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Farbe&quot;</span>, <span class="string">&quot;Farben&quot;</span>, <span class="string">&quot;GTK+&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;en_GB&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Colour&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;es&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Contraste&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;eu&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Kolorea&quot;</span>, <span class="string">&quot;Kontrastea&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fi&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;kontrasti&quot;</span>, <span class="string">&quot;väri&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;fur&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Colôr&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;hu&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;kontraszt&quot;</span>, <span class="string">&quot;szín&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;id&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Kontras&quot;</span>, <span class="string">&quot;Warna&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pl&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Colour&quot;</span>, <span class="string">&quot;GTK+&quot;</span>, <span class="string">&quot;Kolor&quot;</span>, <span class="string">&quot;Kolory&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;pt_BR&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Contraste&quot;</span>, <span class="string">&quot;cor&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Färg&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>])
+            .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="macro">vec!</span>[<span class="string">&quot;Karşıtlık&quot;</span>, <span class="string">&quot;Kontrast&quot;</span>, <span class="string">&quot;Renk&quot;</span>]);
+        <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;Contrast checks whether the contrast between two colors meet the WCAG requirements.&lt;/p&gt;&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;cs&quot;</span>, <span class="string">&quot;&lt;p&gt;Kontroluje kontrast mezi dvěma zadanými barvami, jestli vyhovuje požadavkům pravidel pro bezbariérové weby (WCAG).&lt;/p&gt;&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;es&quot;</span>, <span class="string">&quot;&lt;p&gt;Contraste comprueba la diferencia de contraste entre dos colores que cumplen los requisitos WCAG.&lt;/p&gt;&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;eu&quot;</span>, <span class="string">&quot;&lt;p&gt;Kontrastea aplikazioak bi koloreren arteko kontrasteak WCAG eskakizunak betetzen dituen ala ez egiaztatzen du.&lt;/p&gt;&quot;</span>)
@@ -1446,117 +1446,117 @@
             .<span class="ident">and_locale</span>(<span class="string">&quot;sv&quot;</span>, <span class="string">&quot;&lt;p&gt;Kontrast kontrollerar om kontrasten mellan två färger uppfyller WCAG-kraven.&lt;/p&gt;&quot;</span>)
             .<span class="ident">and_locale</span>(<span class="string">&quot;tr&quot;</span>, <span class="string">&quot;&lt;p&gt;Contrast, iki renk arasındaki karşıtlığın WCAG gereksinimlerini karşılayıp karşılamadığını gözden geçirir.&lt;/p&gt;&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder</span>::<span class="ident">default</span>()
+        <span class="kw">let</span> <span class="ident">c2</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>()
             .<span class="ident">id</span>(<span class="string">&quot;org.gnome.design.Contrast&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">name</span>(<span class="ident">name</span>)
-            .<span class="ident">kind</span>(<span class="ident">ComponentKind</span>::<span class="ident">DesktopApplication</span>)
+            .<span class="ident">kind</span>(<span class="ident">ComponentKind::DesktopApplication</span>)
             .<span class="ident">summary</span>(<span class="ident">summary</span>)
             .<span class="ident">description</span>(<span class="ident">description</span>)
-            .<span class="ident">category</span>(<span class="ident">Category</span>::<span class="ident">Utility</span>)
+            .<span class="ident">category</span>(<span class="ident">Category::Utility</span>)
             .<span class="ident">project_license</span>(<span class="string">&quot;GPL-3.0+&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">project_group</span>(<span class="string">&quot;GNOME&quot;</span>)
             .<span class="ident">keywords</span>(<span class="ident">keywords</span>)
-            .<span class="ident">kudo</span>(<span class="ident">Kudo</span>::<span class="ident">HiDpiIcon</span>)
-            .<span class="ident">kudo</span>(<span class="ident">Kudo</span>::<span class="ident">HighContrast</span>)
-            .<span class="ident">kudo</span>(<span class="ident">Kudo</span>::<span class="ident">ModernToolkit</span>)
+            .<span class="ident">kudo</span>(<span class="ident">Kudo::HiDpiIcon</span>)
+            .<span class="ident">kudo</span>(<span class="ident">Kudo::HighContrast</span>)
+            .<span class="ident">kudo</span>(<span class="ident">Kudo::ModernToolkit</span>)
             .<span class="ident">suggest</span>(<span class="string">&quot;org.gnome.design.Palette&quot;</span>.<span class="ident">into</span>())
             .<span class="ident">require</span>(<span class="string">&quot;org.gnome.design.AppIconPreview&quot;</span>.<span class="ident">into</span>())
-            .<span class="ident">bundle</span>(<span class="ident">Bundle</span>::<span class="ident">Flatpak</span> {
+            .<span class="ident">bundle</span>(<span class="ident">Bundle::Flatpak</span> {
                 <span class="ident">runtime</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;org.gnome.Platform/x86_64/3.36&quot;</span>.<span class="ident">into</span>()),
                 <span class="ident">sdk</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;org.gnome.Sdk/x86_64/3.36&quot;</span>.<span class="ident">into</span>()),
                 <span class="ident">reference</span>: <span class="string">&quot;app/org.gnome.design.Contrast/x86_64/stable&quot;</span>.<span class="ident">into</span>()
             })
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">BugTracker</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>)<span class="question-mark">?</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Donation</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>)<span class="question-mark">?</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Homepage</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>)<span class="question-mark">?</span>))
-            .<span class="ident">url</span>(<span class="ident">ProjectUrl</span>::<span class="ident">Translate</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>)<span class="question-mark">?</span>))
-            .<span class="ident">translation</span>(<span class="ident">Translation</span>::<span class="ident">Gettext</span>(<span class="string">&quot;contrast&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">launchable</span>(<span class="ident">Launchable</span>::<span class="ident">DesktopId</span>(<span class="string">&quot;org.gnome.design.Contrast.desktop&quot;</span>.<span class="ident">into</span>()))
-            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;Bilal Elmoussaoui&quot;</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::BugTracker</span>(<span class="ident">Url::parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/issues&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Donation</span>(<span class="ident">Url::parse</span>(<span class="string">&quot;https://liberapay.com/bielmoussaoui&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Homepage</span>(<span class="ident">Url::parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">url</span>(<span class="ident">ProjectUrl::Translate</span>(<span class="ident">Url::parse</span>(<span class="string">&quot;https://l10n.gnome.org/module/contrast/&quot;</span>)<span class="question-mark">?</span>))
+            .<span class="ident">translation</span>(<span class="ident">Translation::Gettext</span>(<span class="string">&quot;contrast&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">launchable</span>(<span class="ident">Launchable::DesktopId</span>(<span class="string">&quot;org.gnome.design.Contrast.desktop&quot;</span>.<span class="ident">into</span>()))
+            .<span class="ident">developer_name</span>(<span class="ident">TranslatableString::with_default</span>(<span class="string">&quot;Bilal Elmoussaoui&quot;</span>))
             .<span class="ident">metadata</span>(<span class="string">&quot;x-appcenter-suggested-price&quot;</span>.<span class="ident">to_string</span>(), <span class="prelude-val">Some</span>(<span class="string">&quot;5&quot;</span>.<span class="ident">to_string</span>()))
-            .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Cached</span> {
+            .<span class="ident">icon</span>(<span class="ident">Icon::Cached</span> {
                 <span class="ident">path</span>: <span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">width</span>: <span class="prelude-val">Some</span>(<span class="number">64</span>),
                 <span class="ident">height</span>: <span class="prelude-val">Some</span>(<span class="number">64</span>),
             })
-            .<span class="ident">icon</span>(<span class="ident">Icon</span>::<span class="ident">Cached</span> {
+            .<span class="ident">icon</span>(<span class="ident">Icon::Cached</span> {
                 <span class="ident">path</span>: <span class="string">&quot;org.gnome.design.Contrast.png&quot;</span>.<span class="ident">into</span>(),
                 <span class="ident">width</span>: <span class="prelude-val">Some</span>(<span class="number">128</span>),
                 <span class="ident">height</span>: <span class="prelude-val">Some</span>(<span class="number">128</span>),
             }).<span class="ident">content_rating</span>(<span class="ident">ContentRating</span> {
-                <span class="ident">attributes</span>: <span class="macro">vec</span><span class="macro">!</span>[],
-                <span class="ident">version</span>: <span class="ident">ContentRatingVersion</span>::<span class="ident">Oars1_0</span>
+                <span class="ident">attributes</span>: <span class="macro">vec!</span>[],
+                <span class="ident">version</span>: <span class="ident">ContentRatingVersion::Oars1_0</span>
             })
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.3&quot;</span>)
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;0.0.3&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1582329600&quot;</span>, <span class="string">&quot;%s&quot;</span>)<span class="question-mark">?</span>)
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Stylesheet fixes&lt;/p&gt;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;Stylesheet fixes&lt;/p&gt;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.2&quot;</span>)
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;0.0.2&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1566691200&quot;</span>, <span class="string">&quot;%s&quot;</span>)<span class="question-mark">?</span>)
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;Translations updates&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
             .<span class="ident">release</span>(
-                <span class="ident">ReleaseBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;0.0.1&quot;</span>)
+                <span class="ident">ReleaseBuilder::new</span>(<span class="string">&quot;0.0.1&quot;</span>)
                     .<span class="ident">date</span>(<span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="string">&quot;1565136000&quot;</span>, <span class="string">&quot;%s&quot;</span>)<span class="question-mark">?</span>)
-                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString</span>::<span class="ident">with_default</span>(<span class="string">&quot;&lt;p&gt;First release of Contrast&lt;/p&gt;&quot;</span>))
+                    .<span class="ident">description</span>(<span class="ident">MarkupTranslatableString::with_default</span>(<span class="string">&quot;&lt;p&gt;First release of Contrast&lt;/p&gt;&quot;</span>))
                     .<span class="ident">build</span>()
             )
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;cs&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;da&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;de&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;en_GB&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;es&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;eu&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;fi&quot;</span>).<span class="ident">percentage</span>(<span class="number">86</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;fur&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;hu&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;pl&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;pt_BR&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;sv&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">language</span>(<span class="ident">LanguageBuilder</span>::<span class="ident">new</span>(<span class="string">&quot;tr&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
-            .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder</span>::<span class="ident">default</span>()
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;cs&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;da&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;de&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;en_GB&quot;</span>).<span class="ident">percentage</span>(<span class="number">93</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;es&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;eu&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;fi&quot;</span>).<span class="ident">percentage</span>(<span class="number">86</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;fur&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;hu&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;pl&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;pt_BR&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;sv&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">language</span>(<span class="ident">LanguageBuilder::new</span>(<span class="string">&quot;tr&quot;</span>).<span class="ident">percentage</span>(<span class="number">100</span>).<span class="ident">build</span>())
+            .<span class="ident">screenshot</span>(<span class="ident">ScreenshotBuilder::default</span>()
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>)<span class="question-mark">?</span>
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;https://gitlab.gnome.org/World/design/contrast/raw/master/data/resources/screenshots/screenshot1.png&quot;</span>)<span class="question-mark">?</span>
                         ).<span class="ident">build</span>()
                     )
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/624x351/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
-                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind::Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">624</span>)
                         .<span class="ident">height</span>(<span class="number">351</span>)
                         .<span class="ident">build</span>()
                     )
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/112x63/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
-                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind::Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">112</span>)
                         .<span class="ident">height</span>(<span class="number">63</span>)
                         .<span class="ident">build</span>()
                     )
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/224x126/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
-                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind::Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">224</span>)
                         .<span class="ident">height</span>(<span class="number">126</span>)
                         .<span class="ident">build</span>()
                     )
                     .<span class="ident">image</span>(
-                        <span class="ident">ImageBuilder</span>::<span class="ident">new</span>(
-                            <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
+                        <span class="ident">ImageBuilder::new</span>(
+                            <span class="ident">Url::parse</span>(<span class="string">&quot;https://flathub.org/repo/screenshots/org.gnome.design.Contrast-stable/752x423/org.gnome.design.Contrast-ba707a21207a348d15171063edf9790a.png&quot;</span>)<span class="question-mark">?</span>
                         )
-                        .<span class="ident">kind</span>(<span class="ident">ImageKind</span>::<span class="ident">Thumbnail</span>)
+                        .<span class="ident">kind</span>(<span class="ident">ImageKind::Thumbnail</span>)
                         .<span class="ident">width</span>(<span class="number">752</span>)
                         .<span class="ident">height</span>(<span class="number">423</span>)
                         .<span class="ident">build</span>()
@@ -1564,9 +1564,10 @@
                 )
             .<span class="ident">build</span>();
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
+        <span class="macro">assert_eq!</span>(<span class="ident">c1</span>, <span class="ident">c2</span>);
         <span class="prelude-val">Ok</span>(())
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "appstream";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="appstream" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
+    <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>
