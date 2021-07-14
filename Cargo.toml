@@ -1,6 +1,6 @@
 [package]
 name = "appstream"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Bilal Elmoussaoui <bil.elmoussaoui@gmail.com>"]
 edition = "2018"
 description = "Appstream files parser"
@@ -21,8 +21,8 @@ serde = { version = "1.0", features = [ "derive" ] }
 xmltree = "0.10"
 serde_derive = "1.0"
 thiserror = "1.0"
-strum = "0.19"
-strum_macros = "0.19"
+strum = "0.21"
+strum_macros = "0.21"
 
 [dependencies.flate2]
 version = "1.0"
