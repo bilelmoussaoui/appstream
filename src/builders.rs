@@ -745,16 +745,12 @@ impl ScreenshotBuilder {
 
     /// Construct a `Screenshot`.
     pub fn build(self) -> Screenshot {
-        let mut s = Screenshot::default();
-        s.videos = self.videos;
-        s.images = self.images;
-        if let Some(is_default) = self.is_default {
-            s.is_default = is_default;
-        } else {
-            s.is_default = true;
+        Screenshot {
+            caption: self.caption,
+            images: self.images,
+            videos: self.videos,
+            is_default: self.is_default.unwrap_or(true),
         }
-        s.caption = self.caption;
-        s
     }
 }
 
