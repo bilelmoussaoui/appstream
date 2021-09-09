@@ -994,6 +994,8 @@ impl Serialize for ProjectUrl {
 /// See [\<provide\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-provides).
 #[non_exhaustive]
 pub enum Provide {
+    /// Media type (also known as MIME type)
+    MediaType(String),
     /// Shared library.
     Library(PathBuf),
     /// Name of a binary installed in `$PATH`.
