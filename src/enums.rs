@@ -845,7 +845,7 @@ impl Default for ImageKind {
 #[strum(serialize_all = "PascalCase")]
 #[non_exhaustive]
 /// Defines some metrics of awesomeness.
-/// See [the specs](https://gitlab.gnome.org/GNOME/gnome-software/blob/master/doc/kudos.md) for more information.
+/// See [the specs](https://gitlab.gnome.org/GNOME/gnome-software/-/blob/main/doc/kudos.md) for more information.
 pub enum Kudo {
     /// The application uses an AppMenu.
     /// Shouldn't be used anymore.
