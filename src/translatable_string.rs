@@ -61,7 +61,7 @@ impl MarkupTranslatableString {
     /// and can be used to feed the `MarkupTranslatableString`.
     pub fn add_for_element(&mut self, element: &xmltree::Element) {
         let locale = element.attributes.get("lang").map(|l| l.as_str());
-        self.add_for_locale(locale, &element_to_xml(&element));
+        self.add_for_locale(locale, &element_to_xml(element));
     }
 
     /// Adds a new translation for a speicifc locale.

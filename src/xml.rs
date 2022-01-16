@@ -21,10 +21,9 @@ use super::{
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
 
 fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
-    Utc.datetime_from_str(&date, "%s").or_else(
+    Utc.datetime_from_str(date, "%s").or_else(
         |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
-            let date: NaiveDateTime =
-                NaiveDate::parse_from_str(&date, "%Y-%m-%d")?.and_hms(0, 0, 0);
+            let date: NaiveDateTime = NaiveDate::parse_from_str(date, "%Y-%m-%d")?.and_hms(0, 0, 0);
             Ok(DateTime::<Utc>::from_utc(date, Utc))
         },
     )
@@ -62,7 +61,7 @@ impl TryFrom<&Element> for Artifact {
                 match &*e.name {
                     "location" => {
                         let url = Url::parse(
-                            &e.get_text()
+                            e.get_text()
                                 .ok_or_else(|| ParseError::missing_value("location"))?
                                 .as_ref(),
                         )?;
@@ -92,7 +91,7 @@ impl TryFrom<&Element> for Bundle {
             .ok_or_else(|| ParseError::missing_value("bundle"))?
             .into_owned();
 
-        match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type") {
             Some(t) => match t.as_str() {
                 "tarball" => Ok(Bundle::Tarball(val)),
                 "snap" => Ok(Bundle::Snap(val)),
@@ -119,7 +118,7 @@ impl TryFrom<&Element> for Checksum {
             .ok_or_else(|| ParseError::missing_value("checksum"))?
             .into_owned();
 
-        match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type") {
             Some(t) => match t.as_str() {
                 "sha1" => Ok(Checksum::Sha1(val)),
                 "sha256" => Ok(Checksum::Sha256(val)),
@@ -424,7 +423,7 @@ impl TryFrom<&Element> for ContentAttribute {
         let val = ContentState::from_str(&val)
             .map_err(|_| ParseError::invalid_value(&val, "$value", "content-attribute"))?;
 
-        match e.attributes.get("id").as_deref() {
+        match e.attributes.get("id") {
             Some(t) => match t.as_str() {
                 "violence-cartoon" => Ok(ContentAttribute::ViolenceCartoon(val)),
                 "violence-fantasy" => Ok(ContentAttribute::ViolenceFantasy(val)),
@@ -511,7 +510,7 @@ impl TryFrom<&Element> for Image {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let url = Url::parse(
-            &e.get_text()
+            e.get_text()
                 .ok_or_else(|| ParseError::missing_value("image"))?
                 .as_ref(),
         )?;
@@ -613,7 +612,7 @@ impl TryFrom<&Element> for ProjectUrl {
             .ok_or_else(|| ParseError::missing_value("url"))?
             .into_owned();
 
-        match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type") {
             Some(t) => match t.as_str() {
                 "help" => Ok(ProjectUrl::Help(Url::parse(&val)?)),
                 "homepage" => Ok(ProjectUrl::Homepage(Url::parse(&val)?)),
@@ -639,7 +638,7 @@ impl TryFrom<&Element> for Provide {
             .into_owned();
 
         match e.name.as_ref() {
-            "mediatype" => Ok(Provide::MediaType(val.into())),
+            "mediatype" => Ok(Provide::MediaType(val)),
             "library" => Ok(Provide::Library(val.into())),
             "binary" => Ok(Provide::Binary(val)),
             "font" => Ok(Provide::Font(val)),
@@ -728,7 +727,7 @@ impl TryFrom<&Element> for Release {
                     "description" => description.add_for_element(c),
                     "url" => {
                         release = release.url(Url::parse(
-                            &c.get_text()
+                            c.get_text()
                                 .ok_or_else(|| ParseError::missing_value("url"))?
                                 .as_ref(),
                         )?);
@@ -782,7 +781,7 @@ impl TryFrom<&Element> for Size {
             .ok_or_else(|| ParseError::missing_value("size"))?
             .into_owned();
 
-        match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type") {
             Some(t) => match t.as_str() {
                 "download" => {
                     Ok(Size::Download(val.parse::<u64>().map_err(|_| {
@@ -806,7 +805,7 @@ impl TryFrom<&Element> for Translation {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let val = e.get_text().unwrap_or_default().into_owned();
-        match e.attributes.get("type").as_deref() {
+        match e.attributes.get("type") {
             Some(t) => match t.as_str() {
                 "gettext" => Ok(Translation::Gettext(val)),
                 "qt" => Ok(Translation::Qt(val)),
@@ -822,7 +821,7 @@ impl TryFrom<&Element> for Video {
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let url = Url::parse(
-            &e.get_text()
+            e.get_text()
                 .ok_or_else(|| ParseError::missing_value("video"))?
                 .as_ref(),
         )?;
