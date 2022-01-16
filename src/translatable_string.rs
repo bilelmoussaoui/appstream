@@ -50,6 +50,7 @@ impl MarkupTranslatableString {
     ///
     /// * `locale` - The locale to use, use `with_default` if you want the default locale.
     /// * `text` - The corresponding translation.
+    #[must_use]
     pub fn and_locale(mut self, locale: &str, text: &str) -> Self {
         self.add_for_locale(Some(locale), text);
         self
@@ -129,6 +130,7 @@ impl TranslatableString {
     ///
     /// * `locale` - The locale to use, use `with_default` if you want the default locale.
     /// * `text` - The corresponding translation.
+    #[must_use]
     pub fn and_locale(mut self, locale: &str, text: &str) -> Self {
         self.add_for_locale(Some(locale), text);
         self
@@ -214,6 +216,7 @@ impl TranslatableList {
     ///
     /// * `locale` - The locale to use, use `with_default` if you want the default locale.
     /// * `words` - The list of strings to add to this specific locale.
+    #[must_use]
     pub fn and_locale(mut self, locale: &str, words: Vec<&str>) -> Self {
         words.iter().for_each(|w| {
             self.add_for_locale(Some(locale), w);
