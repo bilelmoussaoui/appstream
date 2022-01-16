@@ -466,7 +466,7 @@
         <span class="comment">// For some obscure reasons &amp; history</span>
         <span class="comment">// Some apps uses $app-id.desktop as the id on the appdata/metainfo file</span>
         <span class="comment">// Let&#39;s automatically check for those as well.</span>
-        <span class="kw">let</span> <span class="ident">alternative_id</span>: <span class="ident">AppId</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}.desktop&quot;</span>, <span class="ident">id</span>.<span class="ident">to_string</span>()).<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">alternative_id</span>: <span class="ident">AppId</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}.desktop&quot;</span>, <span class="ident">id</span>).<span class="ident">into</span>();
 
         <span class="self">self</span>.<span class="ident">components</span>
             .<span class="ident">iter</span>()

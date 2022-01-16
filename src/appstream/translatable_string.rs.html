@@ -253,6 +253,9 @@
 <span id="252">252</span>
 <span id="253">253</span>
 <span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">std::collections::BTreeMap</span>;
 
@@ -305,6 +308,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `locale` - The locale to use, use `with_default` if you want the default locale.</span>
     <span class="doccomment">/// * `text` - The corresponding translation.</span>
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">and_locale</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>), <span class="ident">text</span>);
         <span class="self">self</span>
@@ -316,7 +320,7 @@
     <span class="doccomment">/// and can be used to feed the `MarkupTranslatableString`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_for_element</span>(<span class="kw-2">&amp;mut</span> <span class="self">self</span>, <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="ident">xmltree::Element</span>) {
         <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">element</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;lang&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">l</span>.<span class="ident">as_str</span>());
-        <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="ident">locale</span>, <span class="kw-2">&amp;</span><span class="ident">element_to_xml</span>(<span class="kw-2">&amp;</span><span class="ident">element</span>));
+        <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="ident">locale</span>, <span class="kw-2">&amp;</span><span class="ident">element_to_xml</span>(<span class="ident">element</span>));
     }
 
     <span class="doccomment">/// Adds a new translation for a speicifc locale.</span>
@@ -384,6 +388,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `locale` - The locale to use, use `with_default` if you want the default locale.</span>
     <span class="doccomment">/// * `text` - The corresponding translation.</span>
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">and_locale</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">text</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>), <span class="ident">text</span>);
         <span class="self">self</span>
@@ -469,6 +474,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * `locale` - The locale to use, use `with_default` if you want the default locale.</span>
     <span class="doccomment">/// * `words` - The list of strings to add to this specific locale.</span>
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">and_locale</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">locale</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">words</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="ident">words</span>.<span class="ident">iter</span>().<span class="ident">for_each</span>(<span class="op">|</span><span class="ident">w</span><span class="op">|</span> {
             <span class="self">self</span>.<span class="ident">add_for_locale</span>(<span class="prelude-val">Some</span>(<span class="ident">locale</span>), <span class="ident">w</span>);

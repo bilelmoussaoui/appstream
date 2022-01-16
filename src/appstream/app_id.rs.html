@@ -23,7 +23,7 @@
 <span id="22">22</span>
 <span id="23">23</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">std::string::ToString</span>;
+<span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="doccomment">/// Unique identifier of a component. It should be reverse-DNS name.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AppId</span>(<span class="kw">pub</span> <span class="ident">String</span>);
@@ -40,9 +40,9 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ToString</span> <span class="kw">for</span> <span class="ident">AppId</span> {
-    <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">String</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>()
+<span class="kw">impl</span> <span class="ident">fmt::Display</span> <span class="kw">for</span> <span class="ident">AppId</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;mut</span> <span class="ident">fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">fmt::Result</span> {
+        <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>)
     }
 }
 </code></pre></div>

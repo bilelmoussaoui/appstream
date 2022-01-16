@@ -1100,10 +1100,10 @@
 <span class="kw">use</span> <span class="ident">std::fmt</span>;
 <span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
 <span class="kw">use</span> <span class="ident">std::str::FromStr</span>;
-<span class="kw">use</span> <span class="ident">strum_macros</span>::{<span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>};
+<span class="kw">use</span> <span class="ident">strum_macros</span>::{<span class="ident">AsRefStr</span>, <span class="ident">Display</span>, <span class="ident">EnumString</span>};
 <span class="kw">use</span> <span class="ident">url::Url</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">Display</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
@@ -1185,7 +1185,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">Display</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;PascalCase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;PascalCase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
@@ -1505,7 +1505,7 @@
     <span class="ident">Blake2s</span>(<span class="ident">String</span>),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">ToString</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Display</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;kebab-case&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
@@ -1714,7 +1714,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">ToString</span>, <span class="ident">EnumString</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">Display</span>, <span class="ident">EnumString</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="doccomment">/// Defines the state of a `ContentAttribute`</span>
@@ -1735,7 +1735,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">Display</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="doccomment">/// Defines the firmware type.</span>
@@ -1915,7 +1915,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">ToString</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>, <span class="ident">EnumString</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>, <span class="ident">EnumString</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="doccomment">/// The type of an image.</span>
@@ -1932,7 +1932,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">AsRefStr</span>, <span class="ident">ToString</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>, <span class="ident">EnumString</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Deserialize</span>, <span class="ident">AsRefStr</span>, <span class="ident">Display</span>, <span class="ident">Serialize</span>, <span class="ident">PartialEq</span>, <span class="ident">EnumString</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;PascalCase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">non_exhaustive</span>]</span>
 <span class="doccomment">/// Defines some metrics of awesomeness.</span>
@@ -2115,7 +2115,7 @@
     <span class="ident">Codec</span>(<span class="ident">String</span>),
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">ToString</span>, <span class="ident">EnumString</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">EnumString</span>, <span class="ident">AsRefStr</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="doccomment">/// Classifies the release into stable/development.</span>
@@ -2133,7 +2133,7 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">ToString</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">AsRefStr</span>, <span class="ident">EnumString</span>, <span class="ident">Display</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">rename_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="attribute">#[<span class="ident">strum</span>(<span class="ident">serialize_all</span> <span class="op">=</span> <span class="string">&quot;lowercase&quot;</span>)]</span>
 <span class="doccomment">/// Defines how important is to install the new release as un update.</span>
