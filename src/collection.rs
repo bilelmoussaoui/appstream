@@ -78,7 +78,7 @@ impl Collection {
         // For some obscure reasons & history
         // Some apps uses $app-id.desktop as the id on the appdata/metainfo file
         // Let's automatically check for those as well.
-        let alternative_id: AppId = format!("{}.desktop", id.to_string()).into();
+        let alternative_id: AppId = format!("{}.desktop", id).into();
 
         self.components
             .iter()
