@@ -639,6 +639,7 @@ impl TryFrom<&Element> for Provide {
             .into_owned();
 
         match e.name.as_ref() {
+            "mediatype" => Ok(Provide::MediaType(val.into())),
             "library" => Ok(Provide::Library(val.into())),
             "binary" => Ok(Provide::Binary(val)),
             "font" => Ok(Provide::Font(val)),
