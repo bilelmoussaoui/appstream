@@ -9,10 +9,10 @@ use std::cmp::{Ord, Ordering};
 use std::fmt;
 use std::path::PathBuf;
 use std::str::FromStr;
-use strum_macros::{AsRefStr, EnumString, ToString};
+use strum_macros::{AsRefStr, Display, EnumString};
 use url::Url;
 
-#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, AsRefStr, EnumString, Display, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 #[non_exhaustive]
@@ -94,7 +94,7 @@ impl Serialize for Bundle {
     }
 }
 
-#[derive(Clone, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, AsRefStr, EnumString, Display, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "PascalCase")]
 #[strum(serialize_all = "PascalCase")]
 #[non_exhaustive]
@@ -414,7 +414,7 @@ pub enum Checksum {
     Blake2s(String),
 }
 
-#[derive(Clone, Copy, Debug, AsRefStr, Serialize, ToString, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, AsRefStr, Serialize, Display, Deserialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 #[strum(serialize_all = "kebab-case")]
 #[non_exhaustive]
@@ -623,7 +623,7 @@ impl PartialOrd for ContentRatingVersion {
     }
 }
 
-#[derive(Clone, Copy, Debug, AsRefStr, ToString, EnumString, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Copy, Debug, AsRefStr, Display, EnumString, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 /// Defines the state of a `ContentAttribute`
@@ -644,7 +644,7 @@ impl Default for ContentState {
     }
 }
 
-#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Copy, Debug, AsRefStr, EnumString, Display, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 /// Defines the firmware type.
@@ -824,7 +824,7 @@ impl Serialize for Icon {
     }
 }
 
-#[derive(Clone, Copy, Debug, ToString, AsRefStr, Serialize, Deserialize, PartialEq, EnumString)]
+#[derive(Clone, Copy, Debug, Display, AsRefStr, Serialize, Deserialize, PartialEq, EnumString)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 /// The type of an image.
@@ -841,7 +841,7 @@ impl Default for ImageKind {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, AsRefStr, ToString, Serialize, PartialEq, EnumString)]
+#[derive(Clone, Debug, Deserialize, AsRefStr, Display, Serialize, PartialEq, EnumString)]
 #[strum(serialize_all = "PascalCase")]
 #[non_exhaustive]
 /// Defines some metrics of awesomeness.
@@ -1024,7 +1024,7 @@ pub enum Provide {
     Codec(String),
 }
 
-#[derive(Clone, Copy, Debug, ToString, EnumString, AsRefStr, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, Display, EnumString, AsRefStr, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 /// Classifies the release into stable/development.
@@ -1042,7 +1042,7 @@ impl Default for ReleaseKind {
     }
 }
 
-#[derive(Clone, Copy, Debug, AsRefStr, EnumString, ToString, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, AsRefStr, EnumString, Display, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 /// Defines how important is to install the new release as un update.

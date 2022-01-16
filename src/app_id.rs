@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::string::ToString;
+use std::fmt;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 /// Unique identifier of a component. It should be reverse-DNS name.
 pub struct AppId(pub String);
@@ -16,8 +16,8 @@ impl From<String> for AppId {
     }
 }
 
-impl ToString for AppId {
-    fn to_string(&self) -> String {
-        self.0.clone()
+impl fmt::Display for AppId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
     }
 }

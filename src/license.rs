@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::fmt;
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 /// A SPDX license.
 /// See the list of commonly found licenses [https://spdx.org/licenses/](https://spdx.org/licenses/).
@@ -16,8 +17,8 @@ impl From<&str> for License {
     }
 }
 
-impl ToString for License {
-    fn to_string(&self) -> String {
-        self.0.clone()
+impl fmt::Display for License {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
     }
 }
