@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;xml.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>xml.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../appstream/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src&#x2F;xml.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>xml.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../appstream/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -852,6 +853,7 @@
 <span id="852">852</span>
 <span id="853">853</span>
 <span id="854">854</span>
+<span id="855">855</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident"><span class="kw">super</span>::error::ParseError</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Collection</span>, <span class="ident">Component</span>};
 <span class="kw">use</span> <span class="ident">std::convert::TryFrom</span>;
@@ -874,9 +876,9 @@
 };
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">NaiveDate</span>, <span class="ident">NaiveDateTime</span>, <span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
 
-<span class="kw">fn</span> <span class="ident">deserialize_date</span>(<span class="ident">date</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>, <span class="ident">chrono::ParseError</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">deserialize_date</span>(<span class="ident">date</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>, <span class="ident">chrono::ParseError</span><span class="op">&gt;</span> {
     <span class="ident">Utc</span>.<span class="ident">datetime_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">date</span>, <span class="string">&quot;%s&quot;</span>).<span class="ident">or_else</span>(
-        <span class="op">|</span><span class="kw">_</span>: <span class="ident">chrono::ParseError</span><span class="op">|</span> <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>, <span class="ident">chrono::ParseError</span><span class="op">&gt;</span> {
+        <span class="op">|</span><span class="kw">_</span>: <span class="ident">chrono::ParseError</span><span class="op">|</span> -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span>, <span class="ident">chrono::ParseError</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">date</span>: <span class="ident">NaiveDateTime</span> <span class="op">=</span>
                 <span class="ident">NaiveDate::parse_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">date</span>, <span class="string">&quot;%Y-%m-%d&quot;</span>)<span class="question-mark">?</span>.<span class="ident">and_hms</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);
             <span class="prelude-val">Ok</span>(<span class="ident">DateTime</span>::<span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span><span class="ident">::from_utc</span>(<span class="ident">date</span>, <span class="ident">Utc</span>))
@@ -887,7 +889,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AppId</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">e</span>.<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;id&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">as_ref</span>()
@@ -898,7 +900,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Artifact</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">artifact</span> <span class="op">=</span> <span class="ident">ArtifactBuilder::default</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">kind</span>) <span class="op">=</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
@@ -914,7 +916,7 @@
         <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">children</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">xmltree::XMLNode::Element</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="ident">node</span> {
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">e</span>.<span class="ident">name</span> {
-                    <span class="string">&quot;location&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;location&quot;</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Url::parse</span>(
                             <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">get_text</span>()
                                 .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;location&quot;</span>))<span class="question-mark">?</span>
@@ -922,13 +924,13 @@
                         )<span class="question-mark">?</span>;
                         <span class="ident">artifact</span> <span class="op">=</span> <span class="ident">artifact</span>.<span class="ident">url</span>(<span class="ident">url</span>);
                     }
-                    <span class="string">&quot;size&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;size&quot;</span> =&gt; {
                         <span class="ident">artifact</span> <span class="op">=</span> <span class="ident">artifact</span>.<span class="ident">size</span>(<span class="ident">Size::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;checksum&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;checksum&quot;</span> =&gt; {
                         <span class="ident">artifact</span> <span class="op">=</span> <span class="ident">artifact</span>.<span class="ident">checksum</span>(<span class="ident">Checksum::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+                    <span class="kw">_</span> =&gt; (),
                 }
             }
         }
@@ -940,26 +942,26 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Bundle</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;bundle&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>).<span class="ident">as_deref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;tarball&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Tarball</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;snap&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Snap</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;appimage&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Bundle::AppImage</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;limba&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Limba</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;flatpak&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Flatpak</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;tarball&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Tarball</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;snap&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Snap</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;appimage&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bundle::AppImage</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;limba&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Limba</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;flatpak&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bundle::Flatpak</span> {
                     <span class="ident">runtime</span>: <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;runtime&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">to_string</span>()),
                     <span class="ident">sdk</span>: <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;sdk&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">to_string</span>()),
                     <span class="ident">reference</span>: <span class="ident">val</span>,
                 }),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;bundle&quot;</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;bundle&quot;</span>)),
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;bundle&quot;</span>)),
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;bundle&quot;</span>)),
         }
     }
 }
@@ -967,21 +969,21 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Checksum</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;checksum&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>).<span class="ident">as_deref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;sha1&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Sha1</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sha256&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Sha256</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;blake2b&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Blake2b</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;blake2s&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Blake2s</span>(<span class="ident">val</span>)),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;checksum&quot;</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;sha1&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Sha1</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sha256&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Sha256</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;blake2b&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Blake2b</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;blake2s&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Checksum::Blake2s</span>(<span class="ident">val</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;checksum&quot;</span>)),
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;provide&quot;</span>)),
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;provide&quot;</span>)),
         }
     }
 }
@@ -989,7 +991,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Collection</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">attributes</span>
             .<span class="ident">get</span>(<span class="string">&quot;version&quot;</span>)
@@ -1009,7 +1011,7 @@
 
         <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">children</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">xmltree::XMLNode::Element</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="ident">node</span> {
-                <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">e</span>.<span class="ident">name</span> <span class="op">=</span><span class="op">=</span> <span class="string">&quot;component&quot;</span> {
+                <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">e</span>.<span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;component&quot;</span> {
                     <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">component</span>(<span class="ident">Component::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                 }
             }
@@ -1020,7 +1022,7 @@
 
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Component</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">component</span> <span class="op">=</span> <span class="ident">ComponentBuilder::default</span>();
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">kind</span>) <span class="op">=</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
@@ -1043,44 +1045,44 @@
         <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">children</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">xmltree::XMLNode::Element</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="ident">node</span> {
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">e</span>.<span class="ident">name</span> {
-                    <span class="string">&quot;name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">name</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
-                    <span class="string">&quot;summary&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">summary</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
-                    <span class="string">&quot;developer_name&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">developer_name</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
-                    <span class="string">&quot;description&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">description</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
-                    <span class="string">&quot;project_license&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;name&quot;</span> =&gt; <span class="ident">name</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
+                    <span class="string">&quot;summary&quot;</span> =&gt; <span class="ident">summary</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
+                    <span class="string">&quot;developer_name&quot;</span> =&gt; <span class="ident">developer_name</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
+                    <span class="string">&quot;description&quot;</span> =&gt; <span class="ident">description</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>),
+                    <span class="string">&quot;project_license&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">project_license</span>(<span class="ident">License::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;metadata_license&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;metadata_license&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">metadata_license</span>(<span class="ident">License::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;icon&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;icon&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">icon</span>(<span class="ident">Icon::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;update_contact&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;update_contact&quot;</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">contact</span> <span class="op">=</span> <span class="ident">e</span>
                             .<span class="ident">get_text</span>()
                             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;update_contact&quot;</span>))<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">update_contact</span>(<span class="ident">contact</span>.<span class="ident">as_ref</span>());
                     }
-                    <span class="string">&quot;project_group&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;project_group&quot;</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">project_group</span> <span class="op">=</span> <span class="ident">e</span>
                             .<span class="ident">get_text</span>()
                             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;project_group&quot;</span>))<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">project_group</span>(<span class="ident">project_group</span>.<span class="ident">as_ref</span>());
                     }
-                    <span class="string">&quot;compulsory_for_desktop&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;compulsory_for_desktop&quot;</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">compulsory</span> <span class="op">=</span> <span class="ident">e</span>
                             .<span class="ident">get_text</span>()
                             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;compulsory_for_desktop&quot;</span>))<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">compulsory_for_desktop</span>(<span class="ident">compulsory</span>.<span class="ident">as_ref</span>());
                     }
-                    <span class="string">&quot;pkgname&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;pkgname&quot;</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">pkgname</span> <span class="op">=</span> <span class="ident">e</span>
                             .<span class="ident">get_text</span>()
                             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;pkgname&quot;</span>))<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">pkgname</span>(<span class="ident">pkgname</span>.<span class="ident">as_ref</span>());
                     }
-                    <span class="string">&quot;categories&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;categories&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="kw">let</span> <span class="ident">category</span> <span class="op">=</span> <span class="ident">child</span>
                                 .<span class="ident">as_element</span>()
@@ -1093,13 +1095,13 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;source_pkgname&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;source_pkgname&quot;</span> =&gt; {
                         <span class="kw">let</span> <span class="ident">source_pkgname</span> <span class="op">=</span> <span class="ident">e</span>
                             .<span class="ident">get_text</span>()
                             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;source_pkgname&quot;</span>))<span class="question-mark">?</span>;
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">source_pkgname</span>(<span class="ident">source_pkgname</span>.<span class="ident">as_ref</span>());
                     }
-                    <span class="string">&quot;keywords&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;keywords&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">keywords</span>.<span class="ident">add_for_element</span>(
                                 <span class="ident">c</span>.<span class="ident">as_element</span>()
@@ -1107,7 +1109,7 @@
                             );
                         }
                     }
-                    <span class="string">&quot;kudos&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;kudos&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="kw">let</span> <span class="ident">kudo</span> <span class="op">=</span> <span class="ident">child</span>
                                 .<span class="ident">as_element</span>()
@@ -1121,7 +1123,7 @@
                                 })<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;mimetypes&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;mimetypes&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">mimetype</span>(
                                 <span class="kw-2">&amp;</span><span class="ident">child</span>
@@ -1133,7 +1135,7 @@
                             );
                         }
                     }
-                    <span class="string">&quot;screenshots&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;screenshots&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">screenshot</span>(<span class="ident">Screenshot::try_from</span>(
                                 <span class="ident">child</span>
@@ -1143,7 +1145,7 @@
                         }
                     }
 
-                    <span class="string">&quot;releases&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;releases&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">release</span>(<span class="ident">Release::try_from</span>(
                                 <span class="ident">child</span>
@@ -1152,19 +1154,19 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;extends&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;extends&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">extend</span>(<span class="ident">AppId::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;translation&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;translation&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">translation</span>(<span class="ident">Translation::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;launchable&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;launchable&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">launchable</span>(<span class="ident">Launchable::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;content_rating&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;content_rating&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">content_rating</span>(<span class="ident">ContentRating::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;languages&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;languages&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">language</span>(<span class="ident">Language::try_from</span>(
                                 <span class="ident">child</span>
@@ -1173,7 +1175,7 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;provides&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;provides&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">provide</span>(<span class="ident">Provide::try_from</span>(
                                 <span class="ident">child</span>
@@ -1182,13 +1184,13 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;url&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;url&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">url</span>(<span class="ident">ProjectUrl::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;bundle&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;bundle&quot;</span> =&gt; {
                         <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">bundle</span>(<span class="ident">Bundle::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;suggests&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;suggests&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">suggest</span>(<span class="ident">AppId::try_from</span>(
                                 <span class="ident">child</span>
@@ -1197,7 +1199,7 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;metadata&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;metadata&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">children</span> {
                             <span class="kw">let</span> <span class="ident">child</span> <span class="op">=</span> <span class="ident">child</span>
                                 .<span class="ident">as_element</span>()
@@ -1214,7 +1216,7 @@
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">metadata</span>(<span class="ident">key</span>, <span class="ident">value</span>);
                         }
                     }
-                    <span class="string">&quot;requires&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;requires&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">e</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">component</span> <span class="op">=</span> <span class="ident">component</span>.<span class="ident">require</span>(<span class="ident">AppId::try_from</span>(
                                 <span class="ident">child</span>
@@ -1223,7 +1225,7 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+                    <span class="kw">_</span> =&gt; (),
                 }
             };
         }
@@ -1241,14 +1243,14 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ContentRating</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">version</span>: <span class="ident">ContentRatingVersion</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;oars-1.0&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ContentRatingVersion::Oars1_0</span>,
-                <span class="string">&quot;oars-1.1&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ContentRatingVersion::Oars1_1</span>,
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ContentRatingVersion::Unknown</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;oars-1.0&quot;</span> =&gt; <span class="ident">ContentRatingVersion::Oars1_0</span>,
+                <span class="string">&quot;oars-1.1&quot;</span> =&gt; <span class="ident">ContentRatingVersion::Oars1_1</span>,
+                <span class="kw">_</span> =&gt; <span class="ident">ContentRatingVersion::Unknown</span>,
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ContentRatingVersion::Unknown</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="ident">ContentRatingVersion::Unknown</span>,
         };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">attributes</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ContentAttribute</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
@@ -1269,7 +1271,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ContentAttribute</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;content-attribute&quot;</span>))<span class="question-mark">?</span>
@@ -1279,38 +1281,38 @@
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ParseError::invalid_value</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>, <span class="string">&quot;$value&quot;</span>, <span class="string">&quot;content-attribute&quot;</span>))<span class="question-mark">?</span>;
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;id&quot;</span>).<span class="ident">as_deref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;violence-cartoon&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceCartoon</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-fantasy&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceFantasy</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-bloodshed&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceBloodshed</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-sexual&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceSexual</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-desecration&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceDesecration</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-slavery&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceSlavery</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-realistic&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceRealistic</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;violence-worship&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceWorship</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;drugs-alcohol&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::DrugsAlcohol</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;drugs-narcotics&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::DrugsNarcotics</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;drugs-tobacco&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::DrugsTobacco</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sex-nudity&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexNudity</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sex-themes&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexThemes</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sex-homosexuality&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexHomosexuality</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sex-prostitution&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexProstitution</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sex-adultery&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexAdultery</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;sex-appearance&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexAppearance</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;language-profanity&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::LanguageProfanity</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;language-humor&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::LanguageHumor</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;language-discrimination&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::LanguageDiscrimination</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;social-chat&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialChat</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;social-info&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialInfo</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;social-audio&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialAudio</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;social-location&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialLocation</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;social-contacts&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialContacts</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;money-advertising&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::MoneyAdvertising</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;money-purchasing&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::MoneyPurchasing</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;money-gambling&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::MoneyGambling</span>(<span class="ident">val</span>)),
-                <span class="ident">id</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">id</span>, <span class="string">&quot;id&quot;</span>, <span class="string">&quot;content-attribute&quot;</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;violence-cartoon&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceCartoon</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-fantasy&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceFantasy</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-bloodshed&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceBloodshed</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-sexual&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceSexual</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-desecration&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceDesecration</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-slavery&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceSlavery</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-realistic&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceRealistic</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;violence-worship&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::ViolenceWorship</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;drugs-alcohol&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::DrugsAlcohol</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;drugs-narcotics&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::DrugsNarcotics</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;drugs-tobacco&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::DrugsTobacco</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sex-nudity&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexNudity</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sex-themes&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexThemes</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sex-homosexuality&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexHomosexuality</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sex-prostitution&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexProstitution</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sex-adultery&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexAdultery</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;sex-appearance&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SexAppearance</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;language-profanity&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::LanguageProfanity</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;language-humor&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::LanguageHumor</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;language-discrimination&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::LanguageDiscrimination</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;social-chat&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialChat</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;social-info&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialInfo</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;social-audio&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialAudio</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;social-location&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialLocation</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;social-contacts&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::SocialContacts</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;money-advertising&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::MoneyAdvertising</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;money-purchasing&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::MoneyPurchasing</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;money-gambling&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ContentAttribute::MoneyGambling</span>(<span class="ident">val</span>)),
+                <span class="ident">id</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">id</span>, <span class="string">&quot;id&quot;</span>, <span class="string">&quot;content-attribute&quot;</span>)),
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;content-attribute&quot;</span>)),
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;content-attribute&quot;</span>)),
         }
     }
 }
@@ -1318,40 +1320,40 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Icon</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;icon&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">t</span>.<span class="ident">as_str</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;local&quot;</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="ident">t</span>.<span class="ident">as_str</span>(),
+            <span class="prelude-val">None</span> =&gt; <span class="string">&quot;local&quot;</span>,
         };
 
         <span class="kw">let</span> <span class="ident">width</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;width&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">w</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">w</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>(),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">w</span>) =&gt; <span class="ident">w</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>(),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         };
 
         <span class="kw">let</span> <span class="ident">height</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;height&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">h</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">h</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>(),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">h</span>) =&gt; <span class="ident">h</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>().<span class="ident">ok</span>(),
+            <span class="kw">_</span> =&gt; <span class="prelude-val">None</span>,
         };
 
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="string">&quot;stock&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Icon::Stock</span>(<span class="ident">val</span>),
-            <span class="string">&quot;cached&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Icon::Cached</span> {
+            <span class="string">&quot;stock&quot;</span> =&gt; <span class="ident">Icon::Stock</span>(<span class="ident">val</span>),
+            <span class="string">&quot;cached&quot;</span> =&gt; <span class="ident">Icon::Cached</span> {
                 <span class="ident">path</span>: <span class="ident">val</span>.<span class="ident">into</span>(),
                 <span class="ident">width</span>,
                 <span class="ident">height</span>,
             },
-            <span class="string">&quot;remote&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Icon::Remote</span> {
+            <span class="string">&quot;remote&quot;</span> =&gt; <span class="ident">Icon::Remote</span> {
                 <span class="ident">url</span>: <span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>,
                 <span class="ident">width</span>,
                 <span class="ident">height</span>,
             },
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Icon::Local</span> {
+            <span class="kw">_</span> =&gt; <span class="ident">Icon::Local</span> {
                 <span class="ident">path</span>: <span class="ident">val</span>.<span class="ident">into</span>(),
                 <span class="ident">width</span>,
                 <span class="ident">height</span>,
@@ -1363,7 +1365,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Image</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Url::parse</span>(
             <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">get_text</span>()
                 .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;image&quot;</span>))<span class="question-mark">?</span>
@@ -1372,10 +1374,10 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">img</span> <span class="op">=</span> <span class="ident">ImageBuilder::new</span>(<span class="ident">url</span>);
 
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; {
                 <span class="ident">ImageKind::from_str</span>(<span class="ident">t</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;image&quot;</span>))<span class="question-mark">?</span>
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ImageKind::Source</span>,
+            <span class="prelude-val">None</span> =&gt; <span class="ident">ImageKind::Source</span>,
         };
 
         <span class="ident">img</span> <span class="op">=</span> <span class="ident">img</span>.<span class="ident">kind</span>(<span class="ident">kind</span>);
@@ -1401,14 +1403,14 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Language</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">locale</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;language&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;percentage&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">p</span>) =&gt; {
                 <span class="kw">let</span> <span class="ident">percentage</span> <span class="op">=</span> <span class="ident">p</span>
                     .<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>()
                     .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ParseError::invalid_value</span>(<span class="ident">p</span>, <span class="string">&quot;percentage&quot;</span>, <span class="string">&quot;language&quot;</span>))<span class="question-mark">?</span>;
@@ -1417,7 +1419,7 @@
                     <span class="ident">percentage</span>: <span class="prelude-val">Some</span>(<span class="ident">percentage</span>),
                 })
             }
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
                 <span class="ident">locale</span>,
                 <span class="ident">percentage</span>: <span class="prelude-val">None</span>,
             }),
@@ -1428,21 +1430,21 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Launchable</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">get_text</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">into_owned</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="prelude-val">Some</span>(<span class="ident">v</span>) =&gt; <span class="ident">v</span>.<span class="ident">into_owned</span>(),
+            <span class="prelude-val">None</span> =&gt; <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
         };
         <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">k</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">k</span>.<span class="ident">as_str</span>(),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;&quot;</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">k</span>) =&gt; <span class="ident">k</span>.<span class="ident">as_str</span>(),
+            <span class="prelude-val">None</span> =&gt; <span class="string">&quot;&quot;</span>,
         };
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> <span class="ident">kind</span> {
-            <span class="string">&quot;cockpit-manifest&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Launchable::CockpitManifest</span>(<span class="ident">val</span>),
-            <span class="string">&quot;desktop-id&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Launchable::DesktopId</span>(<span class="ident">val</span>),
-            <span class="string">&quot;service&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Launchable::Service</span>(<span class="ident">val</span>),
-            <span class="string">&quot;url&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Launchable::Url</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>),
-            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Launchable::Unknown</span>(<span class="ident">val</span>),
+            <span class="string">&quot;cockpit-manifest&quot;</span> =&gt; <span class="ident">Launchable::CockpitManifest</span>(<span class="ident">val</span>),
+            <span class="string">&quot;desktop-id&quot;</span> =&gt; <span class="ident">Launchable::DesktopId</span>(<span class="ident">val</span>),
+            <span class="string">&quot;service&quot;</span> =&gt; <span class="ident">Launchable::Service</span>(<span class="ident">val</span>),
+            <span class="string">&quot;url&quot;</span> =&gt; <span class="ident">Launchable::Url</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>),
+            <span class="kw">_</span> =&gt; <span class="ident">Launchable::Unknown</span>(<span class="ident">val</span>),
         })
     }
 }
@@ -1450,7 +1452,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">License</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">e</span>.<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;license&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">as_ref</span>()
@@ -1461,24 +1463,24 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ProjectUrl</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;url&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>).<span class="ident">as_deref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;help&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Help</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="string">&quot;homepage&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Homepage</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="string">&quot;donation&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Donation</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="string">&quot;contact&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Contact</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="string">&quot;translate&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Translate</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="string">&quot;faq&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Faq</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="string">&quot;bugtracker&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::BugTracker</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Unknown</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;help&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Help</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="string">&quot;homepage&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Homepage</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="string">&quot;donation&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Donation</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="string">&quot;contact&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Contact</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="string">&quot;translate&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Translate</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="string">&quot;faq&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Faq</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="string">&quot;bugtracker&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::BugTracker</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ProjectUrl::Unknown</span>(<span class="ident">Url::parse</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>)<span class="question-mark">?</span>)),
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;url&quot;</span>)),
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;url&quot;</span>)),
         }
     }
 }
@@ -1486,31 +1488,32 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Provide</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;provide&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>() {
-            <span class="string">&quot;library&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Library</span>(<span class="ident">val</span>.<span class="ident">into</span>())),
-            <span class="string">&quot;binary&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Binary</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;font&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Font</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;modalias&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Modalias</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;python2&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Python2</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;python3&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Python3</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;dbus&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::DBus</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;id&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Id</span>(<span class="ident">val</span>.<span class="ident">into</span>())),
-            <span class="string">&quot;codec&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Provide::Codec</span>(<span class="ident">val</span>)),
-            <span class="string">&quot;firmware&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">kind</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="string">&quot;mediatype&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::MediaType</span>(<span class="ident">val</span>.<span class="ident">into</span>())),
+            <span class="string">&quot;library&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Library</span>(<span class="ident">val</span>.<span class="ident">into</span>())),
+            <span class="string">&quot;binary&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Binary</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;font&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Font</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;modalias&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Modalias</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;python2&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Python2</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;python3&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Python3</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;dbus&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::DBus</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;id&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Id</span>(<span class="ident">val</span>.<span class="ident">into</span>())),
+            <span class="string">&quot;codec&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Provide::Codec</span>(<span class="ident">val</span>)),
+            <span class="string">&quot;firmware&quot;</span> =&gt; <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>) {
+                <span class="prelude-val">Some</span>(<span class="ident">kind</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="ident">FirmwareKind::from_str</span>(<span class="ident">kind</span>)
                         .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">ParseError::invalid_value</span>(<span class="ident">kind</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;firmware&quot;</span>))<span class="question-mark">?</span>;
                     <span class="prelude-val">Ok</span>(<span class="ident">Provide::Firmware</span> { <span class="ident">kind</span>, <span class="ident">item</span>: <span class="ident">val</span> })
                 }
-                <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;firmware&quot;</span>)),
+                <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;firmware&quot;</span>)),
             },
-            <span class="ident">t</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;provide&quot;</span>)),
+            <span class="ident">t</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;provide&quot;</span>)),
         }
     }
 }
@@ -1518,7 +1521,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Release</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">version</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">attributes</span>
             .<span class="ident">get</span>(<span class="string">&quot;version&quot;</span>)
@@ -1566,7 +1569,7 @@
         <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">children</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">xmltree::XMLNode::Element</span>(<span class="kw-2">ref</span> <span class="ident">c</span>) <span class="op">=</span> <span class="ident">node</span> {
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">c</span>.<span class="ident">name</span> {
-                    <span class="string">&quot;artifacts&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;artifacts&quot;</span> =&gt; {
                         <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">c</span>.<span class="ident">children</span>.<span class="ident">iter</span>() {
                             <span class="ident">release</span> <span class="op">=</span> <span class="ident">release</span>.<span class="ident">artifact</span>(<span class="ident">Artifact::try_from</span>(
                                 <span class="ident">child</span>
@@ -1575,18 +1578,18 @@
                             )<span class="question-mark">?</span>);
                         }
                     }
-                    <span class="string">&quot;size&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;size&quot;</span> =&gt; {
                         <span class="ident">release</span> <span class="op">=</span> <span class="ident">release</span>.<span class="ident">size</span>(<span class="ident">Size::try_from</span>(<span class="ident">c</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;description&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">description</span>.<span class="ident">add_for_element</span>(<span class="ident">c</span>),
-                    <span class="string">&quot;url&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;description&quot;</span> =&gt; <span class="ident">description</span>.<span class="ident">add_for_element</span>(<span class="ident">c</span>),
+                    <span class="string">&quot;url&quot;</span> =&gt; {
                         <span class="ident">release</span> <span class="op">=</span> <span class="ident">release</span>.<span class="ident">url</span>(<span class="ident">Url::parse</span>(
                             <span class="kw-2">&amp;</span><span class="ident">c</span>.<span class="ident">get_text</span>()
                                 .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;url&quot;</span>))<span class="question-mark">?</span>
                                 .<span class="ident">as_ref</span>(),
                         )<span class="question-mark">?</span>);
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+                    <span class="kw">_</span> =&gt; (),
                 }
             }
         }
@@ -1598,27 +1601,27 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Screenshot</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">ScreenshotBuilder::default</span>().<span class="ident">set_default</span>(
             <span class="ident">e</span>.<span class="ident">attributes</span>
                 .<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>)
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">as_str</span>() <span class="op">=</span><span class="op">=</span> <span class="string">&quot;default&quot;</span>)
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="ident">t</span>.<span class="ident">as_str</span>() <span class="op">==</span> <span class="string">&quot;default&quot;</span>)
                 .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="bool-val">false</span>),
         );
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">caption</span> <span class="op">=</span> <span class="ident">TranslatableString::default</span>();
         <span class="kw">for</span> <span class="ident">node</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">children</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">xmltree::XMLNode::Element</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=</span> <span class="ident">node</span> {
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">e</span>.<span class="ident">name</span> {
-                    <span class="string">&quot;image&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;image&quot;</span> =&gt; {
                         <span class="ident">s</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">image</span>(<span class="ident">Image::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="string">&quot;caption&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;caption&quot;</span> =&gt; {
                         <span class="ident">caption</span>.<span class="ident">add_for_element</span>(<span class="ident">e</span>);
                     }
-                    <span class="string">&quot;video&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="string">&quot;video&quot;</span> =&gt; {
                         <span class="ident">s</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">video</span>(<span class="ident">Video::try_from</span>(<span class="ident">e</span>)<span class="question-mark">?</span>);
                     }
-                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
+                    <span class="kw">_</span> =&gt; (),
                 }
             }
         }
@@ -1629,27 +1632,27 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Size</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>
             .<span class="ident">get_text</span>()
             .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;size&quot;</span>))<span class="question-mark">?</span>
             .<span class="ident">into_owned</span>();
 
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>).<span class="ident">as_deref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;download&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;download&quot;</span> =&gt; {
                     <span class="prelude-val">Ok</span>(<span class="ident">Size::Download</span>(<span class="ident">val</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
                         <span class="ident">ParseError::invalid_value</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>, <span class="string">&quot;download&quot;</span>, <span class="string">&quot;size&quot;</span>)
                     })<span class="question-mark">?</span>))
                 }
-                <span class="string">&quot;installed&quot;</span> <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="string">&quot;installed&quot;</span> =&gt; {
                     <span class="prelude-val">Ok</span>(<span class="ident">Size::Installed</span>(<span class="ident">val</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
                         <span class="ident">ParseError::invalid_value</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>, <span class="string">&quot;installed&quot;</span>, <span class="string">&quot;size&quot;</span>)
                     })<span class="question-mark">?</span>))
                 }
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;size&quot;</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;size&quot;</span>)),
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;size&quot;</span>)),
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;size&quot;</span>)),
         }
     }
 }
@@ -1657,15 +1660,15 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Translation</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">val</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">get_text</span>().<span class="ident">unwrap_or_default</span>().<span class="ident">into_owned</span>();
         <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">attributes</span>.<span class="ident">get</span>(<span class="string">&quot;type&quot;</span>).<span class="ident">as_deref</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
-                <span class="string">&quot;gettext&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Translation::Gettext</span>(<span class="ident">val</span>)),
-                <span class="string">&quot;qt&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Translation::Qt</span>(<span class="ident">val</span>)),
-                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;translation&quot;</span>)),
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) =&gt; <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">as_str</span>() {
+                <span class="string">&quot;gettext&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Translation::Gettext</span>(<span class="ident">val</span>)),
+                <span class="string">&quot;qt&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Translation::Qt</span>(<span class="ident">val</span>)),
+                <span class="kw">_</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::invalid_value</span>(<span class="ident">t</span>, <span class="string">&quot;type&quot;</span>, <span class="string">&quot;translation&quot;</span>)),
             },
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;translation&quot;</span>)),
+            <span class="prelude-val">None</span> =&gt; <span class="prelude-val">Err</span>(<span class="ident">ParseError::missing_attribute</span>(<span class="string">&quot;type&quot;</span>, <span class="string">&quot;translation&quot;</span>)),
         }
     }
 }
@@ -1673,7 +1676,7 @@
 <span class="kw">impl</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Element</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Video</span> {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">ParseError</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">e</span>: <span class="kw-2">&amp;</span><span class="ident">Element</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">Url::parse</span>(
             <span class="kw-2">&amp;</span><span class="ident">e</span>.<span class="ident">get_text</span>()
                 .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">ParseError::missing_value</span>(<span class="string">&quot;video&quot;</span>))<span class="question-mark">?</span>
@@ -1708,5 +1711,4 @@
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="appstream" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
-    <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script>
 </body></html>
