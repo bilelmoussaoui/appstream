@@ -2,7 +2,7 @@
 name = "appstream"
 version = "0.2.1"
 authors = ["Bilal Elmoussaoui <bil.elmoussaoui@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "Appstream files parser"
 repository = "https://github.com/bilelmoussaoui/appstream"
 keywords = ["appstream", "xml", "parser", "metainfo", "appdata"]
