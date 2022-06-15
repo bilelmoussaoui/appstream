@@ -38,6 +38,10 @@ pub enum ParseError {
     #[error("Invalid value {0} passed to attribute {1} for tag {2}")]
     /// A value passed to an attribute for a specific tag is invalid.
     InvalidValue(String, String, String),
+
+    #[error("Error parsing {0}: {1}")]
+    /// A parsing error requiring a reason.
+    Other(String, String),
 }
 
 impl ParseError {
@@ -64,5 +68,10 @@ impl ParseError {
     /// Creates a missing value error.
     pub fn missing_value(tag: &str) -> Self {
         ParseError::MissingValue(tag.to_string())
+    }
+
+    /// Creates a other error.
+    pub fn other(tag: &str, reason: &str) -> Self {
+        ParseError::Other(tag.to_string(), reason.to_string())
     }
 }

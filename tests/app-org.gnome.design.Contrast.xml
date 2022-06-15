@@ -54,7 +54,11 @@
     </metadata>
     <requires>
       <id>org.gnome.design.AppIconPreview</id>
+      <display_length compare="ge">360</display_length>
     </requires>
+    <supports>
+      <control>keyboard</control>
+    </supports>
     <keywords>
       <keyword>Color</keyword>
       <keyword>Contrast</keyword>

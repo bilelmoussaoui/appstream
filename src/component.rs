@@ -3,8 +3,8 @@ use super::enums::{
 };
 use super::error::ParseError;
 use super::{
-    AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Screenshot,
-    TranslatableList, TranslatableString,
+    AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Requirement,
+    Screenshot, TranslatableList, TranslatableString,
 };
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
@@ -27,6 +27,21 @@ pub struct Component {
     pub id: AppId,
     /// A human-readable name.
     pub name: TranslatableString,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Absolute requirements of the component. See
+    /// <https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations>.
+    pub requires: Vec<Requirement>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Recomended requirements of the component. See
+    /// <https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations>.
+    pub recommends: Vec<Requirement>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Supported features of the component. See
+    /// <https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations>.
+    pub supports: Vec<Requirement>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     /// A short summary of the component.
@@ -133,10 +148,6 @@ pub struct Component {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     /// Suggested components to install.
     pub suggestions: Vec<AppId>,
-
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    /// Required components.
-    pub requirements: Vec<AppId>,
 
     #[serde(default, skip_serializing_if = "HashMap::is_empty")]
     /// Custom metadata.
@@ -600,6 +611,8 @@ mod tests {
 
     #[test]
     fn contrast_metainfo_component() -> Result<(), Box<dyn Error>> {
+        use crate::{AppId, Control, DisplayLength, DisplayLengthValue, Requirement};
+
         let c1: Component =
             Component::from_path("./tests/app-org.gnome.design.Contrast.xml".into())?;
 
@@ -659,6 +672,14 @@ mod tests {
             .and_locale("sv", "<p>Kontrast kontrollerar om kontrasten mellan två färger uppfyller WCAG-kraven.</p>")
             .and_locale("tr", "<p>Contrast, iki renk arasındaki karşıtlığın WCAG gereksinimlerini karşılayıp karşılamadığını gözden geçirir.</p>");
 
+        let app_id_req = Requirement::AppId(AppId::from("org.gnome.design.AppIconPreview"));
+        let display_length = Requirement::DisplayLength(DisplayLength {
+            value: DisplayLengthValue::Value(360),
+            compare: Default::default(),
+            side: Default::default(),
+        });
+        let keyboard = Requirement::Control(Control::Keyboard);
+
         let c2 = ComponentBuilder::default()
             .id("org.gnome.design.Contrast".into())
             .name(name)
@@ -673,7 +694,9 @@ mod tests {
             .kudo(Kudo::HighContrast)
             .kudo(Kudo::ModernToolkit)
             .suggest("org.gnome.design.Palette".into())
-            .require("org.gnome.design.AppIconPreview".into())
+            .requires(app_id_req)
+            .requires(display_length)
+            .supports(keyboard)
             .bundle(Bundle::Flatpak {
                 runtime: Some("org.gnome.Platform/x86_64/3.36".into()),
                 sdk: Some("org.gnome.Sdk/x86_64/3.36".into()),
