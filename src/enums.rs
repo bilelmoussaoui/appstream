@@ -289,7 +289,7 @@ pub enum Category {
     Biology,
     /// Chemistry software.
     Chemistry,
-    /// Computer sience software.
+    /// Computer science software.
     ComputerScience,
     /// Data visualization software.
     DataVisualization,
