@@ -18,12 +18,15 @@ use super::{
     AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
     Screenshot, TranslatableList, TranslatableString, Video,
 };
-use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 
 fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
     Utc.datetime_from_str(date, "%s").or_else(
         |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
-            let date: NaiveDateTime = NaiveDate::parse_from_str(date, "%Y-%m-%d")?.and_hms(0, 0, 0);
+            let date = NaiveDateTime::new(
+                NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
+                NaiveTime::default(),
+            );
             Ok(DateTime::<Utc>::from_utc(date, Utc))
         },
     )

@@ -91,14 +91,14 @@ mod tests {
           <description>
             <p>This stable release fixes bugs.</p>
           </description>
-  
+
           <url>https://example.org/releases/version-1.2.html</url>
-  
+
           <issues>
             <issue url='https://example.com/bugzilla/12345'>bz#12345</issue>
             <issue type='cve'>CVE-2019-123456</issue>
           </issues>
-  
+
           <artifacts>
             <artifact type='binary' platform='x86_64-linux-gnu'>
               <location>https://example.com/mytarball.bin.tar.xz</location>
@@ -132,7 +132,7 @@ mod tests {
                 .description(MarkupTranslatableString::with_default(
                     "<p>This stable release fixes bugs.</p>",
                 ))
-                .date(Utc.ymd(2014, 4, 12).and_hms_milli(0, 0, 0, 0))
+                .date(Utc.with_ymd_and_hms(2014, 4, 12, 0, 0, 0).unwrap())
                 .url(Url::parse("https://example.org/releases/version-1.2.html")?)
                 .artifact(
                     ArtifactBuilder::default()
@@ -162,10 +162,10 @@ mod tests {
                 .build(),
             ReleaseBuilder::new("1.1")
                 .kind(ReleaseKind::Development)
-                .date(Utc.ymd(2013, 10, 20).and_hms_milli(0, 0, 0, 0))
+                .date(Utc.with_ymd_and_hms(2013, 10, 20, 0, 0, 0).unwrap())
                 .build(),
             ReleaseBuilder::new("1.0")
-                .date(Utc.ymd(2012, 8, 26).and_hms_milli(0, 0, 0, 0))
+                .date(Utc.with_ymd_and_hms(2012, 8, 26, 0, 0, 0).unwrap())
                 .build(),
         ];
         assert_eq!(releases1, releases2);
