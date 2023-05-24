@@ -797,7 +797,12 @@ impl Serialize for Icon {
                 s.serialize_field("type", "stock")?;
                 s.serialize_field("name", &path)?;
             }
-            Icon::Remote { url, width, height, scale } => {
+            Icon::Remote {
+                url,
+                width,
+                height,
+                scale,
+            } => {
                 s.serialize_field("type", "remote")?;
                 s.serialize_field("url", &url)?;
                 w = width;
