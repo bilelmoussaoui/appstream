@@ -17,16 +17,22 @@
 //!
 //! This crate aimes to provide an easy and sane Rust parser of Appstream using [xmltree](https://docs.rs/xmltree/)
 //!
+//! The `chrono` or `time` crates can be used to represent dates. `chrono` is the default. To use `time` instead, turn off default features and enable the `time` feature, like this:
+//! ```toml
+//! [dependencies]
+//! appstream = { version = "*", default-features = false, features = ["time"] }
+//! ```
+//!
 //! # Examples
+//!
 //! ```
 //! use std::convert::TryFrom;
 //!
 //! use appstream::{
 //!     builders::{ComponentBuilder, ReleaseBuilder},
 //!     enums::{ProjectUrl, Provide},
-//!     Component, ParseError, TranslatableString,
+//!     Component, DateTime, ParseError, TranslatableString,
 //! };
-//! use chrono::{TimeZone, Utc};
 //! use url::Url;
 //!
 //! fn main() -> Result<(), ParseError> {
@@ -37,14 +43,13 @@
 //!                         <summary>A foo-ish bar</summary>
 //!                         <url type='homepage'>http://www.example.org</url>
 //!                         <metadata_license>CC0-1.0</metadata_license>
-//!                         
 //!                         <provides>
 //!                           <library>libfoobar.so.2</library>
 //!                           <font>foo.ttf</font>
 //!                           <binary>foobar</binary>
 //!                         </provides>
 //!                         <releases>
-//!                           <release version='1.2' date='2015-02-16'/>
+//!                           <release version='1.2'/>
 //!                         </releases>
 //!                         <developer_name>FooBar Team</developer_name>
 //!                     </component>";
@@ -63,7 +68,6 @@
 //!         .provide(Provide::Binary("foobar".into()))
 //!         .release(
 //!             ReleaseBuilder::new("1.2")
-//!                 .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
 //!                 .build(),
 //!         )
 //!         .build();
@@ -104,6 +108,9 @@
 //! ```
 #![deny(missing_docs)]
 
+#[macro_use]
+extern crate cfg_if;
+
 mod app_id;
 /// Various helpers to build any appstream type.
 pub mod builders;
@@ -134,3 +141,42 @@ pub use screenshot::{Image, Screenshot, Video};
 pub use translatable_string::{MarkupTranslatableString, TranslatableList, TranslatableString};
 pub use url;
 pub use xmltree;
+
+cfg_if! {
+    if #[cfg(feature = "time")] {
+        /// The time module DateTime re-export
+        pub use time::OffsetDateTime as DateTime;
+    } else {
+        use chrono::{DateTime as ChronoDateTime, Utc};
+        /// The chrono module DateTime re-export
+        pub type DateTime = ChronoDateTime<Utc>;
+    }
+}
+
+#[cfg(test)]
+#[inline]
+fn date(year: i32, month: u8, day: u8) -> DateTime {
+    cfg_if! {
+        if #[cfg(feature = "time")] {
+            return time::Date::from_calendar_date(year, time::Month::try_from(month).unwrap(), day).unwrap().midnight().assume_utc();
+        } else {
+            use chrono::TimeZone;
+            return Utc.with_ymd_and_hms(year, month.into(), day.into(), 0, 0, 0).unwrap();
+        }
+    }
+}
+
+#[cfg(test)]
+#[inline]
+fn timestamp(timestamp: &str) -> DateTime {
+    cfg_if! {
+        if #[cfg(feature = "time")] {
+            use time::{macros::format_description};
+            let format = format_description!("[unix_timestamp]");
+            return DateTime::parse(timestamp, &format).unwrap()
+        } else {
+            use chrono::TimeZone;
+            return Utc.datetime_from_str(timestamp, "%s").unwrap();
+        }
+    }
+}

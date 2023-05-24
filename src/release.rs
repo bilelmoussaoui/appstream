@@ -1,4 +1,4 @@
-use chrono::{DateTime, Utc};
+use crate::DateTime;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -7,17 +7,58 @@ use super::{
     MarkupTranslatableString,
 };
 
+#[cfg(feature = "time")]
+mod date_or_timestamp {
+    use super::*;
+    use serde::{Deserializer, Serializer};
+
+    use time::{macros::format_description, Date};
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<DateTime>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s = String::deserialize(deserializer)?;
+
+        let timestamp_format = format_description!("[unix_timestamp]");
+        let date_format = format_description!("[year]-[month]-[day]");
+        Ok(Some(
+            DateTime::parse(&s, &time::format_description::well_known::Iso8601::DEFAULT)
+                .or_else(|_| DateTime::parse(&s, &timestamp_format))
+                .or_else(|_| Date::parse(&s, &date_format).map(|d| d.midnight().assume_utc()))
+                .map_err(serde::de::Error::custom)?,
+        ))
+    }
+
+    pub fn serialize<S>(date: &Option<DateTime>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match date {
+            Some(date) => {
+                let formatted = date
+                    .format(&time::format_description::well_known::Iso8601::DEFAULT)
+                    .map_err(serde::ser::Error::custom)?;
+                serializer.serialize_some(&formatted)
+            }
+            None => serializer.serialize_none(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 /// Represents the metainformation that defines a Release.
 /// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
 pub struct Release {
     #[serde(default, alias = "timestamp", skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "time", serde(with = "date_or_timestamp"))]
     /// The release date.
-    pub date: Option<DateTime<Utc>>,
+    pub date: Option<DateTime>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[cfg_attr(feature = "time", serde(with = "date_or_timestamp"))]
     /// The end-of-life date of the release.
-    pub date_eol: Option<DateTime<Utc>>,
+    pub date_eol: Option<DateTime>,
     /// The release version
     pub version: String,
 
@@ -78,7 +119,7 @@ pub struct Artifact {
 mod tests {
     use std::{convert::TryFrom, error::Error};
 
-    use chrono::{TimeZone, Utc};
+    use crate::{date, timestamp};
 
     use super::{
         ArtifactKind, Checksum, MarkupTranslatableString, Release, ReleaseKind, ReleaseUrgency,
@@ -135,7 +176,7 @@ mod tests {
                 .description(MarkupTranslatableString::with_default(
                     "<p>This stable release fixes bugs.</p>",
                 ))
-                .date(Utc.with_ymd_and_hms(2014, 4, 12, 0, 0, 0).unwrap())
+                .date(date(2014, 4, 12))
                 .url(Url::parse("https://example.org/releases/version-1.2.html")?)
                 .artifact(
                     ArtifactBuilder::default()
@@ -165,11 +206,9 @@ mod tests {
                 .build(),
             ReleaseBuilder::new("1.1")
                 .kind(ReleaseKind::Development)
-                .date(Utc.with_ymd_and_hms(2013, 10, 20, 0, 0, 0).unwrap())
+                .date(date(2013, 10, 20))
                 .build(),
-            ReleaseBuilder::new("1.0")
-                .date(Utc.with_ymd_and_hms(2012, 8, 26, 0, 0, 0).unwrap())
-                .build(),
+            ReleaseBuilder::new("1.0").date(date(2012, 8, 26)).build(),
         ];
         assert_eq!(releases1, releases2);
         Ok(())
@@ -204,14 +243,14 @@ mod tests {
             vec![
                 ReleaseBuilder::new("1.8")
                     .description(MarkupTranslatableString::with_default("<p>This stable release fixes the following bug:</p><ul><li>CPU no longer overheats when you hold down spacebar</li></ul>"))
-                    .date(Utc.datetime_from_str("1424116753", "%s")?)
+                    .date(timestamp("1424116753"))
                     .sizes(vec![Size::Download(12345678), Size::Installed(42424242)])
                     .build(),
                 ReleaseBuilder::new("1.2")
-                    .date(Utc.datetime_from_str("1397253600", "%s")?)
+                    .date(timestamp("1397253600"))
                     .build(),
                 ReleaseBuilder::new("1.0")
-                    .date(Utc.datetime_from_str("1345932000", "%s")?)
+                    .date(timestamp("1345932000"))
                     .build()
             ]
         );
