@@ -307,7 +307,7 @@ mod tests {
             .release(
                 ReleaseBuilder::new("3.12.2")
                     .description(MarkupTranslatableString::with_default("<p>Fixes issues X, Y and Z</p>"))
-                    .date(Utc.ymd(2013, 4, 12).and_hms_milli(0, 0, 0, 0))
+                    .date(Utc.with_ymd_and_hms(2013, 4, 12, 0, 0, 0).unwrap())
                     .build(),
             )
             .build();
@@ -371,10 +371,10 @@ mod tests {
             })
             .release(
                 ReleaseBuilder::new("3.0.2")
-                    .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+                    .date(Utc.with_ymd_and_hms(2015, 2, 16, 0, 0, 0).unwrap())
                     .artifact(
                         ArtifactBuilder::default()
-                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab")?) 
+                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab")?)
                         .kind(ArtifactKind::Binary)
                         .build()
                     )
@@ -432,7 +432,7 @@ mod tests {
             .provide(Provide::Binary("foobar".into()))
             .release(
                 ReleaseBuilder::new("1.2")
-                    .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
+                    .date(Utc.with_ymd_and_hms(2015, 2, 16, 0, 0, 0).unwrap())
                     .build(),
             )
             .build();
@@ -548,8 +548,8 @@ mod tests {
             .release(
                 ReleaseBuilder::new("9.0")
                     .description(MarkupTranslatableString::with_default("<p>Now contains the Linux kernel 4.9, GNOME 3.22, KDE Plasma 5, LibreOffice 5.2 and Qt 5.7. LXQt has been added.</p>"))
-                    .date(Utc.ymd(2017, 7, 17).and_hms_milli(0, 0, 0, 0))
-                    .date_eol(Utc.ymd(2020, 7, 17).and_hms_milli(0, 0, 0, 0))
+                    .date(Utc.with_ymd_and_hms(2017, 7, 17, 0, 0, 0).unwrap())
+                    .date_eol(Utc.with_ymd_and_hms(2020, 7, 17, 0, 0, 0).unwrap())
                     .build(),
             )
             .build();
@@ -579,7 +579,7 @@ mod tests {
             .release(ReleaseBuilder::new("10.0").build())
             .release(
                 ReleaseBuilder::new("9.0")
-                    .date(Utc.ymd(2020, 01, 12).and_hms_milli(0, 0, 0, 0))
+                    .date(Utc.with_ymd_and_hms(2020, 01, 12, 0, 0, 0).unwrap())
                     .build(),
             )
             .build();
