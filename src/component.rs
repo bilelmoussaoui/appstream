@@ -282,6 +282,7 @@ mod tests {
             ))
             .provide(Provide::Binary("gnome-power-statistics".into()))
             .provide(Provide::Id("gnome-power-statistics.desktop".into()))
+            .icon(Icon::Cached { path: "org.gnome.gnome-power-statistics.png".into(), width: Some(128), height: Some(128), scale: Some(2) })
             .screenshot(
                 ScreenshotBuilder::default()
                     .caption(TranslatableString::with_default("The options dialog"))
@@ -374,7 +375,7 @@ mod tests {
                     .date(Utc.ymd(2015, 2, 16).and_hms_milli(0, 0, 0, 0))
                     .artifact(
                         ArtifactBuilder::default()
-                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab")?) 
+                        .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab")?)
                         .kind(ArtifactKind::Binary)
                         .build()
                     )
@@ -594,7 +595,18 @@ mod tests {
         let file = std::fs::File::open("./tests/app-com.github.utsushi.Utsushi.json")?;
         let c: Component = serde_json::from_reader(&file)?;
 
-        assert_eq!(c.icons, vec![Icon::Stock("scanner".to_string())]);
+        assert_eq!(
+            c.icons,
+            vec![
+                Icon::Stock("scanner".to_string()),
+                Icon::Cached {
+                    path: "com.github.utsushi.Utsushi.png".into(),
+                    width: Some(64),
+                    height: Some(64),
+                    scale: Some(2)
+                }
+            ]
+        );
         Ok(())
     }
 
@@ -691,11 +703,13 @@ mod tests {
                 path: "org.gnome.design.Contrast.png".into(),
                 width: Some(64),
                 height: Some(64),
+                scale: None,
             })
             .icon(Icon::Cached {
                 path: "org.gnome.design.Contrast.png".into(),
                 width: Some(128),
                 height: Some(128),
+                scale: None,
             }).content_rating(ContentRating {
                 attributes: vec![],
                 version: ContentRatingVersion::Oars1_0
