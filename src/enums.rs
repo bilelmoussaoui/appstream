@@ -669,6 +669,8 @@ pub enum Icon {
         width: Option<u32>,
         /// The icon height.
         height: Option<u32>,
+        /// The icon scale
+        scale: Option<u32>,
     },
     /// Icon loaded from a remote URL.
     Remote {
@@ -678,6 +680,8 @@ pub enum Icon {
         width: Option<u32>,
         /// The icon height.
         height: Option<u32>,
+        /// The icon scale
+        scale: Option<u32>,
     },
     /// Icon loaded from a file.
     Local {
@@ -687,6 +691,8 @@ pub enum Icon {
         width: Option<u32>,
         /// The icon height.
         height: Option<u32>,
+        /// The icon scale
+        scale: Option<u32>,
     },
 }
 
@@ -711,6 +717,7 @@ impl<'de> Deserialize<'de> for Icon {
                 let mut kind = None;
                 let mut width = None;
                 let mut height = None;
+                let mut scale = None;
                 let mut path = None;
 
                 while let Some(key) = access.next_key::<String>()? {
@@ -724,6 +731,9 @@ impl<'de> Deserialize<'de> for Icon {
                         }
                         "height" => {
                             height = access.next_value::<u32>().ok();
+                        }
+                        "scale" => {
+                            scale = access.next_value::<u32>().ok();
                         }
                         "path" | "name" | "url" => {
                             let value = access.next_value::<String>()?;
@@ -746,17 +756,20 @@ impl<'de> Deserialize<'de> for Icon {
                         })?,
                         width,
                         height,
+                        scale,
                     }),
                     "stock" => Ok(Icon::Stock(path)),
                     "cached" => Ok(Icon::Cached {
                         path: path.into(),
                         width,
                         height,
+                        scale,
                     }),
                     "local" => Ok(Icon::Local {
                         path: path.into(),
                         width,
                         height,
+                        scale,
                     }),
                     e => Err(de::Error::invalid_value(
                         de::Unexpected::Str(e),
@@ -777,37 +790,43 @@ impl Serialize for Icon {
         let mut s = serializer.serialize_struct("icon", 4)?;
         let mut w: &Option<u32> = &None;
         let mut h: &Option<u32> = &None;
+        let mut icon_scale: &Option<u32> = &None;
 
         match self {
             Icon::Stock(path) => {
                 s.serialize_field("type", "stock")?;
                 s.serialize_field("name", &path)?;
             }
-            Icon::Remote { url, width, height } => {
+            Icon::Remote { url, width, height, scale } => {
                 s.serialize_field("type", "remote")?;
                 s.serialize_field("url", &url)?;
                 w = width;
                 h = height;
+                icon_scale = scale;
             }
             Icon::Cached {
                 path,
                 width,
                 height,
+                scale,
             } => {
                 s.serialize_field("type", "cached")?;
                 s.serialize_field("path", &path)?;
                 w = width;
                 h = height;
+                icon_scale = scale;
             }
             Icon::Local {
                 path,
                 width,
                 height,
+                scale,
             } => {
                 s.serialize_field("type", "local")?;
                 s.serialize_field("path", &path)?;
                 w = width;
                 h = height;
+                icon_scale = scale;
             }
         };
 
@@ -820,6 +839,11 @@ impl Serialize for Icon {
             Some(v) => s.serialize_field("height", v)?,
             None => s.skip_field("height")?,
         };
+
+        match icon_scale {
+            Some(v) => s.serialize_field("scale", v)?,
+            None => s.skip_field("scale")?,
+        }
         s.end()
     }
 }

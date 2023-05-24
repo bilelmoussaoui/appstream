@@ -484,22 +484,30 @@ impl TryFrom<&Element> for Icon {
             _ => None,
         };
 
+        let scale: Option<u32> = match e.attributes.get("scale") {
+            Some(s) => s.parse::<u32>().ok(),
+            _ => None,
+        };
+
         Ok(match kind {
             "stock" => Icon::Stock(val),
             "cached" => Icon::Cached {
                 path: val.into(),
                 width,
                 height,
+                scale,
             },
             "remote" => Icon::Remote {
                 url: Url::parse(&val)?,
                 width,
                 height,
+                scale,
             },
             _ => Icon::Local {
                 path: val.into(),
                 width,
                 height,
+                scale,
             },
         })
     }

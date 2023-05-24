@@ -21,6 +21,13 @@
     {
       "type": "stock",
       "name": "scanner"
+    },
+    {
+      "type": "cached",
+      "path": "com.github.utsushi.Utsushi.png",
+      "width": 64,
+      "height": 64,
+      "scale": 2
     }
   ],
   "screenshots": [

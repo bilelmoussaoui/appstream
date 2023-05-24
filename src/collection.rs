@@ -176,7 +176,8 @@ mod tests {
             .icon(Icon::Cached {
                 path: "firefox.png".into(),
                 width: None,
-                height: None
+                height: None,
+                scale: None,
             })
             .build()
         )
@@ -292,6 +293,7 @@ mod tests {
                 .icon(Icon::Remote{
                     width: None,
                     height: None,
+                    scale: None,
                     url: Url::parse("http://g-ecx.images-amazon.com/images/G/01/kindle/www/ariel/kindle-icon-kcp120._SL90_.png")?
                 })
                 .metadata("X-Needs-Dark-Theme".to_string(), None)
