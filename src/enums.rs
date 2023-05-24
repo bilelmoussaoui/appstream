@@ -414,7 +414,7 @@ pub enum Checksum {
     Blake2s(String),
 }
 
-#[derive(Clone, Copy, Debug, AsRefStr, Serialize, Display, Deserialize, PartialEq)]
+#[derive(Clone, Copy, Debug, AsRefStr, Serialize, Display, Deserialize, Default, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 #[strum(serialize_all = "kebab-case")]
 #[non_exhaustive]
@@ -451,6 +451,7 @@ pub enum ComponentKind {
     /// A font.
     Font,
     /// A generic component.
+    #[default]
     Generic,
     /// An icon theme.
     IconTheme,
@@ -460,12 +461,6 @@ pub enum ComponentKind {
     Driver,
     /// A codec.
     Codec,
-}
-
-impl Default for ComponentKind {
-    fn default() -> Self {
-        ComponentKind::Generic
-    }
 }
 
 impl FromStr for ComponentKind {
@@ -584,7 +579,7 @@ pub enum ContentAttribute {
     MoneyGambling(ContentState),
 }
 
-#[derive(Clone, Copy, Eq, PartialEq, Deserialize, Serialize, Debug)]
+#[derive(Clone, Copy, Eq, PartialEq, Deserialize, Serialize, Debug, Default)]
 #[non_exhaustive]
 /// Defines the version of the OARS specification.
 pub enum ContentRatingVersion {
@@ -595,13 +590,8 @@ pub enum ContentRatingVersion {
     /// OARS v1.1.
     Oars1_1,
     /// Unknown version
+    #[default]
     Unknown,
-}
-
-impl Default for ContentRatingVersion {
-    fn default() -> Self {
-        ContentRatingVersion::Unknown
-    }
 }
 
 impl Ord for ContentRatingVersion {
@@ -1058,17 +1048,13 @@ pub enum Provide {
 #[strum(serialize_all = "lowercase")]
 /// Classifies the release into stable/development.
 /// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
+#[derive(Default)]
 pub enum ReleaseKind {
     /// A stable release.
+    #[default]
     Stable,
     /// A development release, not intended to be installed by users.
     Development,
-}
-
-impl Default for ReleaseKind {
-    fn default() -> Self {
-        ReleaseKind::Stable
-    }
 }
 
 #[derive(Clone, Copy, Debug, AsRefStr, EnumString, Display, Serialize, Deserialize, PartialEq)]
@@ -1076,21 +1062,17 @@ impl Default for ReleaseKind {
 #[strum(serialize_all = "lowercase")]
 /// Defines how important is to install the new release as un update.
 /// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
+#[derive(Default)]
 pub enum ReleaseUrgency {
     /// Low urgency.
     Low,
     /// Medium urgency.
+    #[default]
     Medium,
     /// High urgency.
     High,
     /// Critical urgency.
     Critical,
-}
-
-impl Default for ReleaseUrgency {
-    fn default() -> Self {
-        ReleaseUrgency::Medium
-    }
 }
 
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]

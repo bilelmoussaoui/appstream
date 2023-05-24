@@ -273,8 +273,7 @@ impl TryFrom<&Element> for Component {
                                     .as_element()
                                     .ok_or_else(|| ParseError::invalid_tag("mimetype"))?
                                     .get_text()
-                                    .ok_or_else(|| ParseError::missing_value("mimetype"))?
-                                    .to_string(),
+                                    .ok_or_else(|| ParseError::missing_value("mimetype"))?,
                             );
                         }
                     }
