@@ -4,7 +4,7 @@ use super::ParseError;
 use crate::app_id::AppId;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-/// A requrirement. See [\<requires\>, \<recommends\>, &
+/// A requirement. See [\<requires\>, \<recommends\>, &
 /// \<supports\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations)
 pub enum Requirement {
     /// A display length requirement.

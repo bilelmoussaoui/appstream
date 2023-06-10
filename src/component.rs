@@ -32,7 +32,7 @@ pub struct Component {
     pub requires: Vec<Requirement>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    /// Recomended requirements of the component. See
+    /// Recommended requirements of the component. See
     /// <https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations>.
     pub recommends: Vec<Requirement>,
 
