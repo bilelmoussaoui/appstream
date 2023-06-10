@@ -14,9 +14,10 @@ use super::enums::{
     ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, Kudo, Launchable,
     ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
 };
+use super::requirements::{Control, DisplayLength, DisplayLengthValue, Rel, Side};
 use super::{
     AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
-    Screenshot, TranslatableList, TranslatableString, Video,
+    Requirement, Screenshot, TranslatableList, TranslatableString, Video,
 };
 use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 
@@ -325,7 +326,7 @@ impl TryFrom<&Element> for Component {
                             component = component.provide(Provide::try_from(
                                 child
                                     .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("prorivdes"))?,
+                                    .ok_or_else(|| ParseError::invalid_tag("provides"))?,
                             )?);
                         }
                     }
@@ -363,10 +364,28 @@ impl TryFrom<&Element> for Component {
                     }
                     "requires" => {
                         for child in e.children.iter() {
-                            component = component.require(AppId::try_from(
+                            component = component.requires(Requirement::try_from(
                                 child
                                     .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("id"))?,
+                                    .ok_or_else(|| ParseError::invalid_tag("requires"))?,
+                            )?);
+                        }
+                    }
+                    "recommends" => {
+                        for child in e.children.iter() {
+                            component = component.recommends(Requirement::try_from(
+                                child
+                                    .as_element()
+                                    .ok_or_else(|| ParseError::invalid_tag("recommends"))?,
+                            )?);
+                        }
+                    }
+                    "supports" => {
+                        for child in e.children.iter() {
+                            component = component.supports(Requirement::try_from(
+                                child
+                                    .as_element()
+                                    .ok_or_else(|| ParseError::invalid_tag("supports"))?,
                             )?);
                         }
                     }
@@ -860,5 +879,66 @@ impl TryFrom<&Element> for Video {
         }
 
         Ok(video.build())
+    }
+}
+
+impl TryFrom<&Element> for Requirement {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        match &*e.name {
+            "display_length" => {
+                let display_length_value = DisplayLengthValue::try_from(
+                    e.get_text()
+                        .ok_or_else(|| ParseError::missing_value("display_length"))?
+                        .as_ref(),
+                )?;
+                let compare = if let Some(rel) = e.attributes.get("compare") {
+                    Rel::try_from(rel.as_ref())?
+                } else {
+                    Rel::default()
+                };
+
+                let side = if let Some(side) = e.attributes.get("side") {
+                    // This should error if the value is not Value(_) and the
+                    // size property is set.
+                    match display_length_value {
+                        DisplayLengthValue::Value(_) => (),
+                        _ => return Err(ParseError::other("side", "Side cannot be specified when 'display_legth' does not use a numeric size")),
+                    }
+
+                    Side::try_from(side.as_ref())?
+                } else {
+                    Side::default()
+                };
+
+                let display_length = DisplayLength {
+                    compare,
+                    value: display_length_value,
+                    side,
+                };
+                Ok(Requirement::DisplayLength(display_length))
+            }
+            "control" => {
+                let control = Control::try_from(
+                    e.get_text()
+                        .ok_or_else(|| ParseError::missing_value("control"))?
+                        .as_ref(),
+                )?;
+                Ok(Requirement::Control(control))
+            }
+            "id" => {
+                let id = AppId::from(
+                    e.get_text()
+                        .ok_or_else(|| ParseError::missing_value("id"))?
+                        .as_ref(),
+                );
+                Ok(Requirement::AppId(id))
+            }
+            // TODO Implement remaining items in
+            // https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-relations
+            "hardware" | "firmware" | "memory" | "kernel" | "modalias" => Ok(Requirement::Other),
+            _ => Err(ParseError::invalid_tag(&*e.name)),
+        }
     }
 }

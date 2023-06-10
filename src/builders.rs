@@ -1,6 +1,7 @@
 use super::collection::Collection;
 use super::component::Component;
 use super::enums::*;
+use super::Requirement;
 use super::{
     AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
     Screenshot, TranslatableList, TranslatableString, Video,
@@ -206,10 +207,15 @@ pub struct ComponentBuilder {
     pub source_pkgname: Option<String>,
     /// Suggested components.
     pub suggestions: Vec<AppId>,
-    /// Required components.
-    pub requirements: Vec<AppId>,
     /// Custom metadata
     pub metadata: HashMap<String, Option<String>>,
+    /// denotes a supported requirement, this is a weaker statement that
+    /// `recommends`.
+    pub supports: Vec<Requirement>,
+    /// denotes a recommended requirement.
+    pub recommends: Vec<Requirement>,
+    /// denotes an absolute requirement.
+    pub requires: Vec<Requirement>,
 }
 
 #[allow(dead_code)]
@@ -425,17 +431,31 @@ impl ComponentBuilder {
         self
     }
 
-    /// Adds a new requirement to the component.
-    #[must_use]
-    pub fn require(mut self, id: AppId) -> Self {
-        self.requirements.push(id);
-        self
-    }
-
     /// Adds a new metadata (key, value) to the component.
     #[must_use]
     pub fn metadata(mut self, key: String, val: Option<String>) -> Self {
         self.metadata.insert(key, val);
+        self
+    }
+
+    #[must_use]
+    /// Adds a supports to the component.
+    pub fn supports(mut self, supports: Requirement) -> Self {
+        self.supports.push(supports);
+        self
+    }
+
+    #[must_use]
+    /// Adds a recommends to the component.
+    pub fn recommends(mut self, recommends: Requirement) -> Self {
+        self.recommends.push(recommends);
+        self
+    }
+
+    #[must_use]
+    /// Adds a requires to the component.
+    pub fn requires(mut self, requires: Requirement) -> Self {
+        self.requires.push(requires);
         self
     }
 
@@ -446,6 +466,9 @@ impl ComponentBuilder {
             kind: self.kind,
             id: self.id.expect("An 'id' is required"),
             name: self.name.expect("A 'name' is required"),
+            requires: self.requires,
+            recommends: self.recommends,
+            supports: self.supports,
             summary: self.summary,
             description: self.description,
             project_license: self.project_license,
@@ -472,7 +495,6 @@ impl ComponentBuilder {
             translations: self.translations,
             source_pkgname: self.source_pkgname,
             suggestions: self.suggestions,
-            requirements: self.requirements,
             metadata: self.metadata,
         }
     }
