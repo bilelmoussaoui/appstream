@@ -1,24 +1,22 @@
-use super::enums::{
-    Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
-};
-use super::error::ParseError;
-use super::{
-    AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Requirement,
-    Screenshot, TranslatableList, TranslatableString,
-};
+use std::{collections::HashMap, convert::TryFrom, fs::File, io::BufReader, path::PathBuf};
+
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::path::PathBuf;
-
-use std::convert::TryFrom;
-use std::fs::File;
-use std::io::BufReader;
 use xmltree::Element;
+
+use super::{
+    enums::{
+        Bundle, Category, ComponentKind, Icon, Kudo, Launchable, ProjectUrl, Provide, Translation,
+    },
+    error::ParseError,
+    AppId, ContentRating, Language, License, MarkupTranslatableString, Release, Requirement,
+    Screenshot, TranslatableList, TranslatableString,
+};
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-/// A component is wrapper around a `metainfo.xml` file or previously an `appdata.xml` file.
-/// It describes an application to the various stores out there on Linux.
+/// A component is wrapper around a `metainfo.xml` file or previously an
+/// `appdata.xml` file. It describes an application to the various stores out
+/// there on Linux.
 pub struct Component {
     #[serde(default, rename = "type")]
     /// The component type.
@@ -65,7 +63,8 @@ pub struct Component {
     pub project_group: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// Indicate for which desktop environment the component is essential for its functionality.
+    /// Indicate for which desktop environment the component is essential for
+    /// its functionality.
     pub compulsory_for_desktop: Option<String>,
 
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -85,7 +84,8 @@ pub struct Component {
     pub urls: Vec<ProjectUrl>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    /// The developers or the projects responsible for the development of the project.
+    /// The developers or the projects responsible for the development of the
+    /// project.
     pub developer_name: Option<TranslatableString>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -200,19 +200,23 @@ impl Component {
 #[cfg(test)]
 mod tests {
 
-    use super::Component;
-    use crate::builders::{
-        ArtifactBuilder, ComponentBuilder, ImageBuilder, LanguageBuilder, ReleaseBuilder,
-        ScreenshotBuilder,
-    };
-    use crate::enums::{
-        ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind, Icon,
-        ImageKind, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, Translation,
-    };
-    use crate::{ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString};
-    use chrono::{TimeZone, Utc};
     use std::error::Error;
+
+    use chrono::{TimeZone, Utc};
     use url::Url;
+
+    use super::Component;
+    use crate::{
+        builders::{
+            ArtifactBuilder, ComponentBuilder, ImageBuilder, LanguageBuilder, ReleaseBuilder,
+            ScreenshotBuilder,
+        },
+        enums::{
+            ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind,
+            Icon, ImageKind, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, Translation,
+        },
+        ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString,
+    };
 
     #[test]
     fn addon_component() -> Result<(), Box<dyn Error>> {

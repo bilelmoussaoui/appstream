@@ -1,14 +1,11 @@
-use super::error::ParseError;
-use super::AppId;
-use super::Component;
+use std::{convert::TryFrom, fs::File, io::BufReader, path::PathBuf};
+
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
-use std::convert::TryFrom;
-use std::fs::File;
-use std::io::BufReader;
-use std::path::PathBuf;
 use xmltree::Element;
+
+use super::{error::ParseError, AppId, Component};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 /// A collection is a wrapper around multiple components at once.
@@ -89,15 +86,18 @@ impl Collection {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
-    use crate::builders::{
-        CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
-    };
-    use crate::enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide};
-    use crate::{MarkupTranslatableString, TranslatableList, TranslatableString};
     use std::error::Error;
+
     use url::Url;
+
+    use super::*;
+    use crate::{
+        builders::{
+            CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder, ScreenshotBuilder,
+        },
+        enums::{Category, ComponentKind, Icon, ImageKind, ProjectUrl, Provide},
+        MarkupTranslatableString, TranslatableList, TranslatableString,
+    };
 
     #[cfg(feature = "gzip")]
     #[test]

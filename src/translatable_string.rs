@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+
+use serde::{Deserialize, Serialize};
 
 pub const DEFAULT_LOCALE: &str = "C";
 
@@ -48,7 +49,8 @@ impl MarkupTranslatableString {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to use, use `with_default` if you want the default locale.
+    /// * `locale` - The locale to use, use `with_default` if you want the
+    ///   default locale.
     /// * `text` - The corresponding translation.
     #[must_use]
     pub fn and_locale(mut self, locale: &str, text: &str) -> Self {
@@ -69,7 +71,8 @@ impl MarkupTranslatableString {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to use, the default locale is used if `None` is set instead.
+    /// * `locale` - The locale to use, the default locale is used if `None` is
+    ///   set instead.
     /// * `text` - The translation corresponding to the locale.
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0.insert(
@@ -87,7 +90,7 @@ impl MarkupTranslatableString {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to retrieve the text for.  
+    /// * `locale` - The locale to retrieve the text for.
     pub fn get_for_locale(&self, locale: &str) -> Option<&String> {
         self.0.get(locale)
     }
@@ -105,8 +108,8 @@ impl MarkupTranslatableString {
 /// ```
 /// use appstream::TranslatableString;
 /// let name = TranslatableString::with_default("Contrast")
-///             .and_locale("cs", "Kontrast")
-///             .and_locale("cs", "Kontrast");
+///     .and_locale("cs", "Kontrast")
+///     .and_locale("cs", "Kontrast");
 /// ```
 pub struct TranslatableString(pub BTreeMap<String, String>);
 
@@ -128,7 +131,8 @@ impl TranslatableString {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to use, use `with_default` if you want the default locale.
+    /// * `locale` - The locale to use, use `with_default` if you want the
+    ///   default locale.
     /// * `text` - The corresponding translation.
     #[must_use]
     pub fn and_locale(mut self, locale: &str, text: &str) -> Self {
@@ -143,7 +147,8 @@ impl TranslatableString {
     pub fn add_for_element(&mut self, element: &xmltree::Element) {
         self.add_for_locale(
             element.attributes.get("lang").map(|l| l.as_str()),
-            &element.get_text().unwrap_or_default(), // for some reason some description tags contains empty strings.
+            &element.get_text().unwrap_or_default(), /* for some reason some description tags
+                                                      * contains empty strings. */
         );
     }
 
@@ -151,7 +156,8 @@ impl TranslatableString {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to use, the default locale is used if `None` is set instead.
+    /// * `locale` - The locale to use, the default locale is used if `None` is
+    ///   set instead.
     /// * `text` - The translation corresponding to the locale.
     pub fn add_for_locale(&mut self, locale: Option<&str>, text: &str) {
         self.0.insert(
@@ -169,7 +175,7 @@ impl TranslatableString {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to retrieve the text for.    
+    /// * `locale` - The locale to retrieve the text for.
     pub fn get_for_locale(&self, locale: &str) -> Option<&String> {
         self.0.get(locale)
     }
@@ -189,8 +195,8 @@ impl TranslatableString {
 /// ```
 /// use appstream::TranslatableList;
 /// let keywords = TranslatableList::with_default(vec!["Color", "Contrast", "GNOME", "GTK"])
-///                         .and_locale("cs", vec!["barva", "kontrast"])
-///                         .and_locale("da", vec!["Farve", "Kontrast"]);
+///     .and_locale("cs", vec!["barva", "kontrast"])
+///     .and_locale("da", vec!["Farve", "Kontrast"]);
 /// ```
 pub struct TranslatableList(pub BTreeMap<String, Vec<String>>);
 
@@ -214,7 +220,8 @@ impl TranslatableList {
     ///
     /// # Arguments
     ///
-    /// * `locale` - The locale to use, use `with_default` if you want the default locale.
+    /// * `locale` - The locale to use, use `with_default` if you want the
+    ///   default locale.
     /// * `words` - The list of strings to add to this specific locale.
     #[must_use]
     pub fn and_locale(mut self, locale: &str, words: Vec<&str>) -> Self {

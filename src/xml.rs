@@ -1,25 +1,25 @@
-use super::error::ParseError;
-use super::{Collection, Component};
-use std::convert::TryFrom;
-use std::str::FromStr;
+use std::{convert::TryFrom, str::FromStr};
+
+use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 use url::Url;
 use xmltree::Element;
 
-use super::builders::{
-    ArtifactBuilder, CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder,
-    ScreenshotBuilder, VideoBuilder,
-};
-use super::enums::{
-    ArtifactKind, Bundle, Category, Checksum, ComponentKind, ContentAttribute,
-    ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, Kudo, Launchable,
-    ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
-};
-use super::requirements::{Control, DisplayLength, DisplayLengthValue, Rel, Side};
 use super::{
-    AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
-    Requirement, Screenshot, TranslatableList, TranslatableString, Video,
+    builders::{
+        ArtifactBuilder, CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder,
+        ScreenshotBuilder, VideoBuilder,
+    },
+    enums::{
+        ArtifactKind, Bundle, Category, Checksum, ComponentKind, ContentAttribute,
+        ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, Kudo, Launchable,
+        ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
+    },
+    error::ParseError,
+    requirements::{Control, DisplayLength, DisplayLengthValue, Rel, Side},
+    AppId, Artifact, Collection, Component, ContentRating, Image, Language, License,
+    MarkupTranslatableString, Release, Requirement, Screenshot, TranslatableList,
+    TranslatableString, Video,
 };
-use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 
 fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
     Utc.datetime_from_str(date, "%s").or_else(

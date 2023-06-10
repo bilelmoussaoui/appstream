@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
 use std::fmt;
+
+use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
 /// A SPDX license.
 /// See the list of commonly found licenses [https://spdx.org/licenses/](https://spdx.org/licenses/).

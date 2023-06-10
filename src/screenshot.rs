@@ -1,7 +1,7 @@
-use super::enums::ImageKind;
-use super::TranslatableString;
 use serde::{Deserialize, Serialize};
 use url::Url;
+
+use super::{enums::ImageKind, TranslatableString};
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Default)]
 /// Defines a visual representation of the `Component`.
@@ -22,7 +22,8 @@ pub struct Screenshot {
         skip_serializing_if = "Vec::is_empty"
     )]
     /// The list of images the current screenshot has.
-    /// It contains one image of kind `ImageKind::Source`, the rest are `ImageKind::Thumbnail`
+    /// It contains one image of kind `ImageKind::Source`, the rest are
+    /// `ImageKind::Thumbnail`
     pub images: Vec<Image>,
 
     #[serde(rename = "video", default, skip_serializing_if = "Vec::is_empty")]
@@ -76,10 +77,10 @@ pub struct Image {
 
 #[cfg(test)]
 mod tests {
+    use std::{convert::TryFrom, error::Error};
+
     use super::*;
     use crate::builders::{ImageBuilder, ScreenshotBuilder, VideoBuilder};
-    use std::convert::TryFrom;
-    use std::error::Error;
 
     #[test]
     fn default_screenshot() -> Result<(), Box<dyn Error>> {

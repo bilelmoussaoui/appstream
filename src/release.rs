@@ -1,8 +1,11 @@
-use super::enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size};
-use super::MarkupTranslatableString;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use url::Url;
+
+use super::{
+    enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size},
+    MarkupTranslatableString,
+};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 /// Represents the metainformation that defines a Release.
@@ -44,8 +47,8 @@ pub struct Release {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-/// Defines the release artifacts, whether it's the source-code or the binary distribution.
-/// See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
+/// Defines the release artifacts, whether it's the source-code or the binary
+/// distribution. See [\<releases\/\>](https://www.freedesktop.org/software/appstream/docs/chap-Metadata.html#tag-releases).
 pub struct Artifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     /// The targeted platform of the artifact.
@@ -73,15 +76,15 @@ pub struct Artifact {
 
 #[cfg(test)]
 mod tests {
+    use std::{convert::TryFrom, error::Error};
+
+    use chrono::{TimeZone, Utc};
+
     use super::{
         ArtifactKind, Checksum, MarkupTranslatableString, Release, ReleaseKind, ReleaseUrgency,
         Size, Url,
     };
     use crate::builders::{ArtifactBuilder, ReleaseBuilder};
-    use chrono::{TimeZone, Utc};
-    use std::convert::TryFrom;
-
-    use std::error::Error;
 
     #[test]
     fn release_artifacts() -> Result<(), Box<dyn Error>> {

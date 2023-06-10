@@ -1,16 +1,19 @@
-use super::error::ParseError;
-use super::AppId;
-use serde::ser::{SerializeMap, SerializeStruct};
+use std::{
+    cmp::{Ord, Ordering},
+    fmt,
+    path::PathBuf,
+    str::FromStr,
+};
+
 use serde::{
     de::{self, Deserializer, MapAccess, Visitor},
+    ser::{SerializeMap, SerializeStruct},
     Deserialize, Serialize, Serializer,
 };
-use std::cmp::{Ord, Ordering};
-use std::fmt;
-use std::path::PathBuf;
-use std::str::FromStr;
 use strum_macros::{AsRefStr, Display, EnumString};
 use url::Url;
+
+use super::{error::ParseError, AppId};
 
 #[derive(Clone, Copy, Debug, AsRefStr, EnumString, Display, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -27,8 +30,8 @@ pub enum ArtifactKind {
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(tag = "type", rename_all = "lowercase")]
 #[non_exhaustive]
-/// Indicates that the software is available via a 3rd-party application installer.
-/// See [\<bundle\/\>](https://www.freedesktop.org/software/appstream/docs/chap-CollectionData.html#tag-ct-bundle).
+/// Indicates that the software is available via a 3rd-party application
+/// installer. See [\<bundle\/\>](https://www.freedesktop.org/software/appstream/docs/chap-CollectionData.html#tag-ct-bundle).
 pub enum Bundle {
     /// A [Limba](https://people.freedesktop.org/~mak/limba/) bundle.
     Limba(String),
@@ -103,7 +106,8 @@ impl Serialize for Bundle {
 pub enum Category {
     // Main categories
     // https://specifications.freedesktop.org/menu-spec/latest/apa.html#main-category-registry
-    /// Application for presenting, creating, or processing multimedia (audio/video).
+    /// Application for presenting, creating, or processing multimedia
+    /// (audio/video).
     AudioVideo,
     /// An audio application.
     Audio,
@@ -125,7 +129,8 @@ pub enum Category {
     Science,
     /// Settings applications.
     Settings,
-    /// System application, "System Tools" such as say a log viewer or network monitor.
+    /// System application, "System Tools" such as say a log viewer or network
+    /// monitor.
     System,
     /// Small utility application, "Accessories".
     Utility,
@@ -175,7 +180,8 @@ pub enum Category {
     TwoDGraphics,
     /// Application for viewing, creating, or processing vector graphics.
     VectorGraphics,
-    /// Application for viewing, creating, or processing raster (bitmap) graphics.
+    /// Application for viewing, creating, or processing raster (bitmap)
+    /// graphics.
     RasterGraphics,
     /// Application for viewing, creating, or processing 3-D graphics.
     ThreeDGraphics,
@@ -193,7 +199,8 @@ pub enum Category {
     TextTools,
     /// Configuration tool for the GUI.
     DesktopSettings,
-    /// A tool to manage hardware components, like sound cards, video cards or printers.
+    /// A tool to manage hardware components, like sound cards, video cards or
+    /// printers.
     HardwareSettings,
     /// A tool to manage printers.
     Printing,
@@ -365,7 +372,8 @@ pub enum Category {
     Documentation,
     /// Application handles adult or explicit material.
     Adult,
-    /// Important application, core to the desktop such as a file manager or a help browser.
+    /// Important application, core to the desktop such as a file manager or a
+    /// help browser.
     Core,
     /// Application based on KDE libraries.
     KDE,
@@ -381,17 +389,21 @@ pub enum Category {
     Motif,
     /// Application based on Java GUI libraries, such as AWT or Swing.
     Java,
-    /// Application that only works inside a terminal (text-based or command line application).
+    /// Application that only works inside a terminal (text-based or command
+    /// line application).
     ConsoleOnly,
     // Reserved categories
     // https://specifications.freedesktop.org/menu-spec/latest/apas03.html
     /// A screen saver.
     Screensaver,
-    /// An application that is primarily an icon for the "system tray" or "notification area".
+    /// An application that is primarily an icon for the "system tray" or
+    /// "notification area".
     TrayIcon,
-    /// An applet that will run inside a panel or another such application, likely desktop specific.
+    /// An applet that will run inside a panel or another such application,
+    /// likely desktop specific.
     Applet,
-    /// A shell (an actual specific shell such as bash or tcsh, not a TerminalEmulator).
+    /// A shell (an actual specific shell such as bash or tcsh, not a
+    /// TerminalEmulator).
     Shell,
     #[strum(default)]
     #[doc(hidden)]
@@ -494,7 +506,8 @@ impl FromStr for ComponentKind {
 /// OARS attribute.
 pub enum ContentAttribute {
     #[serde(rename = "violence-cartoon")]
-    /// Defined as fictional characters depicted in an animated film or a comic strip which do not look human.
+    /// Defined as fictional characters depicted in an animated film or a comic
+    /// strip which do not look human.
     ViolenceCartoon(ContentState),
     #[serde(rename = "violence-fantasy")]
     /// Defined as characters easily distinguishable from reality.
@@ -521,13 +534,15 @@ pub enum ContentAttribute {
     /// Defined as usage of alcohol or seeing a character consumes one.
     DrugsAlcohol(ContentState),
     #[serde(rename = "drugs-narcotics")]
-    /// Defined as an addictive drug affecting mood or behaviour that is specifically illegal in at least one country.
+    /// Defined as an addictive drug affecting mood or behaviour that is
+    /// specifically illegal in at least one country.
     DrugsNarcotics(ContentState),
     #[serde(rename = "drugs-tobacco")]
     /// Defined as any nicotine-rich product.
     DrugsTobacco(ContentState),
     #[serde(rename = "sex-nudity")]
-    /// Defined as a state of undress, and in this case specifically specifically nudity likely to cause offense.
+    /// Defined as a state of undress, and in this case specifically
+    /// specifically nudity likely to cause offense.
     SexNudity(ContentState),
     #[serde(rename = "sex-themes")]
     /// Defined as in reference to a sexual act.
@@ -536,13 +551,16 @@ pub enum ContentAttribute {
     /// Defined as sexual attraction to people of one's own sex.
     SexHomosexuality(ContentState),
     #[serde(rename = "sex-prostitution")]
-    /// Defined as the practice or occupation of engaging in sexual activity with someone for payment.
+    /// Defined as the practice or occupation of engaging in sexual activity
+    /// with someone for payment.
     SexProstitution(ContentState),
     #[serde(rename = "sex-adultery")]
-    /// Defined as voluntary interaction between a married person and a person who is not their spouse.
+    /// Defined as voluntary interaction between a married person and a person
+    /// who is not their spouse.
     SexAdultery(ContentState),
     #[serde(rename = "sex-appearance")]
-    /// Defined as appearance of human or human-like characters that are sexualized in some way.
+    /// Defined as appearance of human or human-like characters that are
+    /// sexualized in some way.
     SexAppearance(ContentState),
     #[serde(rename = "language-profanity")]
     /// Defined as blasphemous or obscene language.
@@ -551,13 +569,15 @@ pub enum ContentAttribute {
     /// Defined as the quality of being amusing.
     LanguageHumor(ContentState),
     #[serde(rename = "language-discrimination")]
-    /// Defined as the unjust or prejudicial treatment of different categories of people, especially on the grounds of race, age, or sex.
+    /// Defined as the unjust or prejudicial treatment of different categories
+    /// of people, especially on the grounds of race, age, or sex.
     LanguageDiscrimination(ContentState),
     #[serde(rename = "social-chat")]
     /// Defined as any messaging system connected to the Internet.
     SocialChat(ContentState),
     #[serde(rename = "social-info")]
-    /// Defined as sharing information with a legal entity typically used for advertising or for sending back diagnostic data.
+    /// Defined as sharing information with a legal entity typically used for
+    /// advertising or for sending back diagnostic data.
     SocialInfo(ContentState),
     #[serde(rename = "social-audio")]
     /// Defined as any multimedia messaging system connected to the Internet.
@@ -566,13 +586,16 @@ pub enum ContentAttribute {
     /// Defined as sharing your physical real-time location.
     SocialLocation(ContentState),
     #[serde(rename = "social-contacts")]
-    /// Defined as sharing identifiable details with other users to allow out-of-band communication.
+    /// Defined as sharing identifiable details with other users to allow
+    /// out-of-band communication.
     SocialContacts(ContentState),
     #[serde(rename = "money-advertising")]
-    /// Defined as the activity of producing advertisements for commercial products or services.
+    /// Defined as the activity of producing advertisements for commercial
+    /// products or services.
     MoneyAdvertising(ContentState),
     #[serde(rename = "money-purchasing")]
-    /// Defined as items or points that a user can buy for use within a virtual world to improve a character or enhance the playing experience.
+    /// Defined as items or points that a user can buy for use within a virtual
+    /// world to improve a character or enhance the playing experience.
     MoneyPurchasing(ContentState),
     #[serde(rename = "money-gambling")]
     /// Defined as taking a risky action in the hope of a desired result.
@@ -897,7 +920,8 @@ pub enum Launchable {
     /// The application can be launched via a desktop file.
     /// See [Desktop File ID](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#desktop-file-id).
     DesktopId(String),
-    /// The software can be started, stopped and monitored by the OS "init" such as systemd.
+    /// The software can be started, stopped and monitored by the OS "init" such
+    /// as systemd.
     Service(String),
     /// The application is a website viewed through a browser.
     Url(Url),

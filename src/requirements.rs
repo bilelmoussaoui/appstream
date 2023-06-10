@@ -1,6 +1,6 @@
-use super::ParseError;
 use serde::{Deserialize, Serialize};
 
+use super::ParseError;
 use crate::app_id::AppId;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -54,7 +54,8 @@ pub struct DisplayLength {
     #[serde(default)]
     /// Allow depending on a certain minimal version.
     pub compare: Rel,
-    /// A relation to the display length defined as an integer value in logical pixels.
+    /// A relation to the display length defined as an integer value in logical
+    /// pixels.
     pub value: DisplayLengthValue,
     #[serde(default)]
     /// Which side is being measure.
@@ -140,7 +141,8 @@ impl TryFrom<&str> for Side {
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "kebab-case")]
-/// Indicates support for or require certain ways a user can control the software
+/// Indicates support for or require certain ways a user can control the
+/// software
 pub enum Control {
     /// Input via mouse/cursors/other pointing devices is possible
     Pointing,
@@ -152,13 +154,16 @@ pub enum Control {
     Tablet,
     /// Input by touching a surface with fingers is possible
     Touch,
-    /// The component supports gamepads (any game controller with wheels/buttons/joysticks)
+    /// The component supports gamepads (any game controller with
+    /// wheels/buttons/joysticks)
     Gamepad,
-    /// Input via a TV remote (with arrow keys, number pad, other basic inputs) is supported.
+    /// Input via a TV remote (with arrow keys, number pad, other basic inputs)
+    /// is supported.
     TvRemote,
     /// The software can be controlled via voice recognition/activation
     Voice,
-    /// The software can be controlled by computer vision / visual object and sign detection
+    /// The software can be controlled by computer vision / visual object and
+    /// sign detection
     Vision,
 }
 
@@ -183,10 +188,9 @@ impl TryFrom<&str> for Control {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::{convert::TryFrom, error::Error};
 
-    use std::convert::TryFrom;
-    use std::error::Error;
+    use super::*;
 
     #[test]
     fn test_display_length() -> Result<(), Box<dyn Error>> {

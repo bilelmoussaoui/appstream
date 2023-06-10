@@ -1,5 +1,6 @@
-use super::enums::{ContentAttribute, ContentRatingVersion};
 use serde::{Deserialize, Serialize};
+
+use super::enums::{ContentAttribute, ContentRatingVersion};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 /// Defines an Open Age Rating service.

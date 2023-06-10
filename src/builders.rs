@@ -1,14 +1,13 @@
-use super::collection::Collection;
-use super::component::Component;
-use super::enums::*;
-use super::Requirement;
-use super::{
-    AppId, Artifact, ContentRating, Image, Language, License, MarkupTranslatableString, Release,
-    Screenshot, TranslatableList, TranslatableString, Video,
-};
-use chrono::{DateTime, Utc};
 use std::collections::HashMap;
+
+use chrono::{DateTime, Utc};
 use url::Url;
+
+use super::{
+    collection::Collection, component::Component, enums::*, AppId, Artifact, ContentRating, Image,
+    Language, License, MarkupTranslatableString, Release, Requirement, Screenshot,
+    TranslatableList, TranslatableString, Video,
+};
 
 #[derive(Default, Debug)]
 /// A helper to build an `Artifact`.
@@ -23,7 +22,8 @@ pub struct ArtifactBuilder {
     pub url: Option<Url>,
     /// The various checksums to validate the artifact.
     pub checksums: Vec<Checksum>,
-    /// The various bundles to grab the artifact from other 3rd-party installers.
+    /// The various bundles to grab the artifact from other 3rd-party
+    /// installers.
     pub bundles: Vec<Bundle>,
 }
 
@@ -165,7 +165,8 @@ pub struct ComponentBuilder {
     pub metadata_license: Option<License>,
     /// The project group of the component.
     pub project_group: Option<String>,
-    /// Indicate for which desktop environment the component is essential for its functionality.
+    /// Indicate for which desktop environment the component is essential for
+    /// its functionality.
     pub compulsory_for_desktop: Option<String>,
     /// The various AppId that the current component extends.
     pub extends: Vec<AppId>,
@@ -175,7 +176,8 @@ pub struct ComponentBuilder {
     pub screenshots: Vec<Screenshot>,
     /// Web URLs.
     pub urls: Vec<ProjectUrl>,
-    /// The developers or the projects responsible for the development of the project.
+    /// The developers or the projects responsible for the development of the
+    /// project.
     pub developer_name: Option<TranslatableString>,
     /// Used by distributors to contact the project.
     pub update_contact: Option<String>,
@@ -297,7 +299,8 @@ impl ComponentBuilder {
         }
         self
     }
-    /// Sets which desktop environment the component is essential for its functionality.
+    /// Sets which desktop environment the component is essential for its
+    /// functionality.
     #[must_use]
     pub fn compulsory_for_desktop(mut self, compulsory_for_desktop: &str) -> Self {
         self.compulsory_for_desktop = Some(compulsory_for_desktop.to_string());
@@ -752,23 +755,25 @@ impl ReleaseBuilder {
 ///
 /// # Example
 /// ```
+/// use appstream::{
+///     builders::{ImageBuilder, ScreenshotBuilder},
+///     TranslatableString,
+/// };
 /// use url::Url;
-/// use appstream::TranslatableString;
-/// use appstream::builders::{ScreenshotBuilder, ImageBuilder};
 ///
 /// fn main() -> Result<(), url::ParseError> {
 ///     let screenshot = ScreenshotBuilder::default()
-///                 .caption(
-///                     TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
-///                         .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
-///                 )
-///                 .image(
-///                     ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png")?)
-///                         .width(800)
-///                         .height(600)
-///                         .build()
-///                 )
-///                 .build();
+///         .caption(
+///             TranslatableString::with_default("FooBar showing kitchen-sink functionality.")
+///                 .and_locale("de", "FooBar beim Ausführen der Spühlbecken-Funktion."),
+///         )
+///         .image(
+///             ImageBuilder::new(Url::parse("https://www.example.org/en_US/main.png")?)
+///                 .width(800)
+///                 .height(600)
+///                 .build(),
+///         )
+///         .build();
 ///
 ///     Ok(())
 /// }
@@ -847,16 +852,15 @@ impl ScreenshotBuilder {
 ///
 /// # Example
 /// ```
-/// use url::Url;
 /// use appstream::builders::VideoBuilder;
+/// use url::Url;
 ///
 /// fn main() -> Result<(), url::ParseError> {
-///
 ///     let video = VideoBuilder::new(Url::parse("https://example.com/foobar/screencast.mkv")?)
-///                 .width(1600)
-///                 .height(900)
-///                 .codec("av1")
-///                 .build();
+///         .width(1600)
+///         .height(900)
+///         .codec("av1")
+///         .build();
 ///
 ///     Ok(())
 /// }

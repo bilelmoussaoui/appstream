@@ -1,12 +1,17 @@
 //! # Appstream
 //!
-//! AppStream is a cross-distro effort for enhancing the metadata available about software components in the Linux and free-software ecosystem.
-//! One of the project's goals is to make building software-center applications possible, and make interaction with the package sources of
-//! a distribution smarter. AppStream provides specifications for meta-information which is shipped by upstream projects
-//! and can be consumed by other software. The meta-information includes data which is interesting to display in software centers
-//! and is mainly useful for end-users, as well as descriptions about the public interfaces a software component provides,
-//!  which is mainly useful for developers, 3rd-party software installers and for automatically installing missing components
-//!  on a distribution, for example missing firmware or mimetype-handlers.
+//! AppStream is a cross-distro effort for enhancing the metadata available
+//! about software components in the Linux and free-software ecosystem.
+//! One of the project's goals is to make building software-center applications
+//! possible, and make interaction with the package sources of a distribution
+//! smarter. AppStream provides specifications for meta-information which is
+//! shipped by upstream projects and can be consumed by other software. The
+//! meta-information includes data which is interesting to display in software
+//! centers and is mainly useful for end-users, as well as descriptions about
+//! the public interfaces a software component provides,  which is mainly useful
+//! for developers, 3rd-party software installers and for automatically
+//! installing missing components  on a distribution, for example missing
+//! firmware or mimetype-handlers.
 //!
 //! Specifications: [https://www.freedesktop.org/software/appstream/docs/](https://www.freedesktop.org/software/appstream/docs/)
 //!
@@ -14,16 +19,17 @@
 //!
 //! # Examples
 //! ```
-//! use appstream::{Component, ParseError};
-//! use appstream::builders::{ComponentBuilder, ReleaseBuilder};
-//! use appstream::TranslatableString;
-//! use appstream::enums::{Provide, ProjectUrl};
-//! use url::Url;
-//! use chrono::{Utc, TimeZone};
 //! use std::convert::TryFrom;
 //!
-//! fn main() -> Result<(), ParseError> {
+//! use appstream::{
+//!     builders::{ComponentBuilder, ReleaseBuilder},
+//!     enums::{ProjectUrl, Provide},
+//!     Component, ParseError, TranslatableString,
+//! };
+//! use chrono::{TimeZone, Utc};
+//! use url::Url;
 //!
+//! fn main() -> Result<(), ParseError> {
 //!     let xml = r"<?xml version='1.0' encoding='UTF-8'?>
 //!                     <component>
 //!                         <id>com.example.foobar</id>
@@ -50,9 +56,7 @@
 //!         .name(TranslatableString::with_default("Foo Bar"))
 //!         .metadata_license("CC0-1.0".into())
 //!         .summary(TranslatableString::with_default("A foo-ish bar"))
-//!         .url(ProjectUrl::Homepage(
-//!             Url::parse("http://www.example.org")?,
-//!         ))
+//!         .url(ProjectUrl::Homepage(Url::parse("http://www.example.org")?))
 //!         .developer_name(TranslatableString::with_default("FooBar Team"))
 //!         .provide(Provide::Library("libfoobar.so.2".into()))
 //!         .provide(Provide::Font("foo.ttf".into()))
@@ -65,7 +69,7 @@
 //!         .build();
 //!
 //!     assert_eq!(c1, c2);
-//!     
+//!
 //!     Ok(())
 //! }
 //! ```
@@ -75,21 +79,29 @@
 //! use appstream::{Collection, Component, ParseError};
 //!
 //! fn main() -> Result<(), ParseError> {
-//!     let collection = Collection::from_path("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into())?;
-//!     #[cfg(feature="gzip")]
-//!     let collection = Collection::from_gzipped("/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz".into())?;
+//!     let collection = Collection::from_path(
+//!         "/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml".into(),
+//!     )?;
+//!     #[cfg(feature = "gzip")]
+//!     let collection = Collection::from_gzipped(
+//!         "/var/lib/flatpak/appstream/flathub/x86_64/active/appstream.xml.gz".into(),
+//!     )?;
 //!     // Find a specific application by id
-//!     println!("{:#?}", collection.find_by_id("org.gnome.design.Contrast".into()));
+//!     println!(
+//!         "{:#?}",
+//!         collection.find_by_id("org.gnome.design.Contrast".into())
+//!     );
 //!
 //!     // Find the list of gedit plugins
-//!     collection.components.iter()
+//!     collection
+//!         .components
+//!         .iter()
 //!         .filter(|c| c.extends.contains(&"org.gnome.gedit".into()))
 //!         .collect::<Vec<&Component>>();
 //!
 //!     Ok(())
 //! }
 //! ```
-//!
 #![deny(missing_docs)]
 
 mod app_id;
