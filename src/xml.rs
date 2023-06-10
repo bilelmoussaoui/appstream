@@ -2,7 +2,7 @@ use std::{convert::TryFrom, str::FromStr};
 
 use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 use url::Url;
-use xmltree::Element;
+use xmltree::{Element, XMLNode};
 
 use super::{
     builders::{
@@ -231,15 +231,17 @@ impl TryFrom<&Element> for Component {
                     }
                     "categories" => {
                         for child in e.children.iter() {
-                            let category = child
-                                .as_element()
-                                .ok_or_else(|| ParseError::invalid_tag("category"))?
-                                .get_text()
-                                .ok_or_else(|| ParseError::missing_value("category"))?
-                                .to_string();
-                            component = component.category(Category::from_str(&category).map_err(
-                                |_| ParseError::invalid_value(&category, "$value", "category"),
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                let category = element
+                                    .get_text()
+                                    .ok_or_else(|| ParseError::missing_value("category"))?
+                                    .to_string();
+                                component = component.category(
+                                    Category::from_str(&category).map_err(|_| {
+                                        ParseError::invalid_value(&category, "$value", "category")
+                                    })?,
+                                );
+                            }
                         }
                     }
                     "source_pkgname" => {
@@ -250,54 +252,49 @@ impl TryFrom<&Element> for Component {
                     }
                     "keywords" => {
                         for c in e.children.iter() {
-                            keywords.add_for_element(
-                                c.as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("keywords"))?,
-                            );
+                            if let XMLNode::Element(element) = c {
+                                keywords.add_for_element(element);
+                            }
                         }
                     }
                     "kudos" => {
                         for child in e.children.iter() {
-                            let kudo = child
-                                .as_element()
-                                .ok_or_else(|| ParseError::invalid_tag("kudo"))?
-                                .get_text()
-                                .ok_or_else(|| ParseError::missing_value("kudo"))?
-                                .to_string();
-                            component =
-                                component.kudo(Kudo::from_str(&kudo).map_err(|_| {
-                                    ParseError::invalid_value(&kudo, "$value", "kudo")
-                                })?);
+                            if let XMLNode::Element(element) = child {
+                                let kudo = element
+                                    .get_text()
+                                    .ok_or_else(|| ParseError::missing_value("kudo"))?
+                                    .to_string();
+                                component =
+                                    component.kudo(Kudo::from_str(&kudo).map_err(|_| {
+                                        ParseError::invalid_value(&kudo, "$value", "kudo")
+                                    })?);
+                            }
                         }
                     }
                     "mimetypes" => {
                         for child in e.children.iter() {
-                            component = component.mimetype(
-                                &child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("mimetype"))?
-                                    .get_text()
-                                    .ok_or_else(|| ParseError::missing_value("mimetype"))?,
-                            );
+                            if let XMLNode::Element(element) = child {
+                                component = component.mimetype(
+                                    &element
+                                        .get_text()
+                                        .ok_or_else(|| ParseError::missing_value("mimetype"))?,
+                                );
+                            }
                         }
                     }
                     "screenshots" => {
                         for child in e.children.iter() {
-                            component = component.screenshot(Screenshot::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("screenshots"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.screenshot(Screenshot::try_from(element)?);
+                            }
                         }
                     }
 
                     "releases" => {
                         for child in e.children.iter() {
-                            component = component.release(Release::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("releases"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.release(Release::try_from(element)?);
+                            }
                         }
                     }
                     "extends" => {
@@ -314,20 +311,16 @@ impl TryFrom<&Element> for Component {
                     }
                     "languages" => {
                         for child in e.children.iter() {
-                            component = component.language(Language::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("languages"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.language(Language::try_from(element)?);
+                            }
                         }
                     }
                     "provides" => {
                         for child in e.children.iter() {
-                            component = component.provide(Provide::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("provides"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.provide(Provide::try_from(element)?);
+                            }
                         }
                     }
                     "url" => {
@@ -338,55 +331,44 @@ impl TryFrom<&Element> for Component {
                     }
                     "suggests" => {
                         for child in e.children.iter() {
-                            component = component.suggest(AppId::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("id"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.suggest(AppId::try_from(element)?);
+                            }
                         }
                     }
                     "metadata" => {
                         for child in &e.children {
-                            let child = child
-                                .as_element()
-                                .ok_or_else(|| ParseError::invalid_tag("value"))?
-                                .to_owned();
+                            if let XMLNode::Element(element) = child {
+                                let key = element
+                                    .attributes
+                                    .get("key")
+                                    .ok_or_else(|| ParseError::missing_attribute("key", "value"))?
+                                    .to_owned();
 
-                            let key = child
-                                .attributes
-                                .get("key")
-                                .ok_or_else(|| ParseError::missing_attribute("key", "value"))?
-                                .to_owned();
-
-                            let value = child.get_text().map(|c| c.to_string());
-                            component = component.metadata(key, value);
+                                let value = element.get_text().map(|c| c.to_string());
+                                component = component.metadata(key, value);
+                            }
                         }
                     }
                     "requires" => {
                         for child in e.children.iter() {
-                            component = component.requires(Requirement::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("requires"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.requires(Requirement::try_from(element)?);
+                            }
                         }
                     }
                     "recommends" => {
                         for child in e.children.iter() {
-                            component = component.recommends(Requirement::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("recommends"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.recommends(Requirement::try_from(element)?);
+                            }
                         }
                     }
                     "supports" => {
                         for child in e.children.iter() {
-                            component = component.supports(Requirement::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("supports"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                component = component.supports(Requirement::try_from(element)?);
+                            }
                         }
                     }
                     _ => (),
@@ -419,11 +401,9 @@ impl TryFrom<&Element> for ContentRating {
 
         let mut attributes: Vec<ContentAttribute> = Vec::new();
         for child in e.children.iter() {
-            attributes.push(ContentAttribute::try_from(
-                child
-                    .as_element()
-                    .ok_or_else(|| ParseError::invalid_tag("content-attribute"))?,
-            )?);
+            if let XMLNode::Element(element) = child {
+                attributes.push(ContentAttribute::try_from(element)?);
+            }
         }
         Ok(Self {
             version,
@@ -743,11 +723,9 @@ impl TryFrom<&Element> for Release {
                 match &*c.name {
                     "artifacts" => {
                         for child in c.children.iter() {
-                            release = release.artifact(Artifact::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("artifact"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                release = release.artifact(Artifact::try_from(element)?);
+                            }
                         }
                     }
                     "size" => {

@@ -332,6 +332,51 @@ mod tests {
     }
 
     #[test]
+    fn component_with_comment() -> Result<(), Box<dyn Error>> {
+        let c1: Component = Component::from_path("./tests/component-with-comment.xml".into())?;
+
+        let c2 = ComponentBuilder::default()
+            .id("@app-id@".into())
+            .name(TranslatableString::with_default("App Metadata Editor"))
+            .kind(ComponentKind::DesktopApplication)
+            .summary(TranslatableString::with_default("Write a GTK + Rust application"))
+            .description(MarkupTranslatableString::with_default(
+                "<p>A boilerplate template for GTK + Rust. It uses Meson as a build system and has flatpak support by default.</p>"
+            ))
+            .metadata_license("CC0".into())
+            .url(ProjectUrl::Homepage(
+                Url::parse("https://gitlab.gnome.org/bilelmoussaoui/app-metadata-editor")?,
+            ))
+            .url(ProjectUrl::BugTracker(Url::parse("https://gitlab.gnome.org/bilelmoussaoui/app-metadata-editor/issues")?))
+            .developer_name(TranslatableString::with_default("Julian Sparber"))
+            .update_contact("julian.sparber@puri.sm")
+            .launchable(Launchable::DesktopId("@app-id@.desktop".into()))
+            .screenshot(
+                ScreenshotBuilder::default()
+                    .caption(TranslatableString::with_default("Main window"))
+                    .image(
+                        ImageBuilder::new(
+                            Url::parse("https://gitlab.gnome.org/bilelmoussaoui/app-metadata-editor/raw/master/data/resources/screenshots/screenshot1.png")?,
+                        )
+                        .build(),
+                    )
+                    .build(),
+            )
+            .content_rating(ContentRating { version:ContentRatingVersion::Oars1_0, attributes: Default::default() })
+            .kudo(Kudo::ModernToolkit)
+            .kudo(Kudo::HiDpiIcon)
+            .translation(Translation::Gettext("@gettext-package@".into()))
+            .release(
+                ReleaseBuilder::new("0.1.0")
+                    .date(Utc.with_ymd_and_hms(2019, 7, 11, 0, 0, 0).unwrap())
+                    .build(),
+            )
+            .build();
+        assert_eq!(c1, c2);
+        Ok(())
+    }
+
+    #[test]
     fn driver_component() -> Result<(), Box<dyn Error>> {
         let c1: Component = Component::from_path("./tests/driver.xml".into())?;
 
