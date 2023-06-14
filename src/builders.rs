@@ -124,7 +124,7 @@ impl IssueBuilder {
     pub fn build(self) -> Issue {
         Issue {
             url: self.url,
-            kind: self.kind.unwrap_or(IssueKind::Generic),
+            kind: self.kind.unwrap_or_default(),
             identifier: self.identifier.expect("Issue identifier is required"),
         }
     }
