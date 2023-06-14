@@ -1099,6 +1099,21 @@ pub enum ReleaseUrgency {
     Critical,
 }
 
+#[derive(
+    Clone, Copy, Debug, AsRefStr, EnumString, Display, Default, Serialize, Deserialize, PartialEq,
+)]
+#[serde(rename_all = "lowercase")]
+#[strum(serialize_all = "lowercase")]
+/// Defines the type of issue fixed in a release
+/// See [\<issues\/\>](https://www.freedesktop.org/software/appstream/docs/sect-Metadata-Releases.html#tag-release-issues).
+pub enum IssueKind {
+    #[default]
+    /// Generic issue
+    Generic,
+    /// Security vulnerability (CVE)
+    CVE,
+}
+
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq)]
 #[serde(tag = "type", content = "$value", rename_all = "kebab-case")]
 #[non_exhaustive]
