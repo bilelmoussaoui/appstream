@@ -14,7 +14,7 @@ use super::{
         ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, Kudo, Launchable,
         ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
     },
-    error::ParseError,
+    error::{CollectionParseError, ContextParseError, ParseError},
     requirements::{Control, DisplayLength, DisplayLengthValue, Rel, Side},
     AppId, Artifact, Collection, Component, ContentRating, Image, Language, License,
     MarkupTranslatableString, Release, Requirement, Screenshot, TranslatableList,
@@ -136,7 +136,7 @@ impl TryFrom<&Element> for Checksum {
 }
 
 impl TryFrom<&Element> for Collection {
-    type Error = ParseError;
+    type Error = CollectionParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
         let version = e
@@ -156,14 +156,29 @@ impl TryFrom<&Element> for Collection {
             }
         }
 
+        let mut errors = Vec::new();
+
         for node in &e.children {
             if let xmltree::XMLNode::Element(ref e) = node {
                 if &*e.name == "component" {
-                    collection = collection.component(Component::try_from(e)?);
+                    match Component::try_from(e) {
+                        Ok(component) => {
+                            collection = collection.component(component);
+                        }
+                        Err(err) => errors.push(ContextParseError::new(err, e.clone())),
+                    }
                 }
             }
         }
-        Ok(collection.build())
+
+        if !errors.is_empty() {
+            Err(CollectionParseError {
+                errors,
+                partial_collection: Some(collection.build()),
+            })
+        } else {
+            Ok(collection.build())
+        }
     }
 }
 

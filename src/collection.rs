@@ -1,11 +1,19 @@
-use std::{convert::TryFrom, fs::File, io::BufReader, path::PathBuf};
+use std::{
+    convert::TryFrom,
+    fs::File,
+    io::BufReader,
+    path::{Path, PathBuf},
+};
 
 #[cfg(feature = "gzip")]
 use flate2::read::GzDecoder;
 use serde::{Deserialize, Serialize};
 use xmltree::Element;
 
-use super::{error::ParseError, AppId, Component};
+use super::{
+    error::{collection_from_result, CollectionParseError, ContextParseError, ParseError},
+    AppId, Component,
+};
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 /// A collection is a wrapper around multiple components at once.
@@ -35,8 +43,26 @@ impl Collection {
     ///
     /// * `path` - The path to the collection.
     pub fn from_path(path: PathBuf) -> Result<Self, ParseError> {
-        let file = BufReader::new(File::open(path)?);
-        let collection = Collection::try_from(&Element::parse(file)?)?;
+        Ok(Self::from_path_(path)?)
+    }
+
+    /// Create a new `Collection` from an XML file; skipping invalid components.
+    ///
+    /// For each invalid component, an error is collected into the returned
+    /// value.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - The path to the collection.
+    pub fn from_path_with_partial(
+        path: impl AsRef<Path>,
+    ) -> (Option<Self>, Vec<ContextParseError>) {
+        collection_from_result(Self::from_path_(path))
+    }
+
+    fn from_path_(path: impl AsRef<Path>) -> Result<Self, CollectionParseError> {
+        let file = BufReader::new(File::open(path).map_err(ParseError::from)?);
+        let collection = Collection::try_from(&Element::parse(file).map_err(ParseError::from)?)?;
         Ok(collection)
     }
 
