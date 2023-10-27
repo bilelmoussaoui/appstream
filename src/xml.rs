@@ -91,7 +91,7 @@ impl TryFrom<&Element> for Issue {
     type Error = ParseError;
 
     fn try_from(e: &Element) -> Result<Self, Self::Error> {
-        let mut issue: IssueBuilder = IssueBuilder::default();
+        let mut issue = IssueBuilder::default();
 
         if let Some(kind) = e.attributes.get("type") {
             let kind = IssueKind::from_str(kind)
@@ -772,11 +772,9 @@ impl TryFrom<&Element> for Release {
                     }
                     "issues" => {
                         for child in c.children.iter() {
-                            release = release.issue(Issue::try_from(
-                                child
-                                    .as_element()
-                                    .ok_or_else(|| ParseError::invalid_tag("issue"))?,
-                            )?);
+                            if let XMLNode::Element(element) = child {
+                                release = release.issue(Issue::try_from(element)?);
+                            }
                         }
                     }
                     "size" => {
