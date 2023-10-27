@@ -4,9 +4,9 @@ use chrono::{DateTime, Utc};
 use url::Url;
 
 use super::{
-    collection::Collection, component::Component, enums::*, AppId, Artifact, ContentRating, Image,
-    Language, License, MarkupTranslatableString, Release, Requirement, Screenshot,
-    TranslatableList, TranslatableString, Video,
+    collection::Collection, component::Component, enums::*, release::Issue, AppId, Artifact,
+    ContentRating, Image, Language, License, MarkupTranslatableString, Release, Requirement,
+    Screenshot, TranslatableList, TranslatableString, Video,
 };
 
 #[derive(Default, Debug)]
@@ -81,6 +81,51 @@ impl ArtifactBuilder {
             checksums: self.checksums,
             platform: self.platform,
             bundles: self.bundles,
+        }
+    }
+}
+
+#[derive(Default, Debug)]
+/// A helper to build an `Issue`.
+pub struct IssueBuilder {
+    /// The issue kind.
+    pub kind: Option<IssueKind>,
+    /// The issue url.
+    pub url: Option<Url>,
+    /// The issue identifier.
+    pub identifier: Option<String>,
+}
+
+#[allow(dead_code)]
+impl IssueBuilder {
+    /// Sets the issue kind.
+    #[must_use]
+    pub fn kind(mut self, kind: IssueKind) -> Self {
+        self.kind = Some(kind);
+        self
+    }
+
+    /// Sets the issue information url.
+    #[must_use]
+    pub fn url(mut self, url: Url) -> Self {
+        self.url = Some(url);
+        self
+    }
+
+    /// Sets the issue identifier
+    #[must_use]
+    pub fn identifier(mut self, identifier: String) -> Self {
+        self.identifier = Some(identifier);
+        self
+    }
+
+    /// Construct an `Issue`.
+    #[must_use]
+    pub fn build(self) -> Issue {
+        Issue {
+            url: self.url,
+            kind: self.kind.unwrap_or_default(),
+            identifier: self.identifier.expect("Issue identifier is required"),
         }
     }
 }
@@ -645,6 +690,8 @@ pub struct ReleaseBuilder {
     pub artifacts: Vec<Artifact>,
     /// A web page containing the release changelog.
     pub url: Option<Url>,
+    /// A list of issues resolved by this release.
+    pub issues: Vec<Issue>,
 }
 
 #[allow(dead_code)]
@@ -665,6 +712,7 @@ impl ReleaseBuilder {
             urgency: ReleaseUrgency::Medium,
             artifacts: vec![],
             url: None,
+            issues: vec![],
         }
     }
 
@@ -733,6 +781,13 @@ impl ReleaseBuilder {
         self
     }
 
+    /// Adds an issue to the release.
+    #[must_use]
+    pub fn issue(mut self, issue: Issue) -> Self {
+        self.issues.push(issue);
+        self
+    }
+
     /// Constructs a `Release`.
     #[must_use]
     pub fn build(self) -> Release {
@@ -747,6 +802,7 @@ impl ReleaseBuilder {
             urgency: self.urgency,
             artifacts: self.artifacts,
             url: self.url,
+            issues: self.issues,
         }
     }
 }

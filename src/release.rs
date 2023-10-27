@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 use super::{
-    enums::{ArtifactKind, Bundle, Checksum, ReleaseKind, ReleaseUrgency, Size},
+    enums::{ArtifactKind, Bundle, Checksum, IssueKind, ReleaseKind, ReleaseUrgency, Size},
     MarkupTranslatableString,
 };
 
@@ -44,6 +44,10 @@ pub struct Release {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     /// A web page with the release changelog.
     pub url: Option<Url>,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    /// Defines the issues resolved by this release
+    pub issues: Vec<Issue>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -74,6 +78,22 @@ pub struct Artifact {
     pub bundles: Vec<Bundle>,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+/// Defines a resolved issue
+/// See [\<issues\/\>](https://www.freedesktop.org/software/appstream/docs/sect-Metadata-Releases.html#tag-release-issues).
+pub struct Issue {
+    #[serde(rename = "type")]
+    /// The issue type.
+    pub kind: IssueKind,
+
+    /// The URL with details about this issue
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub url: Option<Url>,
+
+    /// The bug number, ticket name, or CVE ID for this issue
+    pub identifier: String,
+}
+
 #[cfg(test)]
 mod tests {
     use std::{convert::TryFrom, error::Error};
@@ -81,10 +101,10 @@ mod tests {
     use chrono::{TimeZone, Utc};
 
     use super::{
-        ArtifactKind, Checksum, MarkupTranslatableString, Release, ReleaseKind, ReleaseUrgency,
-        Size, Url,
+        ArtifactKind, Checksum, IssueKind, MarkupTranslatableString, Release, ReleaseKind,
+        ReleaseUrgency, Size, Url,
     };
-    use crate::builders::{ArtifactBuilder, ReleaseBuilder};
+    use crate::builders::{ArtifactBuilder, IssueBuilder, ReleaseBuilder};
 
     #[test]
     fn release_artifacts() -> Result<(), Box<dyn Error>> {
@@ -96,11 +116,6 @@ mod tests {
           </description>
 
           <url>https://example.org/releases/version-1.2.html</url>
-
-          <issues>
-            <issue url='https://example.com/bugzilla/12345'>bz#12345</issue>
-            <issue type='cve'>CVE-2019-123456</issue>
-          </issues>
 
           <artifacts>
             <artifact type='binary' platform='x86_64-linux-gnu'>
@@ -160,6 +175,66 @@ mod tests {
                         .url(Url::parse("https://example.com/mytarball.tar.xz")?)
                         .kind(ArtifactKind::Source)
                         .checksum(Checksum::Sha256("....".into()))
+                        .build(),
+                )
+                .build(),
+            ReleaseBuilder::new("1.1")
+                .kind(ReleaseKind::Development)
+                .date(Utc.with_ymd_and_hms(2013, 10, 20, 0, 0, 0).unwrap())
+                .build(),
+            ReleaseBuilder::new("1.0")
+                .date(Utc.with_ymd_and_hms(2012, 8, 26, 0, 0, 0).unwrap())
+                .build(),
+        ];
+        assert_eq!(releases1, releases2);
+        Ok(())
+    }
+
+    #[test]
+    fn release_issues() -> Result<(), Box<dyn Error>> {
+        let x = r"
+        <releases>
+        <release version='1.2' date='2014-04-12' urgency='high'>
+          <description>
+            <p>This stable release fixes bugs.</p>
+          </description>
+
+          <url>https://example.org/releases/version-1.2.html</url>
+
+          <issues>
+            <issue url='https://example.com/bugzilla/12345'>bz#12345</issue>
+            <issue type='cve'>CVE-2019-123456</issue>
+          </issues>
+        </release>
+        <release version='1.1' type='development' date='2013-10-20' />
+        <release version='1.0' date='2012-08-26' />
+        </releases>";
+
+        let element = xmltree::Element::parse(x.as_bytes())?;
+        let mut releases1: Vec<Release> = vec![];
+        for e in element.children.iter() {
+            releases1.push(Release::try_from(e.as_element().unwrap())?);
+        }
+
+        let releases2 = vec![
+            ReleaseBuilder::new("1.2")
+                .urgency(ReleaseUrgency::High)
+                .description(MarkupTranslatableString::with_default(
+                    "<p>This stable release fixes bugs.</p>",
+                ))
+                .date(Utc.with_ymd_and_hms(2014, 4, 12, 0, 0, 0).unwrap())
+                .url(Url::parse("https://example.org/releases/version-1.2.html")?)
+                .issue(
+                    IssueBuilder::default()
+                        .kind(IssueKind::Generic)
+                        .url(Url::parse("https://example.com/bugzilla/12345")?)
+                        .identifier("bz#12345".into())
+                        .build(),
+                )
+                .issue(
+                    IssueBuilder::default()
+                        .kind(IssueKind::CVE)
+                        .identifier("CVE-2019-123456".into())
                         .build(),
                 )
                 .build(),

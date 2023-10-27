@@ -6,15 +6,16 @@ use xmltree::{Element, XMLNode};
 
 use super::{
     builders::{
-        ArtifactBuilder, CollectionBuilder, ComponentBuilder, ImageBuilder, ReleaseBuilder,
-        ScreenshotBuilder, VideoBuilder,
+        ArtifactBuilder, CollectionBuilder, ComponentBuilder, ImageBuilder, IssueBuilder,
+        ReleaseBuilder, ScreenshotBuilder, VideoBuilder,
     },
     enums::{
         ArtifactKind, Bundle, Category, Checksum, ComponentKind, ContentAttribute,
-        ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, Kudo, Launchable,
-        ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
+        ContentRatingVersion, ContentState, FirmwareKind, Icon, ImageKind, IssueKind, Kudo,
+        Launchable, ProjectUrl, Provide, ReleaseKind, ReleaseUrgency, Size, Translation,
     },
     error::{CollectionParseError, ContextParseError, ParseError},
+    release::Issue,
     requirements::{Control, DisplayLength, DisplayLengthValue, Rel, Side},
     AppId, Artifact, Collection, Component, ContentRating, Image, Language, License,
     MarkupTranslatableString, Release, Requirement, Screenshot, TranslatableList,
@@ -83,6 +84,32 @@ impl TryFrom<&Element> for Artifact {
         }
 
         Ok(artifact.build())
+    }
+}
+
+impl TryFrom<&Element> for Issue {
+    type Error = ParseError;
+
+    fn try_from(e: &Element) -> Result<Self, Self::Error> {
+        let mut issue = IssueBuilder::default();
+
+        if let Some(kind) = e.attributes.get("type") {
+            let kind = IssueKind::from_str(kind)
+                .map_err(|_| ParseError::invalid_value(kind, "type", "issue"))?;
+            issue = issue.kind(kind);
+        }
+
+        if let Some(url) = e.attributes.get("url") {
+            let url = Url::parse(url)?;
+            issue = issue.url(url);
+        }
+
+        let identifier = e
+            .get_text()
+            .ok_or_else(|| ParseError::missing_value("issue"))?;
+        issue = issue.identifier(identifier.to_string());
+
+        Ok(issue.build())
     }
 }
 
@@ -740,6 +767,13 @@ impl TryFrom<&Element> for Release {
                         for child in c.children.iter() {
                             if let XMLNode::Element(element) = child {
                                 release = release.artifact(Artifact::try_from(element)?);
+                            }
+                        }
+                    }
+                    "issues" => {
+                        for child in c.children.iter() {
+                            if let XMLNode::Element(element) = child {
+                                release = release.issue(Issue::try_from(element)?);
                             }
                         }
                     }
