@@ -24,7 +24,6 @@ serde_derive = "1.0"
 thiserror = "1.0"
 strum = "0.24"
 strum_macros = "0.24"
-cfg-if = "1.0.0"
 
 [dependencies.chrono]
 version = "0.4"

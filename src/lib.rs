@@ -108,9 +108,6 @@
 //! ```
 #![deny(missing_docs)]
 
-#[macro_use]
-extern crate cfg_if;
-
 mod app_id;
 /// Various helpers to build any appstream type.
 pub mod builders;
@@ -142,41 +139,48 @@ pub use translatable_string::{MarkupTranslatableString, TranslatableList, Transl
 pub use url;
 pub use xmltree;
 
-cfg_if! {
-    if #[cfg(feature = "time")] {
-        /// The time module DateTime re-export
-        pub use time::OffsetDateTime as DateTime;
-    } else {
-        use chrono::{DateTime as ChronoDateTime, Utc};
-        /// The chrono module DateTime re-export
-        pub type DateTime = ChronoDateTime<Utc>;
-    }
-}
+#[cfg(all(feature = "time", feature = "chrono"))]
+compile_error!("You can't enable both chrono & time features at once");
 
-#[cfg(test)]
+#[cfg(feature = "time")]
+/// The time module DateTime re-export
+pub use time::OffsetDateTime as DateTime;
+
+#[cfg(feature = "chrono")]
+use chrono::{DateTime as ChronoDateTime, Utc};
+#[cfg(feature = "chrono")]
+/// The chrono module DateTime re-export
+pub type DateTime = ChronoDateTime<Utc>;
+
+#[cfg(all(test, feature = "time"))]
 #[inline]
 fn date(year: i32, month: u8, day: u8) -> DateTime {
-    cfg_if! {
-        if #[cfg(feature = "time")] {
-            return time::Date::from_calendar_date(year, time::Month::try_from(month).unwrap(), day).unwrap().midnight().assume_utc();
-        } else {
-            use chrono::TimeZone;
-            return Utc.with_ymd_and_hms(year, month.into(), day.into(), 0, 0, 0).unwrap();
-        }
-    }
+    return time::Date::from_calendar_date(year, time::Month::try_from(month).unwrap(), day)
+        .unwrap()
+        .midnight()
+        .assume_utc();
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "chrono"))]
+#[inline]
+fn date(year: i32, month: u8, day: u8) -> DateTime {
+    use chrono::TimeZone;
+    return Utc
+        .with_ymd_and_hms(year, month.into(), day.into(), 0, 0, 0)
+        .unwrap();
+}
+
+#[cfg(all(test, feature = "time"))]
 #[inline]
 fn timestamp(timestamp: &str) -> DateTime {
-    cfg_if! {
-        if #[cfg(feature = "time")] {
-            use time::{macros::format_description};
-            let format = format_description!("[unix_timestamp]");
-            return DateTime::parse(timestamp, &format).unwrap()
-        } else {
-            use chrono::TimeZone;
-            return Utc.datetime_from_str(timestamp, "%s").unwrap();
-        }
-    }
+    use time::macros::format_description;
+    let format = format_description!("[unix_timestamp]");
+    return DateTime::parse(timestamp, &format).unwrap();
+}
+
+#[cfg(all(test, feature = "chrono"))]
+#[inline]
+fn timestamp(timestamp: &str) -> DateTime {
+    use chrono::TimeZone;
+    return Utc.datetime_from_str(timestamp, "%s").unwrap();
 }

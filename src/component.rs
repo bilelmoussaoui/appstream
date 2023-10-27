@@ -201,7 +201,6 @@ impl Component {
 mod tests {
     use std::error::Error;
 
-    use chrono::{TimeZone, Utc};
     use url::Url;
 
     use super::Component;
@@ -368,7 +367,7 @@ mod tests {
             .translation(Translation::Gettext("@gettext-package@".into()))
             .release(
                 ReleaseBuilder::new("0.1.0")
-                    .date(Utc.with_ymd_and_hms(2019, 7, 11, 0, 0, 0).unwrap())
+                    .date(date(2019, 7, 11))
                     .build(),
             )
             .build();

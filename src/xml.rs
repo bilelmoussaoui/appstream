@@ -22,31 +22,29 @@ use super::{
 
 use crate::DateTime;
 
-cfg_if! {
-    if #[cfg(feature = "time")] {
-        fn deserialize_date(date: &str) -> Result<DateTime, time::error::Parse> {
-            use time::{macros::format_description, Date};
+#[cfg(feature = "time")]
+fn deserialize_date(date: &str) -> Result<DateTime, time::error::Parse> {
+    use time::{macros::format_description, Date};
 
-            let timestamp_format = format_description!("[unix_timestamp]");
-            let date_format = format_description!("[year]-[month]-[day]");
-            DateTime::parse(date, &timestamp_format)
-                .or_else(|_| Date::parse(date, &date_format).map(|d| d.midnight().assume_utc()))
-        }
-    } else {
-        fn deserialize_date(date: &str) -> Result<DateTime, chrono::ParseError> {
-            use chrono::{NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
+    let timestamp_format = format_description!("[unix_timestamp]");
+    let date_format = format_description!("[year]-[month]-[day]");
+    DateTime::parse(date, &timestamp_format)
+        .or_else(|_| Date::parse(date, &date_format).map(|d| d.midnight().assume_utc()))
+}
 
-            Utc.datetime_from_str(date, "%s").or_else(
-                |_: chrono::ParseError| -> Result<DateTime, chrono::ParseError> {
-                    let date = NaiveDateTime::new(
-                        NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
-                        NaiveTime::default(),
-                    );
-                    Ok(DateTime::from_utc(date, Utc))
-                },
-            )
-        }
-    }
+#[cfg(feature = "chrono")]
+fn deserialize_date(date: &str) -> Result<DateTime, chrono::ParseError> {
+    use chrono::{NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
+
+    Utc.datetime_from_str(date, "%s").or_else(
+        |_: chrono::ParseError| -> Result<DateTime, chrono::ParseError> {
+            let date = NaiveDateTime::new(
+                NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
+                NaiveTime::default(),
+            );
+            Ok(DateTime::from_utc(date, Utc))
+        },
+    )
 }
 
 impl TryFrom<&Element> for AppId {
