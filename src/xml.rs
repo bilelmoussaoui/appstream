@@ -36,15 +36,15 @@ fn deserialize_date(date: &str) -> Result<DateTime, time::error::Parse> {
 fn deserialize_date(date: &str) -> Result<DateTime, chrono::ParseError> {
     use chrono::{NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 
-    Utc.datetime_from_str(date, "%s").or_else(
-        |_: chrono::ParseError| -> Result<DateTime, chrono::ParseError> {
-            let date = NaiveDateTime::new(
-                NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
-                NaiveTime::default(),
-            );
-            Ok(DateTime::from_utc(date, Utc))
-        },
-    )
+    if let Ok(date) = NaiveDateTime::parse_from_str(date, "%s") {
+        Ok(Utc.from_utc_datetime(&date))
+    } else {
+        let date = NaiveDateTime::new(
+            NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
+            NaiveTime::default(),
+        );
+        Ok(Utc.from_utc_datetime(&date))
+    }
 }
 
 impl TryFrom<&Element> for AppId {
