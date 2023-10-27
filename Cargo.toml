@@ -10,13 +10,14 @@ license = "MIT"
 exclude = ["tests/**/*.xml", "tests/**/*.xml.gz", "tests/**/*.json"]
 
 [features]
+default = ["chrono"]
+chrono = ["dep:chrono"]
+time = ["dep:time"]
 gzip = ["flate2"]
 test_json = ["serde_json"]
 
-
 [dependencies]
 url = { version = "2.1", features = ["serde"] }
-chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1.0", features = [ "derive" ] }
 xmltree = "0.10"
 serde_derive = "1.0"
@@ -24,10 +25,20 @@ thiserror = "1.0"
 strum = "0.24"
 strum_macros = "0.24"
 
+[dependencies.chrono]
+version = "0.4"
+features = ["serde"]
+optional = true
+
 [dependencies.flate2]
 version = "1.0"
 optional = true
 
 [dependencies.serde_json]
 version = "1.0"
+optional = true
+
+[dependencies.time]
+version = "0.3.21"
+features = ["serde", "parsing", "formatting", "macros"]
 optional = true

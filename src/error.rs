@@ -15,10 +15,6 @@ pub enum ParseError {
     /// url failed to parse a URL.
     UrlParseError(#[from] url::ParseError),
 
-    #[error("chrono parser error: {0}")]
-    /// url failed to parse a URL.
-    ChronoParseError(#[from] chrono::ParseError),
-
     #[error("Input/output error: {0} ")]
     /// IO.
     IOError(#[from] std::io::Error),

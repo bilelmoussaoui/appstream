@@ -199,10 +199,8 @@ impl Component {
 
 #[cfg(test)]
 mod tests {
-
     use std::error::Error;
 
-    use chrono::{TimeZone, Utc};
     use url::Url;
 
     use super::Component;
@@ -211,11 +209,12 @@ mod tests {
             ArtifactBuilder, ComponentBuilder, ImageBuilder, LanguageBuilder, ReleaseBuilder,
             ScreenshotBuilder,
         },
+        date,
         enums::{
             ArtifactKind, Bundle, Category, ComponentKind, ContentRatingVersion, FirmwareKind,
             Icon, ImageKind, Kudo, Launchable, ProjectUrl, Provide, ReleaseKind, Translation,
         },
-        ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString,
+        timestamp, ContentRating, MarkupTranslatableString, TranslatableList, TranslatableString,
     };
 
     #[test]
@@ -323,7 +322,7 @@ mod tests {
             .release(
                 ReleaseBuilder::new("3.12.2")
                     .description(MarkupTranslatableString::with_default("<p>Fixes issues X, Y and Z</p>"))
-                    .date(Utc.with_ymd_and_hms(2013, 4, 12, 0, 0, 0).unwrap())
+                    .date(date(2013, 4, 12))
                     .build(),
             )
             .build();
@@ -368,7 +367,7 @@ mod tests {
             .translation(Translation::Gettext("@gettext-package@".into()))
             .release(
                 ReleaseBuilder::new("0.1.0")
-                    .date(Utc.with_ymd_and_hms(2019, 7, 11, 0, 0, 0).unwrap())
+                    .date(date(2019, 7, 11))
                     .build(),
             )
             .build();
@@ -432,7 +431,7 @@ mod tests {
             })
             .release(
                 ReleaseBuilder::new("3.0.2")
-                    .date(Utc.with_ymd_and_hms(2015, 2, 16, 0, 0, 0).unwrap())
+                    .date(date(2015, 2, 16))
                     .artifact(
                         ArtifactBuilder::default()
                         .url(Url::parse("http://www.hughski.com/downloads/colorhug-als/firmware/colorhug-als-3.0.2.cab")?)
@@ -491,11 +490,7 @@ mod tests {
             .provide(Provide::Library("libfoobar.so.2".into()))
             .provide(Provide::Font("foo.ttf".into()))
             .provide(Provide::Binary("foobar".into()))
-            .release(
-                ReleaseBuilder::new("1.2")
-                    .date(Utc.with_ymd_and_hms(2015, 2, 16, 0, 0, 0).unwrap())
-                    .build(),
-            )
+            .release(ReleaseBuilder::new("1.2").date(date(2015, 2, 16)).build())
             .build();
         assert_eq!(c1, c2);
         Ok(())
@@ -609,8 +604,8 @@ mod tests {
             .release(
                 ReleaseBuilder::new("9.0")
                     .description(MarkupTranslatableString::with_default("<p>Now contains the Linux kernel 4.9, GNOME 3.22, KDE Plasma 5, LibreOffice 5.2 and Qt 5.7. LXQt has been added.</p>"))
-                    .date(Utc.with_ymd_and_hms(2017, 7, 17, 0, 0, 0).unwrap())
-                    .date_eol(Utc.with_ymd_and_hms(2020, 7, 17, 0, 0, 0).unwrap())
+                    .date(date(2017, 7, 17))
+                    .date_eol(date(2020, 7, 17))
                     .build(),
             )
             .build();
@@ -640,7 +635,7 @@ mod tests {
             .release(ReleaseBuilder::new("10.0").build())
             .release(
                 ReleaseBuilder::new("9.0")
-                    .date(Utc.with_ymd_and_hms(2020, 01, 12, 0, 0, 0).unwrap())
+                    .date(date(2020, 01, 12))
                     .build(),
             )
             .build();
@@ -788,19 +783,19 @@ mod tests {
             })
             .release(
                 ReleaseBuilder::new("0.0.3")
-                    .date(Utc.datetime_from_str("1582329600", "%s")?)
+                    .date(timestamp("1582329600"))
                     .description(MarkupTranslatableString::with_default("<p>Stylesheet fixes</p><p>Translations updates</p>"))
                     .build()
             )
             .release(
                 ReleaseBuilder::new("0.0.2")
-                    .date(Utc.datetime_from_str("1566691200", "%s")?)
+                    .date(timestamp("1566691200"))
                     .description(MarkupTranslatableString::with_default("<p>Translations updates</p>"))
                     .build()
             )
             .release(
                 ReleaseBuilder::new("0.0.1")
-                    .date(Utc.datetime_from_str("1565136000", "%s")?)
+                    .date(timestamp("1565136000"))
                     .description(MarkupTranslatableString::with_default("<p>First release of Contrast</p>"))
                     .build()
             )

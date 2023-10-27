@@ -5,6 +5,12 @@ Appstream files parser using Rust & [xmltree](https://docs.rs/xmltree/)
 
 Specifications: [https://www.freedesktop.org/software/appstream/docs/](https://www.freedesktop.org/software/appstream/docs/)
 
+The `chrono` or `time` crates can be used to represent dates. `chrono` is the default. To use `time` instead, turn off default features and enable the `time` feature, like this:
+
+```toml
+[dependencies]
+appstream = { version = "*", default-features = false, features = ["time"] }
+```
 
 How to use
 ```rust
@@ -19,7 +25,7 @@ fn main() -> Result<(), ParseError> {
     collection.components.iter()
         .filter(|c| c.extends.contains(&"org.gnome.gedit".into()))
         .collect::<Vec<&Component>>();
-        
+
     Ok(())
 }
-``` 
+```

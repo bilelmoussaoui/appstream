@@ -1,6 +1,5 @@
 use std::{convert::TryFrom, str::FromStr};
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
 use url::Url;
 use xmltree::{Element, XMLNode};
 
@@ -21,16 +20,31 @@ use super::{
     TranslatableString, Video,
 };
 
-fn deserialize_date(date: &str) -> Result<DateTime<Utc>, chrono::ParseError> {
-    Utc.datetime_from_str(date, "%s").or_else(
-        |_: chrono::ParseError| -> Result<DateTime<Utc>, chrono::ParseError> {
-            let date = NaiveDateTime::new(
-                NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
-                NaiveTime::default(),
-            );
-            Ok(DateTime::<Utc>::from_utc(date, Utc))
-        },
-    )
+use crate::DateTime;
+
+#[cfg(feature = "time")]
+fn deserialize_date(date: &str) -> Result<DateTime, time::error::Parse> {
+    use time::{macros::format_description, Date};
+
+    let timestamp_format = format_description!("[unix_timestamp]");
+    let date_format = format_description!("[year]-[month]-[day]");
+    DateTime::parse(date, &timestamp_format)
+        .or_else(|_| Date::parse(date, &date_format).map(|d| d.midnight().assume_utc()))
+}
+
+#[cfg(feature = "chrono")]
+fn deserialize_date(date: &str) -> Result<DateTime, chrono::ParseError> {
+    use chrono::{NaiveDate, NaiveDateTime, NaiveTime, TimeZone, Utc};
+
+    if let Ok(date) = NaiveDateTime::parse_from_str(date, "%s") {
+        Ok(Utc.from_utc_datetime(&date))
+    } else {
+        let date = NaiveDateTime::new(
+            NaiveDate::parse_from_str(date, "%Y-%m-%d")?,
+            NaiveTime::default(),
+        );
+        Ok(Utc.from_utc_datetime(&date))
+    }
 }
 
 impl TryFrom<&Element> for AppId {

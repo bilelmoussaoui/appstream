@@ -20,8 +20,8 @@ jobs:
         with:
           command: check
 
-  test:
-    name: Test Suite
+  default-features-test:
+    name: Test Suite (Default Features)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -33,7 +33,36 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --all-features
+
+  time-feature-test:
+    name: Test Suite (Only time feature)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --no-default-features --features time
+
+  extra-features-test:
+    name: Test Suite (Time + All Other Features)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --no-default-features --features "time,gzip,test_json"
 
   fmt:
     name: Rustfmt

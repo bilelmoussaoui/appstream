@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use chrono::{DateTime, Utc};
 use url::Url;
 
 use super::{
@@ -8,6 +7,8 @@ use super::{
     Language, License, MarkupTranslatableString, Release, Requirement, Screenshot,
     TranslatableList, TranslatableString, Video,
 };
+
+use crate::DateTime;
 
 #[derive(Default, Debug)]
 /// A helper to build an `Artifact`.
@@ -628,9 +629,9 @@ impl LanguageBuilder {
 /// A helper to build a `Release`.
 pub struct ReleaseBuilder {
     /// The release date.
-    pub date: Option<DateTime<Utc>>,
+    pub date: Option<DateTime>,
     /// The end-of-life date of the release.
-    pub date_eol: Option<DateTime<Utc>>,
+    pub date_eol: Option<DateTime>,
     /// The release description.
     pub description: Option<MarkupTranslatableString>,
     /// The version of the release.
@@ -693,14 +694,14 @@ impl ReleaseBuilder {
 
     /// Sets the release date.
     #[must_use]
-    pub fn date(mut self, date: DateTime<Utc>) -> Self {
+    pub fn date(mut self, date: DateTime) -> Self {
         self.date = Some(date);
         self
     }
 
     /// Sets the End-of-life release date.
     #[must_use]
-    pub fn date_eol(mut self, date_eol: DateTime<Utc>) -> Self {
+    pub fn date_eol(mut self, date_eol: DateTime) -> Self {
         self.date_eol = Some(date_eol);
         self
     }
